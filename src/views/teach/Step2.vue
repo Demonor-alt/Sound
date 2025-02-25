@@ -57,7 +57,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const { showLanguage,difficulty,changeDifficulty } = useLanguageStore();
+const { showLanguage,changeDifficulty } = useLanguageStore();
 const language = ref(showLanguage());
 const title = ref("你的" + language.value + "怎么样");
 const canToStep3 = ref(false);

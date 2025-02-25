@@ -3,14 +3,8 @@ import { ref } from 'vue';
 export const useLanguageStore = defineStore('language', () => {
     const language = ref('');
     const difficulty = ref('');
-    function changeMandarin() {
-        language.value = 'mandarin';
-    }
-    function changeEnglish() {
-        language.value = 'english';
-    }
-    function changeCantonese() {
-        language.value = 'cantonese';
+    function changeLanguage(newValue) {
+        language.value = newValue;
     }
     function showLanguage() {
         if (language.value === 'mandarin') {
@@ -21,14 +15,12 @@ export const useLanguageStore = defineStore('language', () => {
             return '粤语';
         }
     }
-    function changeDifficulty(newValue){
+    function changeDifficulty(newValue) {
         difficulty.value=newValue
     }
     return {
         language,
-        changeMandarin,
-        changeEnglish,
-        changeCantonese,
+        changeLanguage,
         showLanguage,
         difficulty,
         changeDifficulty,

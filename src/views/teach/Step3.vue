@@ -1,6 +1,14 @@
 <template>
     <div class="language-selection">
         <h1>学好这门课程，你就能：</h1>
+        <div class="items">
+            <div class="speak"></div>
+            <div class="item">
+                <h4>自信开口说外语</h4>
+                零压力，开心练习口语和节奏
+            </div>
+        </div>
+       
     </div>
 </template>
 
@@ -8,19 +16,7 @@
 import { useLanguageStore } from '@/stores/language';
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const { changeMandarin, changeEnglish, changeCantonese } = useLanguageStore();
-const changeMandarin1 = () => {
-    changeMandarin();
-    router.push('/teach/step2');
-}
-const changeEnglish1 = () => {
-    changeEnglish();
-    router.push('/teach/step2');
-}
-const changeCantonese1 = () => {
-    changeCantonese();
-    router.push('/teach/step2');
-}
+
     
 </script>
 
@@ -34,5 +30,15 @@ const changeCantonese1 = () => {
         display: flex;
         justify-content: center;
     }
+}
+.items{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.speak{
+    width: 40px;
+    height: 40px;
+    background: url('../../assets/icons/speaker.svg') no-repeat center / contain;
 }
 </style>

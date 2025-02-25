@@ -1,16 +1,16 @@
 <template>
     <div class="language-selection">
         <h1>我想学...</h1>
-        <div class="languages" @click="changeMandarin1">
-            <div class="lang" >
+        <div class="languages">
+            <div class="lang" @click="changeMandarin">
                 <div class="image1"></div>
                 <h4>普通话</h4>
             </div>
-            <div class="lang" @click="changeEnglish1">
+            <div class="lang" @click="changeEnglish">
                 <div class="image2"></div>
                 <h4>英语</h4>
             </div>
-            <div class="lang" @click="changeCantonese1">
+            <div class="lang" @click="changeCantonese">
                 <div class="image1"></div>
                 <h4>粤语</h4>
             </div>
@@ -22,17 +22,17 @@
 import { useLanguageStore } from '@/stores/language';
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const { changeMandarin, changeEnglish, changeCantonese } = useLanguageStore();
-const changeMandarin1 = () => {
-    changeMandarin();
+const { changeLanguage } = useLanguageStore();
+const changeMandarin = () => {
+    changeLanguage('mandarin');
     router.push('/teach/step2');
 }
-const changeEnglish1 = () => {
-    changeEnglish();
+const changeEnglish = () => {
+    changeLanguage('english');
     router.push('/teach/step2');
 }
-const changeCantonese1 = () => {
-    changeCantonese();
+const changeCantonese = () => {
+    changeLanguage('cantonese');
     router.push('/teach/step2');
 }
     
