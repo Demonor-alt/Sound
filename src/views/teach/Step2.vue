@@ -46,7 +46,6 @@
         <div class="build">
             <el-button color="black" v-if="canToStep3===true" @click="toStep3">继续</el-button>
             <el-button color="black" disabled v-else>继续</el-button>
-
         </div>
     </div>
 </template>
