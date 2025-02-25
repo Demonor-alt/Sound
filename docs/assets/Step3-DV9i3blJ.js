@@ -1,0 +1,1 @@
+import{u as a}from"./language-DopD4n-I.js";import{_ as s,i as t,e as n,u as o,o as r}from"./index-D3QT8BKL.js";const c={class:"language-selection"},_={__name:"Step3",setup(u){o();const{changeMandarin:p,changeEnglish:l,changeCantonese:i}=a();return(g,e)=>(r(),t("div",c,e[0]||(e[0]=[n("h1",null,"学好这门课程，你就能：",-1)])))}},f=s(_,[["__scopeId","data-v-6313a6aa"]]);export{f as default};

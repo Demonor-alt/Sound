@@ -1,0 +1,1 @@
+import{u as a}from"./language-DopD4n-I.js";import{x as o,u as r}from"./index-D3QT8BKL.js";const _={__name:"Teach",setup(s){const e=r(),{language:t}=a();return o(()=>{t===""&&e.push("/teach/step1")}),(u,n)=>"111111"}};export{_ as default};
