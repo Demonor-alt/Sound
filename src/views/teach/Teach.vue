@@ -35,7 +35,28 @@
                 </div>
             </el-col>
             <el-col :span="10">
-                1111
+                <div style="margin-left: 100px;">
+                    <el-affix :offset="80">
+                        <div class="top">
+                            <el-popover placement="bottom" :width="200" trigger="hover">
+                                <template #reference>
+                                    <div  :class="{ america: language === 'english', china: language === 'mandarin'||language === 'cantonese' }"></div>
+                                </template>
+                                <div class="content">
+                                    <div style="color: #afafaf;">我的课程</div>
+                                    <div class="myclass">
+                                        <div :class="{ america: language === 'english', china: language === 'mandarin'||language === 'cantonese' }"></div>
+                                        {{ lan }}
+                                    </div>
+                                    <div class="myclass" @click="toStep1">
+                                        <div class="addplus"></div>
+                                        添加新的课程
+                                    </div>
+                                </div>
+                            </el-popover>
+                        </div>
+                    </el-affix>
+                </div>
             </el-col>
         </el-row>
     </div>
@@ -93,6 +114,9 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const { language, showLanguage } = useLanguageStore();
 const lan = ref(showLanguage());
+const toStep1 = () => {
+    router.push('/teach/step1');
+}
 onMounted(() => {
     if (language === '') {
         router.push('/teach/step1');
@@ -153,10 +177,47 @@ header {
 .consonant-item:active {
     border-bottom-width: 2px;
 }
-.slider{
+
+.slider {
     width: 50px;
     height: 9px;
     background-color: #e5e5e5;
     border-radius: 20px;
+}
+
+.america {
+    width: 30px;
+    height: 30px;
+    background: url('../../assets/pictures/america.png') no-repeat center / contain;
+    border-radius: 10px;
+}
+.china {
+    width: 30px;
+    height: 30px;
+    background: url('../../assets/pictures/chinese.png') no-repeat center / contain;
+    border-radius: 10px;
+}
+
+.addplus {
+    width: 30px;
+    height: 30px;
+    background: url('../../assets/icons//addplus.svg') no-repeat center / contain;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .myclass {
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        border-radius: 6px;
+        border: #e5e5e5 2px solid;
+        cursor: pointer;
+    }
 }
 </style>
