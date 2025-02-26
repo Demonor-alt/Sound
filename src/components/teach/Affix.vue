@@ -52,6 +52,22 @@
                         <div style="color: #ff4b4b;">{{ languageData.heartCount }}</div>
                     </div>
                 </template>
+                <h1>红心</h1>
+                <div v-if="languageData.heartCount===5">
+                    <div class="hearts">
+                        <div v-for="index in languageData.heartCount" class="heart"></div>
+                    </div>
+                    <h2>红心满满</h2>
+                    继续加油吧！
+                </div>
+                <div v-else>
+                    <div class="hearts">
+                        <div v-for="index in languageData.heartCount" class="heart"></div>
+                        <div v-for="index in 5-languageData.heartCount" class="heartplus"></div>
+                    </div>
+                    <h2>红心满满</h2>
+                    你还有红心呢！接着练吧！
+                </div>
             </el-popover>
         </div>
     </el-affix>
@@ -127,6 +143,11 @@ const toStep1 = () => {
     height: 30px;
     background: url('../../assets/icons/heart.svg') no-repeat center / contain;
 }
+.heartplus {
+    width: 30px;
+    height: 30px;
+    background: url('../../assets/icons/heartplus.svg') no-repeat center / contain;
+}
 .box {
     width: 60px;
     height: 60px;
@@ -165,5 +186,9 @@ const toStep1 = () => {
         flex-direction: column;
         gap: 5px;
     }
+}
+.hearts{
+    display: flex;
+    flex-direction: row;
 }
 </style>
