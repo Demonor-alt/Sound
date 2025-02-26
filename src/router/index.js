@@ -45,10 +45,6 @@ const routes = [
         component: () => import("@/views/teach/Step3.vue"),
     },
     {
-        path: '/teach/step4',
-        component: () => import("@/views/teach/Step4.vue"),
-    },
-    {
         path: '/courseware',
         component: () => import("@/views/Courseware.vue"),
     },
