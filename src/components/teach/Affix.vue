@@ -45,30 +45,44 @@
                     </div>
                 </div>
             </el-popover>
-            <el-popover placement="bottom" :width="200" trigger="hover">
+            <el-popover placement="bottom" :width="300" trigger="hover">
                 <template #reference>
                     <div class="topitems">
                         <div class="heart"></div>
                         <div style="color: #ff4b4b;">{{ languageData.heartCount }}</div>
                     </div>
                 </template>
-                <h1>红心</h1>
-                <div v-if="languageData.heartCount===5">
-                    <div class="hearts">
-                        <div v-for="index in languageData.heartCount" class="heart"></div>
+                <div class="heart-content">
+                    <h1>红心</h1>
+                    <div v-if="languageData.heartCount === 5">
+                        <div class="hearts">
+                            <div v-for="index in languageData.heartCount" class="heart"></div>
+                        </div>
+                        <h2>红心满满</h2>
+                        继续加油吧！
                     </div>
-                    <h2>红心满满</h2>
-                    继续加油吧！
-                </div>
-                <div v-else>
-                    <div class="hearts">
-                        <div v-for="index in languageData.heartCount" class="heart"></div>
-                        <div v-for="index in 5-languageData.heartCount" class="heartplus"></div>
+                    <div v-else>
+                        <div class="hearts">
+                            <div v-for="index in languageData.heartCount" class="heart"></div>
+                            <div v-for="index in 5 - languageData.heartCount" class="heartplus"></div>
+                        </div>
+                        <h2>获取下一颗红心还要等<span style="color: #ff4b4b;">5小时</span></h2>
+                        你还有红心呢！接着练吧！
                     </div>
-                    <h2>红心满满</h2>
-                    你还有红心呢！接着练吧！
                 </div>
             </el-popover>
+        </div>
+        <div class="task">
+            <h3>每日特别任务</h3>
+            <div>
+                <div class="power"></div>
+                <div>
+                    获取{{ languageData.sparkCount*10 }}经验
+                    <div class="slider">{{ languageData.currentExperience }}/{{ languageData.sparkCount*10 }}</div>
+                    <div></div>
+                </div>
+
+            </div>
         </div>
     </el-affix>
 </template>
@@ -82,15 +96,15 @@ const languageData = ref({
     sparkCount: 0,
     gemCount: 500,
     heartCount: 5,
+    currentExperience:0,
 });
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 const router = useRouter()
 const toStep1 = () => {
     router.push('/teach/step1');
 }
 </script>
 <style>
-
 .top {
     display: flex;
     flex-direction: row;
@@ -143,11 +157,13 @@ const toStep1 = () => {
     height: 30px;
     background: url('../../assets/icons/heart.svg') no-repeat center / contain;
 }
+
 .heartplus {
     width: 30px;
     height: 30px;
     background: url('../../assets/icons/heartplus.svg') no-repeat center / contain;
 }
+
 .box {
     width: 60px;
     height: 60px;
@@ -158,6 +174,11 @@ const toStep1 = () => {
     width: 30px;
     height: 30px;
     background: url('../../assets/icons/addplus.svg') no-repeat center / contain;
+}
+.power{
+    width: 40px;
+    height: 40px;
+    background: url('../../assets/icons/power.svg') no-repeat center / contain;
 }
 
 .content {
@@ -176,19 +197,43 @@ const toStep1 = () => {
         cursor: pointer;
     }
 }
-.gem-content{
+
+.gem-content {
     display: flex;
     flex-direction: row;
     gap: 25px;
     align-items: center;
-    .gem-item{
+
+    .gem-item {
         display: flex;
         flex-direction: column;
         gap: 5px;
     }
 }
-.hearts{
+.heart-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.hearts {
     display: flex;
     flex-direction: row;
+}
+.task{
+    margin-top: 40px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    border: #e5e5e5 2px solid;
+    border-radius: 10px;
+}
+.slider {
+    width: 50px;
+    height: 9px;
+    background-color: #e5e5e5;
+    border-radius: 20px;
 }
 </style>

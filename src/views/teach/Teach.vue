@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </el-col>
-            <el-col :span="1">
+            <el-col :span="9">
                 <div style="margin-left: 100px;">
                     <Myaffix/>
                 </div>
