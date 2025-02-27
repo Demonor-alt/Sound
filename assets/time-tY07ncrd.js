@@ -1,0 +1,1 @@
+const l=f=>{const a=new Date(f),e=new Date-a,r=60*1e3*60,t=r*24,o=t*7,n=t*30,s=t*365;return e<r?"刚刚":e<t?Math.floor(e/r)+"小时前":e<o?Math.floor(e/t)+"天前":e<n?Math.floor(e/o)+"周前":e<s?Math.floor(e/n)+"月前":Math.floor(e/s)+"年前"};export{l as t};
