@@ -16,8 +16,8 @@ jobs:
       - name: Clean submodule configuration
         run: |
           git submodule foreach --recursive sh -c "git config --local --unset-all 'http.https://github.com/.extraheader' || :"
-          
-      - name: Use Node.js 16.15.0
+
+      - name: Use Node.js 20.18.0
         uses: actions/setup-node@v2
         with:
           node-version: "16.x"
