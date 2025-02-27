@@ -58,7 +58,7 @@ const routes = [
     },
 ]
 const router = createRouter({
-    history: createWebHistory("/Sound"),
+    history: createWebHashHistory("/Sound"),
     //history: createWebHashHistory(),
     routes: routes
 })
