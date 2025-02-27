@@ -12,6 +12,11 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v2
+
+      - name: Clean submodule configuration
+        run: |
+          git submodule foreach --recursive sh -c "git config --local --remove-section 'http.https://github.com/.extraheader' || :"
+
       - name: Use Node.js 16.15.0
         uses: actions/setup-node@v2
         with:
