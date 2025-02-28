@@ -93,7 +93,7 @@ import { ref } from 'vue';
 import { useLanguageStore } from '@/stores/language';
 const { language, showLanguage } = useLanguageStore();
 const lan = ref(showLanguage());
-const percentage = ref(90);
+const percentage = ref(100);
 const languageData = ref({
     isSparked: false,
     sparkCount: 0,
