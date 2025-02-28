@@ -74,14 +74,16 @@
         </div>
         <div class="task">
             <h3>每日特别任务</h3>
-            <div>
+            <div class="task-content">
                 <div class="power"></div>
-                <div>
-                    获取{{ languageData.sparkCount*10 }}经验
-                    <div class="slider">{{ languageData.currentExperience }}/{{ languageData.sparkCount*10 }}</div>
-                    <div></div>
+                <div class="experience">
+                    <div style="margin-bottom: 10px;display: flex;justify-content: center;">获取{{
+                        (languageData.sparkCount + 1) *
+                        10 }}经验</div>
+                    <el-progress :text-inside="true" :stroke-width="24" :percentage="percentage" color="black" />
                 </div>
-
+                <div class="boxopen" v-if="percentage===100"></div>
+                <div class="boxplus" v-else></div>
             </div>
         </div>
     </el-affix>
@@ -91,12 +93,13 @@ import { ref } from 'vue';
 import { useLanguageStore } from '@/stores/language';
 const { language, showLanguage } = useLanguageStore();
 const lan = ref(showLanguage());
+const percentage = ref(90);
 const languageData = ref({
     isSparked: false,
     sparkCount: 0,
     gemCount: 500,
     heartCount: 5,
-    currentExperience:0,
+    currentExperience: 0,
 });
 import { useRouter } from 'vue-router';
 const router = useRouter()
@@ -104,7 +107,7 @@ const toStep1 = () => {
     router.push('/teach/step1');
 }
 </script>
-<style>
+<style scoped>
 .top {
     display: flex;
     flex-direction: row;
@@ -170,14 +173,27 @@ const toStep1 = () => {
     background: url('../../assets/icons/box.svg') no-repeat center / contain;
 }
 
+.boxplus {
+    width: 50px;
+    height: 50px;
+    background: url('../../assets/icons/box.svg') no-repeat center / contain;
+}
+
+.boxopen {
+    width: 50px;
+    height: 50px;
+    background: url('../../assets/icons/boxopen.svg') no-repeat center / contain;
+}
+
 .addplus {
     width: 30px;
     height: 30px;
     background: url('../../assets/icons/addplus.svg') no-repeat center / contain;
 }
-.power{
-    width: 40px;
-    height: 40px;
+
+.power {
+    width: 50px;
+    height: 50px;
     background: url('../../assets/icons/power.svg') no-repeat center / contain;
 }
 
@@ -210,18 +226,21 @@ const toStep1 = () => {
         gap: 5px;
     }
 }
-.heart-content{
+
+.heart-content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
+
 .hearts {
     display: flex;
     flex-direction: row;
 }
-.task{
-    margin-top: 40px;
+
+.task {
+    margin-top: 30px;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -230,10 +249,15 @@ const toStep1 = () => {
     border: #e5e5e5 2px solid;
     border-radius: 10px;
 }
-.slider {
-    width: 50px;
-    height: 9px;
-    background-color: #e5e5e5;
-    border-radius: 20px;
+
+.task-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.experience {
+    width: 80%;
+    margin: 0 10px;
 }
 </style>

@@ -5,7 +5,7 @@
                 <div class="head">
                     <div style="font-weight: 600;font-size: 28px;">一起来学{{ lan }}发音！</div>
                     <div style="color: #777777;">磨耳朵，练就地道{{ lan }}发音</div>
-                    <el-button color="black" size="large" style="width: 300px;margin-bottom: 20px;">开始 +10
+                    <el-button color="black" size="large" style="width: 300px;margin-bottom: 20px;" @click="toPractise">开始 +10
                         经验</el-button>
                 </div>
                 <div>
@@ -102,10 +102,13 @@ onMounted(() => {
         router.push('/teach/step1');
     }
 })
+const toPractise = () => {
+    router.push('/teach/practise');
+}
 </script>
-<style>
+<style scoped>
 .mbody {
-    margin: 0 10%;
+    margin: 1% 10%;
 }
 
 .head {
