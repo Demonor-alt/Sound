@@ -335,7 +335,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import MyInputW from "@/components/newComponent/InputW.vue";
+import MyInputW from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
 const type = ref('textarea');
 const rows = ref("5");

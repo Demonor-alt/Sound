@@ -202,7 +202,7 @@
 </template>
 
 <script setup>
-import MyInputW from "@/components/newComponent/InputW.vue";
+import MyInputW from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 const samples = reactive([]);
 const nextId = ref(1);

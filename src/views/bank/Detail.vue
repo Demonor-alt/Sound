@@ -161,7 +161,7 @@
 import { timeDistance } from '@/hooks/time';
 import MySelect from '@/components/newComponent/Select.vue'
 const color = ref('#ffffff');
-import MyInputW from "@/components/newComponent/InputW.vue";
+import MyInputW from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您的评论...")
 const type = ref('textarea');
 const rows = ref("3");
