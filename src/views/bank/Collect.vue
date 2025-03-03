@@ -3,7 +3,7 @@
         <el-header class="display">
             <h1 class="title">我的收藏</h1>
             <div class="action-bar">
-                <MyInput :message="searchText" :placeholder="placeholder" class="search-input"
+                <MyInput :message="searchText" :placeholder="placeholder" :color="myBorderColor" class="search-input" 
                     @update:message="handleMessage" />
             </div>
         </el-header>
@@ -98,6 +98,7 @@ import {
 import { ElButton } from 'element-plus'
 import { useRouter } from 'vue-router'
 import MyInput from '@/components/newComponent/Input.vue'
+const myBorderColor = ref('#f5f5f5');
 const router = useRouter()
 const MoreDetail= (id) => {
     // 跳转到添加声音的页面

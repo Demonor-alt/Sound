@@ -3,7 +3,7 @@
         <el-header class="display">
             <h1 class="title">我的声音</h1>
             <div class="action-bar">
-                <MyInput :message="searchText" :placeholder="placeholder" class="search-input"
+                <MyInput :message="searchText" :placeholder="placeholder" :color="myBorderColor" class="search-input"
                     @update:message="handleMessage" />
                 <el-button color="black" @click="createNewSound" class="create-btn">
                     <el-icon size="20" style="padding-right: 5px;">
@@ -104,6 +104,7 @@ import {
 import { ElButton } from 'element-plus'
 import { useRouter } from 'vue-router'
 import MyInput from '@/components/newComponent/Input.vue'
+const myBorderColor = ref('#f5f5f5');
 const router = useRouter()
 
 const createNewSound = () => {

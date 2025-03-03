@@ -103,7 +103,7 @@
   .logo {
     width: 150px;
     height: 60px;
-    background: url('assets/logo.svg') no-repeat center / contain;
+    background: url('../assets/logo.svg') no-repeat center / contain;
   }
   
   .menu {
