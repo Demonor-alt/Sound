@@ -141,9 +141,3 @@
     margin-right: 30px;
   }
   </style>
-  <style>
-  .el-input,
-  .el-textarea {
-      --el-input-focus-border-color: #dcdfe6 !important;
-  }
-  </style>

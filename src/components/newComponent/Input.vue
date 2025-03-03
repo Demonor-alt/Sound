@@ -1,5 +1,5 @@
 <template>
-    <div class="inputW" :class="{ focused: isFocused }">
+    <div class="input" :class="{ focused: isFocused }">
         <el-input size="large" v-model="input" :rows="props.rows" :placeholder="props.placeholder"
             :maxlength="props.maxlength" @focus="isFocused = true" @blur="isFocused = false" :type="props.type" />
     </div>
@@ -33,14 +33,14 @@ watch(() => input.value, (newValue) => {
 </script>
 
 <style scoped>
-.inputW {
+.input {
     padding: 1px;
     border: 3px solid v-bind(color);
     border-radius: 8px;
 }
 
-.inputW.focused {
-    border: 3px solid black;
+.input.focused {
+    border: 3px solid black !important;
     border-radius: 8px;
 }
 
