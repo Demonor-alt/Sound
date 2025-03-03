@@ -5,15 +5,16 @@
         </el-col>
         <el-col :span="12">
             <div class="body">
-                <div style="display: flex;flex-direction: column; align-items: center;width: 100%;justify-content: center;">
+                <div
+                    style="display: flex;flex-direction: column; align-items: center;width: 100%;justify-content: center;">
                     <h2>登录您的帐户</h2>
                     <div style="font-size: small;color: #71717a;">请使用您的电子邮箱和密码登录</div>
                 </div>
                 <MyInput :message="no" :placeholder="noPlaceholder" :color="myBorderColor" @update:message="handleNo" />
                 <MyInput :message="password" :placeholder="passwordPlaceholder" :color="myBorderColor"
                     @update:message="handlePassword" />
-                <el-button size="large" color="black" style="width: 100%;margin-top: 20px;"
-                    @click="login">登录</el-button>
+                <el-button size="large" color="black" style="width: 100%;margin-top: 20px;" @click="handleLogin"
+                    :loading="isLoading">登录</el-button>
             </div>
         </el-col>
     </el-row>
@@ -25,7 +26,9 @@ const no = ref('');
 const password = ref('');
 const noPlaceholder = ref('邮箱');
 const passwordPlaceholder = ref('密码');
-const myBorderColor = ref('#f5f5f5')
+const myBorderColor = ref('#f5f5f5');
+const isLoading = ref(false);
+
 function handleNo(newValue) {
     searchText.value = newValue;
 }
@@ -35,8 +38,16 @@ function handlePassword(newValue) {
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const login = () => {
-    router.push('/discover');
-}
+    isLoading.value = true;
+    // 模拟登录请求
+    setTimeout(() => {
+        router.push('/discover');
+        isLoading.value = false;
+    }, 1000); // 模拟 1 秒的登录请求时间
+};
+const handleLogin = () => {
+    login();
+};
 </script>
 <style>
 .logo {
