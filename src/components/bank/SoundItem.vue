@@ -1,8 +1,8 @@
 <template>
-    <div v-if="voices.length === 0">
+    <div v-if="filteredVoices.length === 0">
         <el-empty description="暂无数据" />
     </div>
-    <el-row v-for="voice in voices" :key="voice.id" class="voice-item">
+    <el-row v-for="voice in filteredVoices" :key="voice.id" class="voice-item">
         <el-col :span="3">
             <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="voice.image" fit="cover" />
         </el-col>
@@ -33,9 +33,14 @@
                                     <span>{{ sample.title }}</span>
                                 </div>
                                 <div class="sample-btn">
-                                    <div v-if="!sample.isPlaying" class="close" @click="togglePlay(voice.id, index)">
+                                    <audio>
+                                        <source :src="sample.url" type="audio/mp4">
+                                        <source :src="sample.url" type="audio/x-m4a">
+                                        浏览器不支持音频播放
+                                    </audio>
+                                    <div v-if="!sample.isPlaying" class="close" @click="togglePlay(voice.id, index);sample.isPlaying=true">
                                     </div>
-                                    <div v-else class="on" @click="togglePlay(voice.id, index)"></div>
+                                    <div v-else class="on" @click="togglePlay(voice.id, index);sample.isPlaying=false"></div>
                                 </div>
                             </div>
                             <div style="font-size: small;color: #71717a; padding-top: 10px;">
@@ -116,13 +121,106 @@ import {
     Star,
     StarFilled
 } from '@element-plus/icons-vue';
-import { ref, defineProps } from 'vue'
+import { ref, defineProps, computed, reactive } from 'vue' // 添加reactive
 import { timeDistance } from '@/hooks/time';
 const props = defineProps({
-    voices: {
-        type: Array,
-        required: true
+    sortValue: {
+        type: String,
+    },
+    languageValue: {
+        type: String,
+    },
+    tagValue: {
+        type: String,
     }
+});
+import audioUrl from '@/assets/sound.m4a';
+const voices = ref([
+    {
+        id: 1,
+        userName: 'fc',
+        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+        name: '55',
+        description: '1212',
+        creationTime: new Date(2025, 1, 9, 19, 11),
+        status: "成功",
+        audioUrl: '/samples/sample1.mp3',
+        peopleCount: 110000,
+        shareCount: 11,
+        likeCount: 20,
+        collectCount: 10,
+        language: 'ch',
+        tag: 'aaaaaaaaa',
+        isUsed:false,
+        isShared:false,
+        isLiked: false,
+        isUnliked: false,
+        isCollected: false,
+        sample: [
+            {
+                id: 1,
+                isPlaying: false,
+                title: 'Default Sample',
+                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
+                url: audioUrl
+            },
+            {
+                id: 2,
+                isPlaying: false,
+                title: '方可让父母',
+                text: '对侧人防热非人发热功耗一节课iklo',
+                url: audioUrl
+            }
+        ],
+    },
+    {
+        id: 2,
+        userName: 'fcds',
+        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+        name: '55',
+        description: '1212',
+        creationTime: new Date(2025, 1, 9, 19, 10),
+        status: "成功",
+        audioUrl: '/samples/sample1.mp3',
+        peopleCount: 15,
+        shareCount: 12,
+        likeCount: 20,
+        collectCount: 10,
+        language: 'en',
+        tag: '1',
+        isUsed:false,
+        isShared:false,
+        isLiked: false,
+        isUnliked: false,
+        isCollected: false,
+        sample: [
+            {
+                id: 1,
+                isPlaying: false,
+                title: 'Default Sample',
+                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
+                url: audioUrl
+            },
+        ],
+    },
+]);
+const filteredVoices = computed(() => {
+    let result = [...voices.value];
+    if (props.tagValue === '') {
+        result = [...voices.value];
+    }
+    else if (props.tagValue !== '') {
+        result = result.filter(voice => voice.tag === props.tagValue);
+    }
+    if (props.languageValue !== '1') {
+        result = result.filter(voice => voice.language === props.languageValue);
+    }
+    if (props.sortValue === '2') {
+        result.sort(((a, b) => new Date(b.creationTime) - new Date(a.creationTime)));
+    } else if (props.sortValue === '1') {
+        result.sort(((a, b) => b.peopleCount - a.peopleCount));
+    }
+    return result;
 });
 import { useRouter } from 'vue-router';
 const router = useRouter();
@@ -144,35 +242,57 @@ function formatNumberWithK(num) {
 }
 import { ElNotification } from 'element-plus'
 const open = (id) => {
-    const voiceIndex = props.voices.findIndex(voice => voice.id === id);
-    if (props.voices[voiceIndex].isShared === false) {
-        props.voices[voiceIndex].isShared =true;
-        props.voices[voiceIndex].shareCount++;
+    const voiceIndex = voices.value.findIndex(voice => voice.id === id);
+    if (voices.value[voiceIndex].isShared === false) {
+        voices.value[voiceIndex].isShared = true;
+        voices.value[voiceIndex].shareCount++;
     }
     ElNotification({
         message: "已复制到剪贴板",
         position: 'bottom-right',
     })
 }
-const togglePlay = (id, index) => {
-    if (!voices.value[id].sample[index].url) {
-        console.error('Audio URL is empty');
-        return;
-    }
-    const audio = new Audio(voices.value[id].sample[index].url);
-    const fileInfo = voices.value[id].sample[index];
+const audioPlayers = reactive({})
 
-    if (fileInfo.isPlaying) {
-        audio.pause();
-        fileInfo.isPlaying = false;
+const togglePlay = (voiceId, sampleIndex) => {
+  // 通过find正确查找voice对象
+  const voice = voices.value.find(v => v.id === voiceId)
+  if (!voice) return
+
+  const sample = voice.sample[sampleIndex]
+  const playerKey = `${voiceId}-${sampleIndex}`
+
+  // 如果已经有播放器实例
+  if (audioPlayers[playerKey]) {
+    const audio = audioPlayers[playerKey]
+    if (sample.isPlaying) {
+      audio.pause()
     } else {
-        audio.play();
-        fileInfo.isPlaying = true;
+      // 暂停所有正在播放的音频
+      Object.values(audioPlayers).forEach(a => a.pause())
+      audio.play()
     }
+  } else {
+    // 创建新播放器实例
+    const audio = new Audio(sample.url)
+    audioPlayers[playerKey] = audio
+    
+    // 添加播放结束监听
     audio.addEventListener('ended', () => {
-        voices.value[id].sample[index].isPlaying = false;
-    });
-};
+      sample.isPlaying = false
+    })
+
+    audio.play()
+  }
+
+  // 切换播放状态
+  sample.isPlaying = !sample.isPlaying
+  
+  // 更新其他音频状态
+  voice.sample.forEach((s, idx) => {
+    if (idx !== sampleIndex) s.isPlaying = false
+  })
+}
 </script>
 <style scoped>
 .voice-item {
@@ -255,6 +375,7 @@ const togglePlay = (id, index) => {
         }
     }
 }
+
 .voice-name {
     font-size: 23px;
     font-weight: 800;
@@ -291,6 +412,7 @@ const togglePlay = (id, index) => {
     padding: 2px 10px;
     border-radius: 20px;
 }
+
 .display-detail {
     color: #71717a;
 }
@@ -347,6 +469,7 @@ const togglePlay = (id, index) => {
     height: 15px;
     background: url('../../assets/icons/on.svg') no-repeat center / contain;
 }
+
 .dot {
     width: 8px;
     height: 8px;
@@ -354,5 +477,4 @@ const togglePlay = (id, index) => {
     border-radius: 50%;
     background-color: #e5e8eb;
 }
-
 </style>
