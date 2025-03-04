@@ -21,7 +21,7 @@
                     <el-image style="width: 70px; height: 70px;border-radius: 10px;" :src="voice.image" fit="cover" />
                 </el-col>
                 <el-col :span="7">
-                    <div style="font-size: 20px; font-weight: 800;padding-bottom: 10px;">{{ voice.name }}</div>
+                    <div style="font-size: 20px; font-weight: 800;padding-bottom: 10px;cursor: pointer;" @click="MoreDetail(voice.id)">{{ voice.name }}</div>
                     <div style="color: #6b7280;">{{ voice.description }}</div>
                 </el-col>
                 <el-col :span="4">
@@ -116,6 +116,11 @@ const router = useRouter()
 const createNewSound = () => {
     // 跳转到添加员工的页面
     router.push('/createbank')
+}
+const MoreDetail = (id) => {
+    // 跳转到添加声音的页面
+    router.push({ path: '/detail', query: { id: id } });
+
 }
 function handleMessage(newMessage) {
     searchText.value = newMessage;
