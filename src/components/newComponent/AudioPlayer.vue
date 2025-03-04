@@ -6,9 +6,9 @@
         </audio>
         <div class="audio_right">
             <div class="gap">
-                <img v-if="!audioIsPlay" @click="playAudio" class="audio_icon" src="../../assets/icons/close2.svg"
+                <img v-if="audioIsPlay" @click="playAudio" class="audio_icon" src="../../assets/icons/close2.svg"
                     alt="播放" />
-                <img v-if="audioIsPlay" @click="playAudio" class="audio_icon" src="../../assets/icons/on.svg" alt="暂停" />
+                <img v-else @click="playAudio" class="audio_icon" src="../../assets/icons/on.svg" alt="暂停" />
                 <div class="audio_time">
                     <span>{{ audioStart }}</span>
                     &nbsp;/&nbsp;
@@ -63,29 +63,25 @@ onMounted(() => {
 });
 // 获取音频时长
 function calculateDuration() {
-    var myVid = audioRef.value;
+    const myVid = audioRef.value;
     myVid.loop = false;
     myVid.src = props.audioUrl;
-    // 监听音频播放完毕
-    myVid.addEventListener(
-        "ended",
-        function () {
-            audioIsPlay.value = true;
-            currentProgress.value = 0;
-        },
-        false
-    );
-    if (myVid != null) {
-        myVid.oncanplay = function () {
-            duration.value = myVid.duration; // 计算音频时长
-            durationTime.value = transTime(myVid.duration); //换算成时间格式
+    
+    myVid.addEventListener("ended", () => {
+        audioIsPlay.value = true;
+        currentProgress.value = 0;
+    });
+    
+    if (myVid) {
+        myVid.oncanplay = () => {
+            duration.value = myVid.duration;
+            durationTime.value = transTime(myVid.duration);
         };
-        myVid.volume = 0.8; // 设置默认音量50%
-        // 进入页面默认开始播放
-        audioRef.value.play();
-        audioIsPlay.value = false;
+        myVid.volume = 0.8;
+        // 移除默认播放逻辑
     }
 }
+
 // 音频播放时间换算
 function transTime(duration) {
     const minutes = Math.floor(duration / 60);

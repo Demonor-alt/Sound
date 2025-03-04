@@ -186,10 +186,11 @@ const nextId = ref(1);
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
-const whiteColor = ref('#FFFFFF');
 const grayColor = ref('#f5f5f5');
 const placeholderDescription = ref('填写音频描述');
 const rows = ref("3");
+import audioUrl from '@/assets/sound.m4a';
+const ttsAudioUrl = ref(audioUrl);
 const addSample = () => {
     samples.push({
         id: nextId.value++,
