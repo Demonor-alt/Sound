@@ -108,9 +108,9 @@ import {
     Clock
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus'
-import { useRouter } from 'vue-router'
 import MyInput from '@/components/newComponent/Input.vue'
 const myBorderColor = ref('#f5f5f5');
+import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const createNewSound = () => {

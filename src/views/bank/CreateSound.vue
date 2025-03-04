@@ -1,8 +1,8 @@
 <template>
     <el-row>
-        <el-col :span="12" v-if="currentStep === 1">
+        <el-col :span="12" v-if="step === 1">
             <h2>训练新声音</h2>
-            <Step :currentStep="currentStep" />
+            <Step :currentStep="step" />
             <div>
                 <h3>声音详情</h3>
                 <div>
@@ -127,7 +127,7 @@
         </el-col>
         <el-col :span="12" v-else>
             <h2>训练新声音</h2>
-            <Step :currentStep="currentStep" />
+            <Step :currentStep="step" />
             <div>
                 <h3>音频样本</h3>
                 <div class="audio-container">
@@ -136,7 +136,7 @@
                         <div>
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.title === '' ? "样本" + sample.id : sample.title
-                                    }}</span>
+                                }}</span>
                                 <el-icon size="20" color="#606672" @click="removeSample(index)">
                                     <Close />
                                 </el-icon>
@@ -165,7 +165,7 @@
                         </button>
                     </div>
                     <div class="btnssecond">
-                        <button class="next-btn">保存</button>
+                        <button class="next-btn" @click="toMyBank">保存</button>
                         <button class="skip">跳过</button>
                     </div>
                 </div>
@@ -173,7 +173,7 @@
         </el-col>
         <el-divider direction="vertical" style="height: auto;" />
         <el-col :span="11" class="reactivity">
-            <Recent/>
+            <Recent />
         </el-col>
     </el-row>
 </template>
@@ -188,7 +188,6 @@ const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
 const rows = ref("3");
-// 添加样本的方法
 const addSample = () => {
     samples.push({
         id: nextId.value++,
@@ -198,12 +197,17 @@ const addSample = () => {
     });
 };
 
-// 生成样本的方法
 const generateSample = (index) => {
     // 这里可以添加生成音频的逻辑
     console.log('生成样本:', samples[index]);
 };
-
+import { useRouter } from 'vue-router'
+const router = useRouter()
+const toMyBank = () => {
+    // 跳转到添加员工的页面
+    router.push('/mybank');
+    stepStore.reduceStep();
+}
 // 删除样本
 const removeSample = (index) => {
     const sample = samples[index]
@@ -299,32 +303,56 @@ const handleFileUpload = (file) => {
             isPlaying: false,
             url: audioUrl,
         };
-        console.log(fileInfo.url);
         files.value.push(fileInfo);
     });
 
     return false;
 };
 
-const togglePlay = (index) => {
-    const audio = new Audio(files.value[index].url);
-    const fileInfo = files.value[index];
+const audioInstances = reactive({});
 
-    if (fileInfo.isPlaying) {
-        audio.pause();
-        fileInfo.isPlaying = false;
-    } else {
-        audio.play();
-        fileInfo.isPlaying = true;
+const togglePlay = (index) => {
+    const file = files.value[index]
+
+    // 如果已有实例则复用
+    if (!audioInstances[index]) {
+        audioInstances[index] = new Audio(file.url)
     }
+
+    const audio = audioInstances[index]
+
+    if (file.isPlaying) {
+        audio.pause()
+    } else {
+        // 暂停所有正在播放的音频
+        Object.entries(audioInstances).forEach(([key, instance]) => {
+            if (key != index && !instance.paused) {
+                instance.pause()
+                files.value[key].isPlaying = false
+            }
+        })
+        audio.play()
+    }
+
+    // 更新播放状态
+    file.isPlaying = !file.isPlaying
+
+    // 添加播放结束监听
     audio.addEventListener('ended', () => {
-        console.log(1111);
-        files.value[index].isPlaying = false;
-    });
-};
+        file.isPlaying = false
+    })
+}
+
+// 修改删除文件方法
 const deleteFile = (index) => {
-    files.value.splice(index, 1);
-};
+    // 停止播放并释放资源
+    if (audioInstances[index]) {
+        audioInstances[index].pause()
+        audioInstances[index].src = ''
+        delete audioInstances[index]
+    }
+    files.value.splice(index, 1)
+}
 
 const handleRemove = (file, files) => {
     const index = files.value.findIndex((f) => f.name === file.name);
@@ -375,12 +403,24 @@ import Step from '@/components/bank/Step.vue';
 import MyInput from '@/components/newComponent/Input.vue';
 import Store from '@/components/bank/Store.vue';
 import { useStepStore } from '@/stores/step';
-const { step, incrementStep, reduceStep } = useStepStore();
-const currentStep = ref(step);
+import { storeToRefs } from 'pinia';
+const stepStore = useStepStore()
+const { step } = storeToRefs(stepStore);
 const createAction = () => {
-    incrementStep();
-    currentStep.value = 2;
-};
+  // 清除所有录音记录
+  files.value = []
+  
+  // 清除所有音频实例
+  Object.keys(audioInstances).forEach(key => {
+    audioInstances[key].pause()
+    audioInstances[key].src = ''
+  })
+  Object.keys(audioInstances).forEach(key => {
+  delete audioInstances[key];
+});
+  // 跳转逻辑
+  stepStore.incrementStep()
+}
 
 const formData = reactive({
     type: 'public',
