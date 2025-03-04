@@ -36,19 +36,18 @@
                     </div>
                     <div class="form-section">
                         名称
-                        <MyInput :message="formData.name" :placeholder="placeholderName" class="search-input"
+                        <MyInput :message="formData.name" :placeholder="placeholderName" class="search-input" :color="grayColor"
                             @update:message="handleMessageName" />
                     </div>
                     <div class="form-section">
                         描述 (可选)
-                        <div class="input" :class="{ focused: isFocused }">
-                            <el-input v-model="formData.description" :rows="3" type="textarea" placeholder="填写音频描述"
-                                @focus="isFocused = true" @blur="isFocused = false" />
-                        </div>
+                        <MyInput :message="formData.description" :placeholder="placeholderDescription" :color="grayColor" :type="type"
+                            @update:message="handleMessageDescription" />
+
                     </div>
                     <div class="form-section">
                         标签
-                        <MyInput :message="formData.tags" :placeholder="placeholderTag" class="search-input"
+                        <MyInput :message="formData.tags" :placeholder="placeholderTag" class="search-input" :color="grayColor"
                             @update:message="handleMessageTag" />
                     </div>
                 </div>
@@ -143,9 +142,9 @@
                             </div>
                         </div>
                         <div class="myinput">
-                            <MyInputW :message="sample.title" :placeholder="placeholderName2"
+                            <MyInput :message="sample.title" :placeholder="placeholderName2" 
                                 @update:message="(newMessage) => handleMessageName2(index, newMessage)" />
-                            <MyInputW :message="sample.text" :placeholder="placeholderTextArea" :type="type"
+                            <MyInput :message="sample.text" :placeholder="placeholderTextArea" :type="type"
                                 :rows="rows"
                                 @update:message="(newMessage) => handleMessageTextArea(index, newMessage)" />
                             <el-button color="#e7e7e8" @click="generateSample(index)"
@@ -180,13 +179,16 @@
 
 <script setup>
 import Recent from "@/components/bank/Recent.vue";
-import MyInputW from "@/components/newComponent/Input.vue";
+import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 const samples = reactive([]);
 const nextId = ref(1);
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
+const whiteColor = ref('#FFFFFF');
+const grayColor = ref('#f5f5f5');
+const placeholderDescription = ref('填写音频描述');
 const rows = ref("3");
 const addSample = () => {
     samples.push({
@@ -196,7 +198,6 @@ const addSample = () => {
         audioUrl: '',
     });
 };
-
 const generateSample = (index) => {
     // 这里可以添加生成音频的逻辑
     console.log('生成样本:', samples[index]);
@@ -204,7 +205,6 @@ const generateSample = (index) => {
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const toMyBank = () => {
-    // 跳转到添加员工的页面
     router.push('/mybank');
     stepStore.reduceStep();
 }
@@ -260,7 +260,6 @@ function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
     const differenceInSeconds = Math.floor(differenceInMillis / 1000);
     return differenceInSeconds;
 }
-// 新增：生成录音记录
 const createRecording = (blob) => {
     end.value = new Date();
     const newRecording = {
@@ -281,18 +280,15 @@ const formatFileSize = (bytes) => {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;
 };
-
 const formatDuration = (seconds) => {
     if (isNaN(seconds) || seconds === Infinity) {
         return '未知';
     }
     return `${Math.floor(seconds)}s`;
 };
-
 const handleFileUpload = (file) => {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(URL.createObjectURL(file));
-
     audio.addEventListener('loadedmetadata', () => {
         const duration = audio.duration;
         const formattedDuration = formatDuration(duration);
@@ -308,9 +304,7 @@ const handleFileUpload = (file) => {
 
     return false;
 };
-
 const audioInstances = reactive({});
-
 const togglePlay = (index) => {
     const file = files.value[index]
 
@@ -390,6 +384,9 @@ const placeholderTag = ref('输入标签');
 function handleMessageName(newMessage) {
     formData.value.name = newMessage;
 }
+function handleMessageDescription(newMessage){
+    formData.value.description = newMessage;
+}
 function handleMessageTag(newMessage) {
     formData.value.tag = newMessage;
 }
@@ -400,7 +397,6 @@ import {
     Close,
 } from '@element-plus/icons-vue';
 import Step from '@/components/bank/Step.vue';
-import MyInput from '@/components/newComponent/Input.vue';
 import Store from '@/components/bank/Store.vue';
 import { useStepStore } from '@/stores/step';
 import { storeToRefs } from 'pinia';
@@ -515,21 +511,6 @@ const uploadSuccess = (result) => {
     height: 150px;
     text-align: center;
     background-color: #f5f5f5;
-}
-
-.input {
-    padding: 1px;
-    border: 3px solid #f5f5f5;
-    border-radius: 8px;
-}
-
-.input.focused {
-    border: 3px solid black;
-    border-radius: 8px;
-}
-
-::v-deep .input .el-textarea__inner {
-    background-color: #f5f5f5 !important;
 }
 
 :deep(.el-tabs__active-bar) {
