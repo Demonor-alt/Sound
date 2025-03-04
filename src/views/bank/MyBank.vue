@@ -227,7 +227,7 @@ const total = ref(0);
 const bankList = async () => {
     try {
         const result = await bankQueryService();
-        voices.value = result.data.data.records;
+        voices.value = result.data.records;
         total.value = voices.value.length;
     } catch (error) {
         console.error('Failed to ', error);

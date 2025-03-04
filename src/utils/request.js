@@ -14,4 +14,9 @@ instance.interceptors.request.use(
         Promise.reject(err)
     }
 )
+instance.interceptors.response.use(
+    result => {
+        return result.data;
+    },
+);
 export default instance;

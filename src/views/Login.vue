@@ -10,8 +10,9 @@
                     <h2>登录您的帐户</h2>
                     <div style="font-size: small;color: #71717a;">请使用您的电子邮箱和密码登录</div>
                 </div>
-                <MyInput :message="no" :placeholder="noPlaceholder" :color="myBorderColor" @update:message="handleNo" />
-                <MyInput :message="password" :placeholder="passwordPlaceholder" :color="myBorderColor"
+                <MyInput :message="email" :placeholder="emailPlaceholder" :color="myBorderColor"
+                    @update:message="handleEmail" />
+                <MyInput :message="password" :placeholder="passwordPlaceholder" :color="myBorderColor" :type="type"
                     @update:message="handlePassword" />
                 <el-button size="large" color="black" style="width: 100%;margin-top: 20px;" @click="handleLogin"
                     :loading="isLoading">登录</el-button>
@@ -22,31 +23,46 @@
 <script setup>
 import MyInput from '@/components/newComponent/Input.vue';
 import { ref } from 'vue';
-const no = ref('');
+import { loginService } from '@/api/login';
+const email = ref('');
 const password = ref('');
-const noPlaceholder = ref('邮箱');
+const emailPlaceholder = ref('邮箱');
 const passwordPlaceholder = ref('密码');
+const type = ref('password');
 const myBorderColor = ref('#f5f5f5');
 const isLoading = ref(false);
 
-function handleNo(newValue) {
-    searchText.value = newValue;
+function handleEmail(newValue) {
+    email.value = newValue;
 }
 function handlePassword(newValue) {
-    searchText.value = newValue;
+    password.value = newValue;
 }
-import { useRouter } from 'vue-router'
+import { useRouter } from 'vue-router';
 const router = useRouter()
-const login = () => {
+import { useTokenStore } from '@/stores/token'
+const tokenStore = useTokenStore();
+import { ElMessage } from 'element-plus';
+const handleLogin = async () => {
     isLoading.value = true;
-    // 模拟登录请求
-    setTimeout(() => {
-        router.push('/discover');
-        isLoading.value = false;
-    }, 1000); // 模拟 1 秒的登录请求时间
-};
-const handleLogin = () => {
-    login();
+    const queryData = {
+        email: email.value,
+        password: password.value,
+    };
+    // let result = await loginService(queryData);
+    // if (result.code == 0) {
+        // tokenStore.setToken(result.data.token);
+        // localStorage.setItem('user', email.value);
+        setTimeout(() => {
+            router.push('/discover');
+            isLoading.value = false;
+        }, 1000);
+    // } else {
+    //     setTimeout(() => {
+    //         ElMessage.error(result.msg ? result.msg : '登录失败');
+    //         isLoading.value = false;
+    //     }, 1000);
+    // }
 };
 </script>
 <style>
