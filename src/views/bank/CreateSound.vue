@@ -53,6 +53,19 @@
                 </div>
                 <h3>输入音频</h3>
                 <el-tabs v-model="activeName" class="demo-tabs">
+                    <el-tab-pane label="上传音频" name="second">
+                        <div class="audio-upload">
+                            <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
+                                :file-list="files" :on-remove="handleRemove" :limit="1">
+                                <template #default>
+                                    <div class="upload-button">
+                                        <div class="insert"></div>
+                                        <h5>添加或删除您的音频文件</h5>
+                                    </div>
+                                </template>
+                            </el-upload>
+                        </div>
+                    </el-tab-pane>
                     <el-tab-pane label="录制音频" name="first">
                         <div class="audio-player">
                             <div v-if="!recording" @click="startRecording" class="record">
@@ -65,19 +78,6 @@
                             </div>
                             <div style="font-size: small;color: #6b7280;">*您可以使用自己的文本或下面的建议文本录制您的声音。</div>
                             <Store />
-                        </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="上传音频" name="second">
-                        <div class="audio-upload">
-                            <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
-                                :file-list="files" :on-remove="handleRemove" :limit="1">
-                                <template #default>
-                                    <div class="upload-button">
-                                        <div class="insert"></div>
-                                        <h5>添加或删除您的音频文件</h5>
-                                    </div>
-                                </template>
-                            </el-upload>
                         </div>
                     </el-tab-pane>
                     <div class="audio-upload">
