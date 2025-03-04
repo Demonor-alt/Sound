@@ -3,7 +3,7 @@
         <el-header class="display">
             <h1 class="title">我的收藏</h1>
             <div class="action-bar">
-                <MyInput :message="searchText" :placeholder="placeholder" :color="myBorderColor" class="search-input" 
+                <MyInput :message="searchText" :placeholder="placeholder" :color="myBorderColor" class="search-input"
                     @update:message="handleMessage" />
             </div>
         </el-header>
@@ -31,8 +31,7 @@
                 <el-col :span="3">
                     <div class="item">状态</div>
                     <div style="padding-top: 3%;">
-                        <el-tag type="success" round effect="dark" style="width: 50px;font-weight: 1000;">{{
-                            voice.status }}</el-tag>
+                        <el-tag type="success" round effect="dark" style="width: 50px;font-weight: 1000;">成功</el-tag>
                     </div>
                 </el-col>
                 <el-col :span="4">
@@ -42,7 +41,7 @@
                             <template #reference>
                                 <div style="display: flex;flex-direction: row;gap: 10px;cursor: pointer;">
                                     <div class="logo"></div>
-                                    <span style="color: #71717a;"> {{ voice.sample.length}}&nbsp音频示例</span>
+                                    <span style="color: #71717a;"> {{ voice.sample.length }}&nbsp音频示例</span>
                                 </div>
                             </template>
                             <div class="audio-samples">
@@ -55,9 +54,16 @@
                                             <span>{{ sample.title }}</span>
                                         </div>
                                         <div class="sample-btn">
-                                            <div v-if="!sample.isPlaying" class="close" @click="togglePlay(index)">
+                                            <audio>
+                                                <source :src="sample.url" type="audio/mp4">
+                                                <source :src="sample.url" type="audio/x-m4a">
+                                                浏览器不支持音频播放
+                                            </audio>
+                                            <div v-if="!sample.isPlaying" class="close"
+                                                @click="togglePlay(voice.id, index); sample.isPlaying = true">
                                             </div>
-                                            <div v-else class="on" @click="togglePlay(index)"></div>
+                                            <div v-else class="on"
+                                                @click="togglePlay(voice.id, index); sample.isPlaying = false"></div>
                                         </div>
                                     </div>
                                     <div style="font-size: small;color: #71717a; padding-top: 10px;">
@@ -71,12 +77,13 @@
                 <el-col :span="4">
                     <div class="btns">
                         <el-button size="large" color="black" @click="useVoice(voice.id)">使用声音</el-button>
-                        <el-button size="large" class="btn" v-if="voice.isCollected" @click="voice.isCollected=!voice.isCollected">
+                        <el-button size="large" class="btn" v-if="voice.isCollected"
+                            @click="voice.isCollected = !voice.isCollected">
                             <el-icon size="25" color="black">
                                 <StarFilled />
                             </el-icon>
                         </el-button>
-                        <el-button size="large" class="btn" v-else @click="voice.isCollected=!voice.isCollected">
+                        <el-button size="large" class="btn" v-else @click="voice.isCollected = !voice.isCollected">
                             <el-icon size="25" color="black">
                                 <Star />
                             </el-icon>
@@ -89,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed,reactive } from 'vue'
 import {
     StarFilled,
     Clock,
@@ -100,7 +107,7 @@ import { useRouter } from 'vue-router'
 import MyInput from '@/components/newComponent/Input.vue'
 const myBorderColor = ref('#f5f5f5');
 const router = useRouter()
-const MoreDetail= (id) => {
+const MoreDetail = (id) => {
     // 跳转到添加声音的页面
     router.push({ path: '/detail', query: { id: id } });
 
@@ -108,6 +115,7 @@ const MoreDetail= (id) => {
 function handleMessage(newMessage) {
     searchText.value = newMessage;
 }
+import audioUrl from '@/assets/sound.m4a';
 // 模拟数据
 const voices = ref([
     {
@@ -134,14 +142,14 @@ const voices = ref([
                 isPlaying: false,
                 title: 'Default Sample',
                 text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: ''
+                url: audioUrl
             },
             {
                 id: 2,
                 isPlaying: false,
                 title: '方可让父母',
                 text: '对侧人防热非人发热功耗一节课iklo',
-                url: ''
+                url: audioUrl
             }
         ],
     },
@@ -169,7 +177,7 @@ const voices = ref([
                 isPlaying: false,
                 title: 'Default Sample',
                 text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: ''
+                url: audioUrl
             },
         ],
     },
@@ -196,25 +204,47 @@ const formatDate = (date) => {
     }).format(date)
 }
 
-const togglePlay = (id, index) => {
-    if (!voices.value[id].sample[index].url) {
-        console.error('Audio URL is empty');
-        return;
-    }
-    const audio = new Audio(voices.value[id].sample[index].url);
-    const fileInfo = voices.value[id].sample[index];
+const audioPlayers = reactive({})
 
-    if (fileInfo.isPlaying) {
-        audio.pause();
-        fileInfo.isPlaying = false;
+const togglePlay = (voiceId, sampleIndex) => {
+  // 通过find正确查找voice对象
+  const voice = voices.value.find(v => v.id === voiceId)
+  if (!voice) return
+
+  const sample = voice.sample[sampleIndex]
+  const playerKey = `${voiceId}-${sampleIndex}`
+
+  // 如果已经有播放器实例
+  if (audioPlayers[playerKey]) {
+    const audio = audioPlayers[playerKey]
+    if (sample.isPlaying) {
+      audio.pause()
     } else {
-        audio.play();
-        fileInfo.isPlaying = true;
+      // 暂停所有正在播放的音频
+      Object.values(audioPlayers).forEach(a => a.pause())
+      audio.play()
     }
+  } else {
+    // 创建新播放器实例
+    const audio = new Audio(sample.url)
+    audioPlayers[playerKey] = audio
+    
+    // 添加播放结束监听
     audio.addEventListener('ended', () => {
-        voices.value[id].sample[index].isPlaying = false;
-    });
-};
+      sample.isPlaying = false
+    })
+
+    audio.play()
+  }
+
+  // 切换播放状态
+  sample.isPlaying = !sample.isPlaying
+  
+  // 更新其他音频状态
+  voice.sample.forEach((s, idx) => {
+    if (idx !== sampleIndex) s.isPlaying = false
+  })
+}
 const useVoice = (id) => {
     router.push({ path: '/explanation', query: { id: id } });
 }
@@ -283,6 +313,7 @@ const useVoice = (id) => {
         display: flex;
         flex-direction: row;
         gap: 10px;
+
         .btn:hover {
             background-color: #f4f4f5 !important;
             border: #606266 1px solid !important;
