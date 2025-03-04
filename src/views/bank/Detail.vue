@@ -112,9 +112,9 @@
                                     </div>
                                     <div class="sample-btn">
                                         <div v-if="!sample.isPlaying" class="close"
-                                            @click="togglePlay(voice.id, index)">
+                                            @click="togglePlay(index)">
                                         </div>
-                                        <div v-else class="on" @click="togglePlay(voice.id, index)"></div>
+                                        <div v-else class="on" @click="togglePlay( index)"></div>
                                     </div>
                                 </div>
                                 <div style="font-size: small;color: #71717a; padding-top: 10px;">
@@ -165,8 +165,6 @@ import MyInputW from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您的评论...")
 const type = ref('textarea');
 const rows = ref("3");
-
-import { ref } from 'vue';
 import {
     Clock,
     Star,
@@ -199,6 +197,7 @@ const handleSortValue = (newValue) => {
 function handleMessageTextArea(newValue) {
     reportData.value.desctibe = newValue;
 }
+import audioUrl from '@/assets/sound.m4a';
 const voice = ref({
     id: 1,
     userName: 'fc',
@@ -223,19 +222,18 @@ const voice = ref({
             isPlaying: false,
             title: 'Default Sample',
             text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-            url: ''
+            url: audioUrl
         },
         {
             id: 2,
             isPlaying: false,
             title: '方可让父母',
             text: '对侧人防热非人发热功耗一节课iklo',
-            url: ''
+            url: audioUrl
         }
     ],
 })
 import { ElNotification } from 'element-plus'
-
 const open = () => {
     visiblePopover.value = false;
     ElNotification({
@@ -243,6 +241,65 @@ const open = () => {
         position: 'bottom-right',
     })
 }
+import { ref, reactive } from 'vue'
+
+// 音频实例存储对象
+const audioPlayers = reactive({})
+
+// 修改后的播放控制方法
+const togglePlay = (index) => {
+  const sample = voice.value.sample[index]
+  const playerKey = `-${index}`
+
+  // 如果已经有播放器实例
+  if (audioPlayers[playerKey]) {
+    const audio = audioPlayers[playerKey]
+    if (sample.isPlaying) {
+      audio.pause()
+    } else {
+      // 暂停所有正在播放的音频
+      stopAllAudios()
+      audio.play()
+    }
+  } else {
+    // 创建新播放器实例
+    const audio = new Audio(sample.url)
+    audioPlayers[playerKey] = audio
+    
+    // 添加播放结束监听
+    audio.addEventListener('ended', () => {
+      sample.isPlaying = false
+    })
+
+    // 暂停其他音频并播放当前
+    stopAllAudios()
+    audio.play()
+  }
+
+  // 切换当前音频状态
+  sample.isPlaying = !sample.isPlaying
+}
+
+// 停止所有音频的方法
+const stopAllAudios = () => {
+  Object.entries(audioPlayers).forEach(([key, audio]) => {
+    if (!audio.paused) {
+      audio.pause()
+      // 更新对应样本状态
+      const [voiceId, index] = key.split('-')
+      voice.value.sample[index].isPlaying = false
+    }
+  })
+}
+
+// 添加组件卸载时的清理
+import { onBeforeUnmount } from 'vue'
+onBeforeUnmount(() => {
+  Object.values(audioPlayers).forEach(audio => {
+    audio.pause()
+    audio.src = ''
+  })
+})
 </script>
 <style scoped>
 .header {
