@@ -1,0 +1,1 @@
+import{d as f,r as u}from"./index-DJpvEbxv.js";const o=f("language",()=>{const e=u(""),a=u("");function t(n){e.value=n}function r(){if(e.value==="mandarin")return"普通话";if(e.value==="english")return"英语";if(e.value==="cantonese")return"粤语"}function i(n){a.value=n}return{language:e,changeLanguage:t,showLanguage:r,difficulty:a,changeDifficulty:i}});export{o as u};
