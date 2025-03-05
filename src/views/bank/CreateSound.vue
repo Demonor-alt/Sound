@@ -232,6 +232,7 @@ const mediaRecorder = ref(null);
 const audioChunks = ref([]);
 const start = ref();
 const end = ref();
+//录制音频
 const startRecording = async () => {
     start.value = new Date();
     try {
@@ -270,6 +271,7 @@ const createRecording = (blob) => {
         url: URL.createObjectURL(blob),
         blob: blob,
         duration: `${calculateTimeDifferenceInSeconds(start.value, end.value)}s`,
+        size: formatFileSize(blob.size) 
     };
     files.value.unshift(newRecording);
 };
@@ -289,6 +291,7 @@ const formatDuration = (seconds) => {
     }
     return `${Math.floor(seconds)}s`;
 };
+//上传音频
 const handleFileUpload = (file) => {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(URL.createObjectURL(file));
@@ -306,6 +309,7 @@ const handleFileUpload = (file) => {
     });
     return false;
 };
+// 播放音频
 const audioInstances = reactive({});
 const togglePlay = (index) => {
     const file = files.value[index]
@@ -352,6 +356,7 @@ const handleRemove = (file, files) => {
     }
 };
 const activeName = ref('first');
+//声音长度总和
 const selectedTime = computed(() => {
     let totalSeconds = 0;
     for (const file of files.value) {
@@ -360,6 +365,7 @@ const selectedTime = computed(() => {
     }
     return totalSeconds;
 });
+//声音节点
 const marks = computed(() => ({
     10: {
         style: { color: '#9ca3b3', fontSize: '17px' },
