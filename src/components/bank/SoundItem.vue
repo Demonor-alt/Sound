@@ -272,21 +272,31 @@ const open = (voiceId) => {
     const currentUrl = window.location.href;
     const textToCopy = `${currentUrl}?id=${voiceId}`;
     navigator.clipboard.writeText(textToCopy)
-        .then(async() => {
+      .then(async () => {
             ElNotification({
                 message: "已复制到剪贴板",
                 position: 'bottom-right',
             });
-            let result = await discoverUpdateShareService(voiceId);
+            try {
+                let result = await discoverUpdateShareService(voiceId);
+                console.log(result);
+            } catch (error) {
+                console.error('分享服务调用失败:', error);
+                ElNotification({
+                    message: `分享服务调用失败: ${error.message}`,
+                    position: 'bottom-right',
+                    type: 'error'
+                });
+            }
         })
-        .catch((error) => {
+      .catch((error) => {
             ElNotification({
                 message: `复制失败: ${error.message}`,
                 position: 'bottom-right',
                 type: 'error'
             });
         });
-}
+};
 </script>
 
 <style scoped>

@@ -5,6 +5,6 @@ export const discoverQueryService = () => {
     return request.get('/discover');
 }
 //更改分享人数
-export const discoverUpdateShareService = (data) => {
-    return request.put('/discover/share',data)
+export const discoverUpdateShareService = (id) => {
+    return request.post(`/discover/share?voiceId=${id}`)
 }
