@@ -42,7 +42,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 import { useTokenStore } from '@/stores/token'
 const tokenStore = useTokenStore();
-// import { ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus';
 const handleLogin = async () => {
     isLoading.value = true;
     const queryData = {
@@ -51,8 +51,8 @@ const handleLogin = async () => {
     };
     // let result = await loginService(queryData);
     // if (result.code == 0) {
-        // tokenStore.setToken(result.data.token);
-        // localStorage.setItem('user', email.value);
+    //     tokenStore.setToken(result.data);
+    //     localStorage.setItem('user', email.value);
         setTimeout(() => {
             router.push('/discover');
             isLoading.value = false;

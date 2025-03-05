@@ -57,8 +57,8 @@
             </el-icon>视频变声
           </div>
         </div>
-        <el-avatar :icon="UserFilled" class="avatar" />
-      </el-header>
+        <el-avatar v-if="token.userImage !== ''" :src="token.userImage" />
+        <el-avatar v-else :icon="UserFilled" />      </el-header>
       <el-main>
         <router-view />
       </el-main>
@@ -79,12 +79,12 @@
      Compass,
      Folder
   } from '@element-plus/icons-vue';
-  
   const router = useRouter();
-  
   function setActive(index) {
     router.push(`/${index}`);
   }
+  import { useTokenStore } from '@/stores/token'
+const {token} = useTokenStore();
   </script>
   
   <style scoped>
