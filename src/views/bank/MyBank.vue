@@ -13,16 +13,18 @@
             </div>
         </el-header>
         <el-main>
-            <div v-if="voices.length === 0">
+            <div v-if="voiceList.length === 0">
                 <el-empty description="暂无数据" />
             </div>
-            <el-row v-for="voice in filteredVoices" :key="voice.id" class="voice-item">
+            <el-row v-for="voice in filteredVoices" :key="voice.voiceId" class="voice-item">
                 <el-col :span="2">
-                    <el-image style="width: 70px; height: 70px;border-radius: 10px;" :src="voice.image" fit="cover" />
+                    <el-image style="width: 70px; height: 70px;border-radius: 10px;" :src="voice.voiceImage"
+                        fit="cover" />
                 </el-col>
                 <el-col :span="7">
-                    <div style="font-size: 20px; font-weight: 800;padding-bottom: 10px;cursor: pointer;" @click="MoreDetail(voice.id)">{{ voice.name }}</div>
-                    <div style="color: #6b7280;">{{ voice.description }}</div>
+                    <div style="font-size: 20px; font-weight: 800;padding-bottom: 10px;cursor: pointer;"
+                        @click="MoreDetail(voice.voiceId)">{{ voice.voiceName }}</div>
+                    <div style="color: #6b7280;">{{ voice.voiceDescription }}</div>
                 </el-col>
                 <el-col :span="4">
                     <div class="item">创建时间</div>
@@ -30,7 +32,7 @@
                         <el-icon size="20" style="color: #6b7280;">
                             <Clock />
                         </el-icon>
-                        <span style="font-weight: 520;">{{ formatDate(voice.creationTime) }}</span>
+                        <span style="font-weight: 520;">{{ formatDate(voice.voiceCreationTime) }}</span>
                     </div>
                 </el-col>
                 <el-col :span="3">
@@ -46,33 +48,34 @@
                             <template #reference>
                                 <div style="display: flex;flex-direction: row;gap: 10px;cursor: pointer;">
                                     <div class="logo"></div>
-                                    <span style="color: #71717a;"> {{ voice.samples.length }}&nbsp音频示例</span>
+                                    <span style="color: #71717a;"> {{ voice.voiceSamples.length }}&nbsp音频示例</span>
                                 </div>
                             </template>
                             <div class="audio-samples">
                                 <span style="font-size: large;font-weight: 800 ;color: black;">示例</span>
-                                <el-card v-for="(sample, index) in voice.samples" :key="index" class="samples-item"
+                                <el-card v-for="(sample, index) in voice.voiceSamples" :key="index" class="samples-item"
                                     shadow="never">
                                     <div class="samples-content">
                                         <div>
                                             <span class="samples-index">{{ index + 1 }}</span>
-                                            <span>{{ sample.title }}</span>
+                                            <span>{{ sample.sampleTitle }}</span>
                                         </div>
                                         <div class="sample-btn">
                                             <audio>
-                                                <source :src="sample.url" type="audio/mp4">
-                                                <source :src="sample.url" type="audio/x-m4a">
+                                                <source :src="sample.sampleUrl" type="audio/mp4">
+                                                <source :src="sample.sampleUrl" type="audio/x-m4a">
                                                 浏览器不支持音频播放
                                             </audio>
-                                            <div v-if="!sample.isPlaying" class="close"
-                                                @click="togglePlay(voice.id, index); sample.isPlaying = true">
+                                            <div v-if="!sample.sampleIsPlaying" class="close"
+                                                @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = true">
                                             </div>
                                             <div v-else class="on"
-                                                @click="togglePlay(voice.id, index); sample.isPlaying = false"></div>
+                                                @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = false">
+                                            </div>
                                         </div>
                                     </div>
                                     <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                        {{ sample.text }}
+                                        {{ sample.sampleText }}
                                     </div>
                                 </el-card>
                             </div>
@@ -81,17 +84,29 @@
                 </el-col>
                 <el-col :span="4">
                     <div class="btns">
-                        <el-button size="large" color="black" @click="useVoice(voice.id)">使用声音</el-button>
-                        <el-button size="large" class="btn" circle>
-                            <el-icon size="20">
+                        <el-button size="large" color="black" @click="useVoice(voice.voiceId)">使用声音</el-button>
+                        <el-button size="large" class="btn" circle @click="toUpdate(voice.voiceId)">
+                            <el-icon size="20" color="black">
                                 <Edit />
                             </el-icon>
                         </el-button>
-                        <el-button size="large" class="btn" circle>
-                            <el-icon size="20">
+                        <el-button size="large" class="btn" circle @click="dialogVisible = true">
+                            <el-icon size="20" color="black">
                                 <Delete />
                             </el-icon>
                         </el-button>
+                        <el-dialog v-model="dialogVisible" align-center :show-close="false" style="width: 500px;">
+                            <div style="font-size: large;font-weight: 600;">您确定要删除语音吗</div>
+                            <template #footer>
+                                <span class="dialog-footer">
+                                    <el-button color="black" plain @click="dialogVisible = false">取消</el-button>
+                                    <el-button color="black"
+                                        @click="dialogVisible = false; deleteService(voice.voiceId)">
+                                        确认
+                                    </el-button>
+                                </span>
+                            </template>
+                        </el-dialog>
                     </div>
                 </el-col>
             </el-row>
@@ -107,97 +122,53 @@ import {
     Delete,
     Clock
 } from '@element-plus/icons-vue';
-import { ElButton } from 'element-plus'
-import MyInput from '@/components/newComponent/Input.vue'
+import { ElButton } from 'element-plus';
+import MyInput from '@/components/newComponent/Input.vue';
 const myBorderColor = ref('#f5f5f5');
+const dialogVisible = ref(false);
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
 const createNewSound = () => {
-    // 跳转到添加员工的页面
     router.push('/createbank')
+}
+const toUpdate = (id) => {
+    router.push({ path: '/createbank', query: { id: id } })
 }
 const MoreDetail = (id) => {
     // 跳转到添加声音的页面
     router.push({ path: '/detail', query: { id: id } });
-
 }
 function handleMessage(newMessage) {
     searchText.value = newMessage;
 }
 import audioUrl from '@/assets/sound.m4a';
 // 模拟数据
-const voices = ref([
+const voiceList = ref([
     {
-        id: 1,
-        userName: 'fc',
-        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        name: '55',
-        description: '1212',
-        creationTime: new Date(2025, 1, 9, 19, 11),
-        status: "成功",
-        peopleCount: 110000,
-        shareCount: 11,
-        likeCount: 20,
-        collectCount: 10,
-        language: 'ch',
-        tag: 'aaaaaaaaa',
-        isLiked: false,
-        isUnliked: false,
-        isCollected: false,
-        samples: [
+        "voiceId": 70,
+        "voiceImage": "https://loremflickr.com/400/400?lock=567532027855895",
+        "voiceName": "曲志明",
+        "voiceDescription": "例面求上。果圆相称斗织是。开电年。同利算术极七等被来。问广十世。",
+        "voiceCreationTime": "2024-04-22 00:28:31",
+        "voiceIsCollected": true,
+        "voiceSamples": [
             {
-                id: 1,
-                isPlaying: false,
-                title: 'Default Sample',
-                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: audioUrl
-            },
-            {
-                id: 2,
-                isPlaying: false,
-                title: '方可让父母',
-                text: '对侧人防热非人发热功耗一节课iklo',
-                url: audioUrl
+                "sampleId": 83,
+                "sampleIsPlaying": false,
+                "sampleTitle": "拨伟大快但是脊梁",
+                "sampleText": "consectetur",
+                "sampleUrl": audioUrl
             }
-        ],
-    },
-    {
-        id: 2,
-        userName: 'fcds',
-        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        name: '55',
-        description: '1212',
-        creationTime: new Date(2025, 1, 9, 19, 10),
-        status: "成功",
-        peopleCount: 15,
-        shareCount: 11,
-        likeCount: 20,
-        collectCount: 10,
-        language: 'en',
-        tag: '1',
-        isLiked: false,
-        isUnliked: false,
-        isCollected: false,
-        samples: [
-            {
-                id: 1,
-                isPlaying: false,
-                title: 'Default Sample',
-                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: audioUrl
-            },
-        ],
-    },
+        ]
+    }
 ]);
 const searchText = ref('');
 const placeholder = ref('搜索声音...');
 const filteredVoices = computed(() => {
-    return voices.value.filter(voice =>
-        voice.name.includes(searchText.value)
+    return voiceList.value.filter(voice =>
+        voice.voiceName.includes(searchText.value)
     )
 })
-
 
 // 日期格式化
 const formatDate = (date) => {
@@ -214,64 +185,67 @@ const formatDate = (date) => {
 const audioPlayers = reactive({})
 
 const togglePlay = (voiceId, sampleIndex) => {
-  // 通过find正确查找voice对象
-  const voice = voices.value.find(v => v.id === voiceId)
-  if (!voice) return
+    // 通过find正确查找voice对象
+    const voice = voiceList.value.find(v => v.voiceId === voiceId)
+    if (!voice) return
 
-  const sample = voice.samples[sampleIndex]
-  const playerKey = `${voiceId}-${sampleIndex}`
+    const sample = voice.voiceSamples[sampleIndex]
+    const playerKey = `${voiceId}-${sampleIndex}`
 
-  // 如果已经有播放器实例
-  if (audioPlayers[playerKey]) {
-    const audio = audioPlayers[playerKey]
-    if (sample.isPlaying) {
-      audio.pause()
+    // 如果已经有播放器实例
+    if (audioPlayers[playerKey]) {
+        const audio = audioPlayers[playerKey]
+        if (sample.sampleIsPlaying) {
+            audio.pause()
+        } else {
+            // 暂停所有正在播放的音频
+            Object.values(audioPlayers).forEach(a => a.pause())
+            audio.play()
+        }
     } else {
-      // 暂停所有正在播放的音频
-      Object.values(audioPlayers).forEach(a => a.pause())
-      audio.play()
+        // 创建新播放器实例
+        const audio = new Audio(sample.sampleUrl)
+        audioPlayers[playerKey] = audio
+
+        // 添加播放结束监听
+        audio.addEventListener('ended', () => {
+            sample.sampleIsPlaying = false
+        })
+
+        audio.play()
     }
-  } else {
-    // 创建新播放器实例
-    const audio = new Audio(sample.url)
-    audioPlayers[playerKey] = audio
-    
-    // 添加播放结束监听
-    audio.addEventListener('ended', () => {
-      sample.isPlaying = false
+
+    // 切换播放状态
+    sample.sampleIsPlaying = !sample.sampleIsPlaying
+
+    // 更新其他音频状态
+    voice.voiceSamples.forEach((s, idx) => {
+        if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
-
-    audio.play()
-  }
-
-  // 切换播放状态
-  sample.isPlaying = !sample.isPlaying
-  
-  // 更新其他音频状态
-  voice.samples.forEach((s, idx) => {
-    if (idx !== sampleIndex) s.isPlaying = false
-  })
 }
 const useVoice = (id) => {
     router.push({ path: '/explanation', query: { id: id } });
 }
-// import { bankQueryService } from '@/api/bank/mybank';
-// const total = ref(0);
+import { useTokenStore } from '@/stores/token';
+const token = useTokenStore();
+// import { bankQueryService, bankDeleteService } from '@/api/bank/mybank';
 // const bankList = async () => {
 //     try {
-//         const result = await bankQueryService();
-//         voices.value = result.data.records;
-//         total.value = voices.value.length;
+//         const result = await bankQueryService(token.token.userId);
+//         voiceList.value = result.data;
 //     } catch (error) {
 //         console.error('Failed to ', error);
-//         voices.value = [];
-//         total.value = 0;
+//         voiceList.value = [];
 //     }
 // };
 
 // onMounted(() => {
 //     bankList();
 // });
+// const deleteService = async(id) => {
+//     let result = await bankDeleteService(id);
+//     bankList();
+// };
 </script>
 
 <style scoped>

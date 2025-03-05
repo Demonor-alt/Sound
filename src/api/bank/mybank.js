@@ -1,6 +1,10 @@
 import request from '@/utils/request.js'
 //音色库 - 我的音色
 //查询
-export const bankQueryService = () => {
-    return request.get('/bank/query');
+export const bankQueryService = (userId) => {
+    return request.get(`/mybank/${userId}`);
+}
+//删除
+export const bankDeleteService = (voiceId) => {
+    return request.delete("mybank?voiceId=" + voiceId);
 }

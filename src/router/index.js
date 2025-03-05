@@ -30,7 +30,7 @@ const routes = [
                 component: () => import("@/views/bank/MyBank.vue"),
             },
             {
-                path: '/createbank',
+                path: '/createbank/:id?',
                 component: () => import("@/views/bank/CreateSound.vue"),
             },
             {
