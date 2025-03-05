@@ -2,112 +2,118 @@
     <div v-if="filteredVoices.length === 0">
         <el-empty description="暂无数据" />
     </div>
-    <el-row v-for="voice in filteredVoices" :key="voice.id" class="voice-item">
+    <el-row v-for="voice in filteredVoices" :key="voice.voiceId" class="voice-item">
         <el-col :span="3">
-            <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="voice.image" fit="cover" />
+            <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="voice.voiceImage" fit="cover" />
         </el-col>
         <el-col :span="21">
-            <div class="voice-name" @click="MoreDetail(voice.id)">{{ voice.name }}</div>
+            <div class="voice-name" @click="MoreDetail(voice.voiceId)">{{ voice.voiceName }}</div>
             <div class="voice-detail">
                 <span class="display-detail"> {{ voice.userName }}</span>
                 <div class="dot"></div>
                 <el-icon size="20" style="color: #6b7280;">
                     <Clock />
                 </el-icon>
-                <span class="display-detail">{{ timeDistance(voice.creationTime) }}</span>
+                <span class="display-detail">{{ timeDistance(voice.voiceCreationTime) }}</span>
                 <div class="dot"></div>
                 <el-popover placement="bottom" :width="400" trigger="click">
                     <template #reference>
                         <div style="display: flex;flex-direction: row;gap: 10px;cursor: pointer;">
                             <div class="logo"></div>
-                            <span class="display-detail"> {{ voice.sample.length }}&nbsp音频示例</span>
+                            <span class="display-detail"> {{ voice.voiceSamples.length }}&nbsp音频示例</span>
                         </div>
                     </template>
                     <div class="audio-samples">
                         <span style="font-size: large;font-weight: 800 ;color: black;">示例</span>
-                        <el-card v-for="(sample, index) in voice.sample" :key="index" class="samples-item"
+                        <el-card v-for="(sample, index) in voice.voiceSamples" :key="index" class="samples-item"
                             shadow="never">
                             <div class="samples-content">
                                 <div>
                                     <span class="samples-index">{{ index + 1 }}</span>
-                                    <span>{{ sample.title }}</span>
+                                    <span>{{ sample.sampleTitle }}</span>
                                 </div>
                                 <div class="sample-btn">
                                     <audio>
-                                        <source :src="sample.url" type="audio/mp4">
-                                        <source :src="sample.url" type="audio/x-m4a">
+                                        <source :src="sample.sampleUrl" type="audio/mp4">
+                                        <source :src="sample.sampleUrl" type="audio/x-m4a">
                                         浏览器不支持音频播放
                                     </audio>
-                                    <div v-if="!sample.isPlaying" class="close" @click="togglePlay(voice.id, index);sample.isPlaying=true">
+                                    <div v-if="!sample.sampleIsPlaying" class="close"
+                                        @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = true">
                                     </div>
-                                    <div v-else class="on" @click="togglePlay(voice.id, index);sample.isPlaying=false"></div>
+                                    <div v-else class="on"
+                                        @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = false"></div>
                                 </div>
                             </div>
                             <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                {{ sample.text }}
+                                {{ sample.sampleText }}
                             </div>
                         </el-card>
                     </div>
                 </el-popover>
                 <div class="dot"></div>
-                <div class="tag1"> {{ voice.language }}</div>
-                <div class="tag2" v-if="voice.tag !== ''" style="margin-left: 5px;"> {{ voice.tag }}
+                <div class="tag1"> {{ voice.voiceLanguage }}</div>
+                <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag }}
                 </div>
             </div>
             <div class="voice-sample">
-                <div v-for="(sample, index) in voice.sample" :key="index" class="voice-sample-item">
+                <div v-for="(sample, index) in voice.voiceSamples" :key="index" class="voice-sample-item">
                     <div class="sample-btn">
-                        <div v-if="!sample.isPlaying" class="close-plus" @click="togglePlay(voice.id, index)">
+                        <div v-if="!sample.sampleIsPlaying" class="close-plus"
+                            @click="togglePlay(voice.voiceId, index)">
                         </div>
-                        <div v-else class="on-plus" @click="togglePlay(voice.id, index)"></div>
+                        <div v-else class="on-plus" @click="togglePlay(voice.voiceId, index)"></div>
                     </div>
                     <div
                         style="width: 50%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: small;">
-                        {{ sample.text }}
+                        {{ sample.sampleText }}
                     </div>
                 </div>
             </div>
             <div class="btns">
-                <el-button size="large" color="black" @click="useVoice(voice.id)">使用声音</el-button>
+                <el-button size="large" color="black" @click="useVoice(voice.voiceId)">使用声音</el-button>
                 <div class="btns-plus">
                     <div class="button">
                         <div class="used"></div>
                         <div class="number">
-                            {{ formatNumberWithK(voice.peopleCount) }}&nbsp;Used
+                            {{ formatNumberWithK(voice.voiceUseCount) }}&nbsp;Used
                         </div>
                     </div>
                     <div class="button">
-                        <div class="shared" @click="open(voice.id)"></div>
+                        <div class="shared" @click="open(voice.voiceId)"></div>
                         <div class="number">
-                            {{ formatNumberWithK(voice.shareCount) }}&nbsp;Shares
+                            {{ formatNumberWithK(voice.voiceShareCount) }}&nbsp;Shares
                         </div>
                     </div>
                     <div class="button">
-                        <div class="like" v-if="!voice.isLiked"
-                            @click="voice.isLiked = !voice.isLiked; voice.likeCount++; voice.isUnliked = false"></div>
-                        <div class="likefill" v-else @click="voice.isLiked = !voice.isLiked; voice.likeCount--;"></div>
+                        <div class="like" v-if="!voice.voiceIsLiked"
+                            @click="voice.voiceIsLiked = !voice.voiceIsLiked; voice.voiceLikeCount++; voice.voiceIsUnliked = false">
+                        </div>
+                        <div class="likefill" v-else
+                            @click="voice.voiceIsLiked = !voice.voiceIsLiked; voice.voiceLikeCount--;">
+                        </div>
                         <div class="number">
-                            {{ formatNumberWithK(voice.likeCount) }}
+                            {{ formatNumberWithK(voice.voiceLikeCount) }}
                         </div>
                     </div>
                     <div class="button">
-                        <div class="unlike" v-if="!voice.isUnliked"
-                            @click="voice.isUnliked = !voice.isUnliked; if (voice.isLiked === true) { voice.likeCount--; voice.isLiked = false }">
+                        <div class="unlike" v-if="!voice.voiceIsUnliked"
+                            @click="voice.voiceIsUnliked = !voice.voiceIsUnliked; if (voice.voiceIsLiked === true) { voice.voiceLikeCount--; voice.voiceIsLiked = false }">
                         </div>
-                        <div class="unlikefill" v-else @click="voice.isUnliked = !voice.isUnliked">
+                        <div class="unlikefill" v-else @click="voice.voiceIsUnliked = !voice.voiceIsUnliked">
                         </div>
                     </div>
                     <div class="button">
-                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voice.isCollected"
-                            @click="voice.isCollected = !voice.isCollected; voice.collectCount++;">
+                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voice.voiceIsCollected"
+                            @click="voice.voiceIsCollected = !voice.voiceIsCollected; voice.voiceCollectCount++;">
                             <Star />
                         </el-icon>
                         <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-else
-                            @click="voice.isCollected = !voice.isCollected; voice.collectCount--;">
+                            @click="voice.voiceIsCollected = !voice.voiceIsCollected; voice.voiceCollectCount--;">
                             <StarFilled />
                         </el-icon>
                         <div class="number">
-                            {{ formatNumberWithK(voice.collectCount) }}
+                            {{ formatNumberWithK(voice.voiceCollectCount) }}
                         </div>
                     </div>
                 </div>
@@ -115,13 +121,14 @@
         </el-col>
     </el-row>
 </template>
+
 <script setup>
 import {
     Clock,
     Star,
     StarFilled
 } from '@element-plus/icons-vue';
-import { ref, defineProps, computed, reactive } from 'vue' // 添加reactive
+import { ref, defineProps, computed, reactive, onMounted } from 'vue';
 import { timeDistance } from '@/hooks/time';
 const props = defineProps({
     sortValue: {
@@ -137,70 +144,38 @@ const props = defineProps({
 import audioUrl from '@/assets/sound.m4a';
 const voices = ref([
     {
-        id: 1,
+        voiceId: 1,
         userName: 'fc',
-        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        name: '55',
-        description: '1212',
-        creationTime: new Date(2025, 1, 9, 19, 11),
-        status: "成功",
-        audioUrl: '/samples/sample1.mp3',
-        peopleCount: 110000,
-        shareCount: 11,
-        likeCount: 20,
-        collectCount: 10,
-        language: 'ch',
-        tag: 'aaaaaaaaa',
-        isUsed:false,
-        isShared:false,
-        isLiked: false,
-        isUnliked: false,
-        isCollected: false,
-        sample: [
+        voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+        voiceName: '55',
+        voiceDescription: '1212',
+        voiceCreationTime: new Date(2025, 1, 9, 19, 11),
+        voiceUseCount: 110000,
+        voiceShareCount: 11,
+        voiceLikeCount: 20,
+        voiceCollectCount: 10,
+        voiceLanguage: 'ch',
+        voiceTag: 'aaaaaaaaa',
+        voiceIsUsed: false,
+        voiceIsShared: false,
+        voiceIsLiked: false,
+        voiceIsUnliked: false,
+        voiceIsCollected: false,
+        voiceSamples: [
             {
-                id: 1,
-                isPlaying: false,
-                title: 'Default Sample',
-                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: audioUrl
+                sampleId: 1,
+                sampleIsPlaying: false,
+                sampleTitle: 'Default Sample',
+                sampleText: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
+                sampleUrl: audioUrl
             },
             {
-                id: 2,
-                isPlaying: false,
-                title: '方可让父母',
-                text: '对侧人防热非人发热功耗一节课iklo',
-                url: audioUrl
+                sampleId: 2,
+                sampleIsPlaying: false,
+                sampleTitle: '方可让父母',
+                sampleText: '对侧人防热非人发热功耗一节课iklo',
+                sampleUrl: audioUrl
             }
-        ],
-    },
-    {
-        id: 2,
-        userName: 'fcds',
-        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        name: '55',
-        description: '1212',
-        creationTime: new Date(2025, 1, 9, 19, 10),
-        status: "成功",
-        audioUrl: '/samples/sample1.mp3',
-        peopleCount: 15,
-        shareCount: 12,
-        likeCount: 20,
-        collectCount: 10,
-        language: 'en',
-        tag: '1',
-        isUsed:false,
-        isShared:false,
-        isLiked: false,
-        isUnliked: false,
-        isCollected: false,
-        sample: [
-            {
-                id: 1,
-                isPlaying: false,
-                title: 'Default Sample',
-                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: audioUrl
-            },
         ],
     },
 ]);
@@ -210,25 +185,25 @@ const filteredVoices = computed(() => {
         result = [...voices.value];
     }
     else if (props.tagValue !== '') {
-        result = result.filter(voice => voice.tag === props.tagValue);
+        result = result.filter(voice => voice.voiceTag === props.tagValue);
     }
     if (props.languageValue !== '1') {
-        result = result.filter(voice => voice.language === props.languageValue);
+        result = result.filter(voice => voice.voiceLanguage === props.languageValue);
     }
     if (props.sortValue === '2') {
-        result.sort(((a, b) => new Date(b.creationTime) - new Date(a.creationTime)));
+        result.sort(((a, b) => new Date(b.voiceCreationTime) - new Date(a.voiceCreationTime)));
     } else if (props.sortValue === '1') {
-        result.sort(((a, b) => b.peopleCount - a.peopleCount));
+        result.sort(((a, b) => b.voiceUseCount - a.voiceUseCount));
     }
     return result;
 });
 import { useRouter } from 'vue-router';
 const router = useRouter();
-const MoreDetail = (id) => {
-    router.push({ path: '/detail', query: { id: id } });
+const MoreDetail = (voiceId) => {
+    router.push({ path: '/detail', query: { id: voiceId } });
 }
-const useVoice = (id) => {
-    router.push({ path: '/explanation', query: { id: id } });
+const useVoice = (voiceId) => {
+    router.push({ path: '/explanation', query: { id: voiceId } });
 }
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {
@@ -240,60 +215,80 @@ function formatNumberWithK(num) {
     }
     return num;
 }
-import { ElNotification } from 'element-plus'
-const open = (id) => {
-    const voiceIndex = voices.value.findIndex(voice => voice.id === id);
-    if (voices.value[voiceIndex].isShared === false) {
-        voices.value[voiceIndex].isShared = true;
-        voices.value[voiceIndex].shareCount++;
-    }
-    ElNotification({
-        message: "已复制到剪贴板",
-        position: 'bottom-right',
-    })
-}
 const audioPlayers = reactive({})
 
 const togglePlay = (voiceId, sampleIndex) => {
-  // 通过find正确查找voice对象
-  const voice = voices.value.find(v => v.id === voiceId)
-  if (!voice) return
+    const voice = voices.value.find(v => v.voiceId === voiceId)
+    if (!voice) return
 
-  const sample = voice.sample[sampleIndex]
-  const playerKey = `${voiceId}-${sampleIndex}`
+    const sample = voice.voiceSamples[sampleIndex]
+    const playerKey = `${voiceId}-${sampleIndex}`
 
-  // 如果已经有播放器实例
-  if (audioPlayers[playerKey]) {
-    const audio = audioPlayers[playerKey]
-    if (sample.isPlaying) {
-      audio.pause()
+    if (audioPlayers[playerKey]) {
+        const audio = audioPlayers[playerKey]
+        // 修改为 sample.sampleIsPlaying
+        if (sample.sampleIsPlaying) {
+            audio.pause()
+        } else {
+            // 暂停所有正在播放的音频
+            Object.values(audioPlayers).forEach(a => a.pause())
+            audio.play()
+        }
     } else {
-      // 暂停所有正在播放的音频
-      Object.values(audioPlayers).forEach(a => a.pause())
-      audio.play()
+        // 创建新播放器实例
+        const audio = new Audio(sample.sampleUrl)
+        audioPlayers[playerKey] = audio
+
+        // 添加播放结束监听
+        audio.addEventListener('ended', () => {
+            // 修改为 sample.sampleIsPlaying
+            sample.sampleIsPlaying = false
+        })
+
+        audio.play()
     }
-  } else {
-    // 创建新播放器实例
-    const audio = new Audio(sample.url)
-    audioPlayers[playerKey] = audio
-    
-    // 添加播放结束监听
-    audio.addEventListener('ended', () => {
-      sample.isPlaying = false
+
+    // 切换播放状态
+    // 修改为 sample.sampleIsPlaying
+    sample.sampleIsPlaying = !sample.sampleIsPlaying
+
+    // 更新其他音频状态
+    voice.voiceSamples.forEach((s, idx) => {
+        if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
-
-    audio.play()
-  }
-
-  // 切换播放状态
-  sample.isPlaying = !sample.isPlaying
-  
-  // 更新其他音频状态
-  voice.sample.forEach((s, idx) => {
-    if (idx !== sampleIndex) s.isPlaying = false
-  })
+}
+import { discoverQueryService, discoverUpdateShareService } from '@/api/discover'
+onMounted(async () => {
+    let result = await discoverQueryService();
+    voices.value = result.data;
+})
+import { ElNotification } from 'element-plus'
+const open = (voiceId) => {
+    const voiceIndex = voices.value.findIndex(voice => voice.voiceId === voiceId);
+    if (voices.value[voiceIndex].voiceIsShared === false) {
+        voices.value[voiceIndex].voiceIsShared = true;
+        voices.value[voiceIndex].voiceShareCount++;
+    }
+    const currentUrl = window.location.href;
+    const textToCopy = `${currentUrl}?id=${voiceId}`;
+    navigator.clipboard.writeText(textToCopy)
+        .then(async() => {
+            ElNotification({
+                message: "已复制到剪贴板",
+                position: 'bottom-right',
+            });
+            let result = await discoverUpdateShareService(voiceId);
+        })
+        .catch((error) => {
+            ElNotification({
+                message: `复制失败: ${error.message}`,
+                position: 'bottom-right',
+                type: 'error'
+            });
+        });
 }
 </script>
+
 <style scoped>
 .voice-item {
     background-color: white;
