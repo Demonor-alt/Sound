@@ -12,3 +12,7 @@ export const discoverUpdateShareService = (id) => {
 export const discoverUpdateLikeService = (data) => {
     return request.put("/discover/like",data);
 }
+//更改收藏人数
+export const discoverUpdateCollectService = (data) => {
+    return request.put("/discover/collect",data);
+}

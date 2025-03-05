@@ -100,11 +100,11 @@
                     </div>
                     <div class="button">
                         <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voice.voiceIsCollected"
-                            @click="voice.voiceIsCollected = !voice.voiceIsCollected; voice.voiceCollectCount++;">
+                            @click="toggleCollect(voice)">
                             <Star />
                         </el-icon>
                         <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-else
-                            @click="voice.voiceIsCollected = !voice.voiceIsCollected; voice.voiceCollectCount--;">
+                            @click="toggleCollect(voice)">
                             <StarFilled />
                         </el-icon>
                         <div class="number">
@@ -243,7 +243,7 @@ const togglePlay = (voiceId, sampleIndex) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService } from '@/api/discover'
+import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/discover'
 onMounted(async () => {
     let result = await discoverQueryService();
     voices.value = result.data;
@@ -320,6 +320,19 @@ const toggleDislike =async(voice) => {
         voiceLikeCount: voice.voiceLikeCount,
     }
     let result = await discoverUpdateLikeService(editData);
+};
+const toggleCollect = async(voice) => {
+    voice.voiceIsCollected = !voice.voiceIsCollected;
+    if (voice.voiceIsCollected) {
+        voice.voiceCollectCount++;
+    } else {
+        voice.voiceCollectCount--;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceCollectCount: voice.voiceCollectCount,
+    }
+    let result = await discoverUpdateCollectService(editData);
 };
 </script>
 
