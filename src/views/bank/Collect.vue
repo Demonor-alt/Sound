@@ -201,9 +201,9 @@ const token = useTokenStore();
 //     let result = await collectQueryService(token.token.userId);
 //     voices.value = result.data;
 // })
-// const toggleCollect = (voice) => {
-//     voice.voiceIsCollected = !voice.voiceIsCollected;
-// };
+const toggleCollect = (voice) => {
+    voice.voiceIsCollected = !voice.voiceIsCollected;
+};
 // onBeforeUnmount(async () => {
 //     const deleteIds = [];
 //     if (voices.value.length > 0) {
