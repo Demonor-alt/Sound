@@ -243,7 +243,7 @@ const togglePlay = (voiceId, sampleIndex) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-// import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/discover'
+// import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/bank/discover'
 // onMounted(async () => {
 //     let result = await discoverQueryService();
 //     voices.value = result.data;

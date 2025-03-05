@@ -255,7 +255,7 @@ const togglePlay = (voiceId, sampleIndex) => {
 const useVoice = (id) => {
     router.push({ path: '/explanation', query: { id: id } });
 }
-// import { bankQueryService } from '@/api/bank';
+// import { bankQueryService } from '@/api/bank/mybank';
 // const total = ref(0);
 // const bankList = async () => {
 //     try {
