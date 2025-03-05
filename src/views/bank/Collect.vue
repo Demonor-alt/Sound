@@ -51,7 +51,7 @@
                                     shadow="never">
                                     <div class="samples-content">
                                         <div>
-                                            <span class="samples-index">{{ index+1 }}</span>
+                                            <span class="samples-index">{{ index + 1 }}</span>
                                             <span>{{ sample.sampleTitle }}</span>
                                         </div>
                                         <div class="sample-btn">
@@ -79,14 +79,12 @@
                 <el-col :span="4">
                     <div class="btns">
                         <el-button size="large" color="black" @click="useVoice(voice.voiceId)">使用声音</el-button>
-                        <el-button size="large" class="btn" v-if="voice.voiceIsCollected"
-                            @click="voice.voiceIsCollected = !voice.voiceIsCollected">
+                        <el-button size="large" class="btn" v-if="voice.voiceIsCollected" @click="toggleCollect(voice)">
                             <el-icon size="25" color="black">
                                 <StarFilled />
                             </el-icon>
                         </el-button>
-                        <el-button size="large" class="btn" v-else
-                            @click="voice.voiceIsCollected = !voice.voiceIsCollected">
+                        <el-button size="large" class="btn" v-else @click="toggleCollect(voice)">
                             <el-icon size="25" color="black">
                                 <Star />
                             </el-icon>
@@ -100,6 +98,7 @@
 
 <script setup>
 import { ref, computed, reactive, onMounted } from 'vue'
+import { onBeforeUnmount } from 'vue';
 import {
     StarFilled,
     Clock,
@@ -195,13 +194,32 @@ const togglePlay = (voiceId, sampleIndex) => {
 const useVoice = (id) => {
     router.push({ path: '/explanation', query: { id: id } });
 }
-// import { useTokenStore } from '@/stores/token';
-// const token = useTokenStore();
-// import { collectQueryService } from '@/api/bank/collect'
+import { useTokenStore } from '@/stores/token';
+const token = useTokenStore();
+// import { collectQueryService, collectBatchDeleteService } from '@/api/bank/collect'
 // onMounted(async () => {
 //     let result = await collectQueryService(token.token.userId);
 //     voices.value = result.data;
 // })
+// const toggleCollect = (voice) => {
+//     voice.voiceIsCollected = !voice.voiceIsCollected;
+// };
+// onBeforeUnmount(async () => {
+//     const deleteIds = [];
+//     if (voices.value.length > 0) {
+//         voices.value.forEach(voice => {
+//             if (!voice.voiceIsCollected) {
+//                 deleteIds.push(voice.voiceId);
+//             }
+//         });
+//         if (deleteIds.length > 0) {
+//             const ids = deleteIds.join(',');
+//             let result = await collectBatchDeleteService({ userId: token.token.userId, ids: ids })
+//             console.log(result);
+//         }
+//     }
+// });
+
 </script>
 <style scoped>
 .sound-manager {

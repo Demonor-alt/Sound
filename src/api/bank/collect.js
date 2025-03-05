@@ -4,3 +4,7 @@ import request from '@/utils/request.js'
 export const collectQueryService = (userId) => {
     return request.get(`/collect/${userId}`);
 }
+//批量删除
+export const collectBatchDeleteService = (params) => {
+    return request.delete('/collect',{ params: params })
+}
