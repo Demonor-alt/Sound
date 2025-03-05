@@ -86,22 +86,17 @@
                         </div>
                     </div>
                     <div class="button">
-                        <div class="like" v-if="!voice.voiceIsLiked"
-                            @click="voice.voiceIsLiked = !voice.voiceIsLiked; voice.voiceLikeCount++; voice.voiceIsUnliked = false">
+                        <div class="likefill" v-if="voice.voiceIsLiked === 1" @click="toggleLike(voice)">
                         </div>
-                        <div class="likefill" v-else
-                            @click="voice.voiceIsLiked = !voice.voiceIsLiked; voice.voiceLikeCount--;">
+                        <div class="like" v-else @click="toggleLike(voice)">
                         </div>
                         <div class="number">
                             {{ formatNumberWithK(voice.voiceLikeCount) }}
                         </div>
                     </div>
                     <div class="button">
-                        <div class="unlike" v-if="!voice.voiceIsUnliked"
-                            @click="voice.voiceIsUnliked = !voice.voiceIsUnliked; if (voice.voiceIsLiked === true) { voice.voiceLikeCount--; voice.voiceIsLiked = false }">
-                        </div>
-                        <div class="unlikefill" v-else @click="voice.voiceIsUnliked = !voice.voiceIsUnliked">
-                        </div>
+                        <div class="unlikefill" v-if="voice.voiceIsLiked === 2" @click="toggleDislike(voice)"></div>
+                        <div class="unlike" v-else @click="toggleDislike(voice)"></div>
                     </div>
                     <div class="button">
                         <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voice.voiceIsCollected"
@@ -172,7 +167,7 @@ const voices = ref([
             {
                 sampleId: 2,
                 sampleIsPlaying: false,
-                sampleTitle: '方可让父母',
+                sampleTitle: '可以让父母',
                 sampleText: '对侧人防热非人发热功耗一节课iklo',
                 sampleUrl: audioUrl
             }
@@ -220,13 +215,10 @@ const audioPlayers = reactive({})
 const togglePlay = (voiceId, sampleIndex) => {
     const voice = voices.value.find(v => v.voiceId === voiceId)
     if (!voice) return
-
     const sample = voice.voiceSamples[sampleIndex]
     const playerKey = `${voiceId}-${sampleIndex}`
-
     if (audioPlayers[playerKey]) {
         const audio = audioPlayers[playerKey]
-        // 修改为 sample.sampleIsPlaying
         if (sample.sampleIsPlaying) {
             audio.pause()
         } else {
@@ -238,26 +230,20 @@ const togglePlay = (voiceId, sampleIndex) => {
         // 创建新播放器实例
         const audio = new Audio(sample.sampleUrl)
         audioPlayers[playerKey] = audio
-
         // 添加播放结束监听
         audio.addEventListener('ended', () => {
-            // 修改为 sample.sampleIsPlaying
             sample.sampleIsPlaying = false
         })
-
         audio.play()
     }
-
     // 切换播放状态
-    // 修改为 sample.sampleIsPlaying
     sample.sampleIsPlaying = !sample.sampleIsPlaying
-
     // 更新其他音频状态
     voice.voiceSamples.forEach((s, idx) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-import { discoverQueryService, discoverUpdateShareService } from '@/api/discover'
+import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService } from '@/api/discover'
 onMounted(async () => {
     let result = await discoverQueryService();
     voices.value = result.data;
@@ -272,7 +258,7 @@ const open = (voiceId) => {
     const currentUrl = window.location.href;
     const textToCopy = `${currentUrl}?id=${voiceId}`;
     navigator.clipboard.writeText(textToCopy)
-      .then(async () => {
+        .then(async () => {
             ElNotification({
                 message: "已复制到剪贴板",
                 position: 'bottom-right',
@@ -289,13 +275,51 @@ const open = (voiceId) => {
                 });
             }
         })
-      .catch((error) => {
+        .catch((error) => {
             ElNotification({
                 message: `复制失败: ${error.message}`,
                 position: 'bottom-right',
                 type: 'error'
             });
         });
+};
+
+const toggleLike = async (voice) => {
+    if (voice.voiceIsLiked === 1) {
+        voice.voiceIsLiked = 0;
+        voice.voiceLikeCount--;
+    } else {
+        if (voice.voiceIsLiked === 2) {
+            voice.voiceIsUnliked = false;
+        }
+        voice.voiceIsLiked = 1;
+        voice.voiceLikeCount++;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceLikeCount: voice.voiceLikeCount,
+    }
+    let result = await discoverUpdateLikeService(editData);
+};
+const toggleDislike =async(voice) => {
+    if (voice.voiceIsLiked === 2) {
+        // 当前是不喜欢状态，切换为中立
+        voice.voiceIsLiked = 0;
+        voice.voiceIsUnliked = false;
+    } else {
+        // 当前不是不喜欢状态
+        if (voice.voiceIsLiked === 1) {
+            voice.voiceLikeCount--;
+            voice.voiceIsLiked = 0;
+        }
+        voice.voiceIsLiked = 2;
+        voice.voiceIsUnliked = true;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceLikeCount: voice.voiceLikeCount,
+    }
+    let result = await discoverUpdateLikeService(editData);
 };
 </script>
 
