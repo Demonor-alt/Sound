@@ -243,11 +243,11 @@ const togglePlay = (voiceId, sampleIndex) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/discover'
-onMounted(async () => {
-    let result = await discoverQueryService();
-    voices.value = result.data;
-})
+// import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/discover'
+// onMounted(async () => {
+//     let result = await discoverQueryService();
+//     voices.value = result.data;
+// })
 import { ElNotification } from 'element-plus'
 const open = (voiceId) => {
     const voiceIndex = voices.value.findIndex(voice => voice.voiceId === voiceId);
@@ -263,17 +263,16 @@ const open = (voiceId) => {
                 message: "已复制到剪贴板",
                 position: 'bottom-right',
             });
-            try {
-                let result = await discoverUpdateShareService(voiceId);
-                console.log(result);
-            } catch (error) {
-                console.error('分享服务调用失败:', error);
-                ElNotification({
-                    message: `分享服务调用失败: ${error.message}`,
-                    position: 'bottom-right',
-                    type: 'error'
-                });
-            }
+            // try {
+            //     let result = await discoverUpdateShareService(voiceId);
+            // } catch (error) {
+            //     console.error('分享服务调用失败:', error);
+            //     ElNotification({
+            //         message: `分享服务调用失败: ${error.message}`,
+            //         position: 'bottom-right',
+            //         type: 'error'
+            //     });
+            // }
         })
         .catch((error) => {
             ElNotification({
@@ -284,56 +283,56 @@ const open = (voiceId) => {
         });
 };
 
-const toggleLike = async (voice) => {
-    if (voice.voiceIsLiked === 1) {
-        voice.voiceIsLiked = 0;
-        voice.voiceLikeCount--;
-    } else {
-        if (voice.voiceIsLiked === 2) {
-            voice.voiceIsUnliked = false;
-        }
-        voice.voiceIsLiked = 1;
-        voice.voiceLikeCount++;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-    let result = await discoverUpdateLikeService(editData);
-};
-const toggleDislike =async(voice) => {
-    if (voice.voiceIsLiked === 2) {
-        // 当前是不喜欢状态，切换为中立
-        voice.voiceIsLiked = 0;
-        voice.voiceIsUnliked = false;
-    } else {
-        // 当前不是不喜欢状态
-        if (voice.voiceIsLiked === 1) {
-            voice.voiceLikeCount--;
-            voice.voiceIsLiked = 0;
-        }
-        voice.voiceIsLiked = 2;
-        voice.voiceIsUnliked = true;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-    let result = await discoverUpdateLikeService(editData);
-};
-const toggleCollect = async(voice) => {
-    voice.voiceIsCollected = !voice.voiceIsCollected;
-    if (voice.voiceIsCollected) {
-        voice.voiceCollectCount++;
-    } else {
-        voice.voiceCollectCount--;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceCollectCount: voice.voiceCollectCount,
-    }
-    let result = await discoverUpdateCollectService(editData);
-};
+// const toggleLike = async (voice) => {
+//     if (voice.voiceIsLiked === 1) {
+//         voice.voiceIsLiked = 0;
+//         voice.voiceLikeCount--;
+//     } else {
+//         if (voice.voiceIsLiked === 2) {
+//             voice.voiceIsUnliked = false;
+//         }
+//         voice.voiceIsLiked = 1;
+//         voice.voiceLikeCount++;
+//     }
+//     const editData = {
+//         voiceId: voice.voiceId,
+//         voiceLikeCount: voice.voiceLikeCount,
+//     }
+//     let result = await discoverUpdateLikeService(editData);
+// };
+// const toggleDislike =async(voice) => {
+//     if (voice.voiceIsLiked === 2) {
+//         // 当前是不喜欢状态，切换为中立
+//         voice.voiceIsLiked = 0;
+//         voice.voiceIsUnliked = false;
+//     } else {
+//         // 当前不是不喜欢状态
+//         if (voice.voiceIsLiked === 1) {
+//             voice.voiceLikeCount--;
+//             voice.voiceIsLiked = 0;
+//         }
+//         voice.voiceIsLiked = 2;
+//         voice.voiceIsUnliked = true;
+//     }
+//     const editData = {
+//         voiceId: voice.voiceId,
+//         voiceLikeCount: voice.voiceLikeCount,
+//     }
+//     let result = await discoverUpdateLikeService(editData);
+// };
+// const toggleCollect = async(voice) => {
+//     voice.voiceIsCollected = !voice.voiceIsCollected;
+//     if (voice.voiceIsCollected) {
+//         voice.voiceCollectCount++;
+//     } else {
+//         voice.voiceCollectCount--;
+//     }
+//     const editData = {
+//         voiceId: voice.voiceId,
+//         voiceCollectCount: voice.voiceCollectCount,
+//     }
+//     let result = await discoverUpdateCollectService(editData);
+// };
 </script>
 
 <style scoped>
