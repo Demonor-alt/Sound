@@ -9,12 +9,12 @@
                     <div class="form-section">
                         类型
                         <div class="radio">
-                            <el-radio-group v-model="formData.type" size="large" text-color="black" fill="#fafafa">
-                                <el-radio-button label="公开" value="public" />
-                                <el-radio-button label="私有" value="private" />
+                            <el-radio-group v-model="formData.voiceType" size="large" text-color="black" fill="#fafafa">
+                                <el-radio-button label="公开" value="1" />
+                                <el-radio-button label="私有" value="0" />
                             </el-radio-group>
                         </div>
-                        <div v-if="formData.type === 'public'" style="font-size: small; color: #6b748b;">
+                        <div v-if="formData.voiceType === '1'" style="font-size: small; color: #6b748b;">
                             此语音模型将在发现页面中可见，每个人都可以看到。
                         </div>
                         <div v-else style="font-size: small; color: #6b748b;">此语音模型仅对创建者可见，不能共享且不会出现在发现页面。</div>
@@ -24,8 +24,8 @@
                         <div class="avatar">
                             <div class="upload-box">
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
-                                    action="/api/upload" name="file" :on-success="uploadSuccess">
-                                    <img v-if="formData.cover" :src="formData.cover" class="avatar" />
+                                    action="/api/common/upload" name="file" :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
+                                    <img v-if="formData.voiceImage" :src="formData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
                                     </el-icon>
@@ -36,18 +36,18 @@
                     </div>
                     <div class="form-section">
                         名称
-                        <MyInput :message="formData.name" :placeholder="placeholderName" class="search-input" :color="grayColor"
+                        <MyInput :message="formData.voiceName" :placeholder="placeholderName" class="search-input" :color="grayColor"
                             @update:message="handleMessageName" />
                     </div>
                     <div class="form-section">
                         描述 (可选)
-                        <MyInput :message="formData.description" :placeholder="placeholderDescription" :color="grayColor" :type="type"
+                        <MyInput :message="formData.voiceDescription" :placeholder="placeholderDescription" :color="grayColor" :type="type"
                             @update:message="handleMessageDescription" />
 
                     </div>
                     <div class="form-section">
                         标签
-                        <MyInput :message="formData.tags" :placeholder="placeholderTag" class="search-input" :color="grayColor"
+                        <MyInput :message="formData.voiceTag" :placeholder="placeholderTag" class="search-input" :color="grayColor"
                             @update:message="handleMessageTag" />
                     </div>
                 </div>
@@ -181,6 +181,8 @@
 import Recent from "@/components/bank/Recent.vue";
 import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
+import {useTokenStore} from "@/stores/token";
+const tokenStore = useTokenStore();
 const samples = reactive([]);
 const nextId = ref(1);
 const placeholderName2 = ref("输入音频样本标题");
@@ -302,20 +304,16 @@ const handleFileUpload = (file) => {
         };
         files.value.push(fileInfo);
     });
-
     return false;
 };
 const audioInstances = reactive({});
 const togglePlay = (index) => {
     const file = files.value[index]
-
     // 如果已有实例则复用
     if (!audioInstances[index]) {
         audioInstances[index] = new Audio(file.url)
     }
-
     const audio = audioInstances[index]
-
     if (file.isPlaying) {
         audio.pause()
     } else {
@@ -328,10 +326,8 @@ const togglePlay = (index) => {
         })
         audio.play()
     }
-
     // 更新播放状态
     file.isPlaying = !file.isPlaying
-
     // 添加播放结束监听
     audio.addEventListener('ended', () => {
         file.isPlaying = false
@@ -355,7 +351,6 @@ const handleRemove = (file, files) => {
         deleteFile(index);
     }
 };
-const isFocused = ref(false);
 const activeName = ref('first');
 const selectedTime = computed(() => {
     let totalSeconds = 0;
@@ -406,7 +401,6 @@ const { step } = storeToRefs(stepStore);
 const createAction = () => {
   // 清除所有录音记录
   files.value = []
-  
   // 清除所有音频实例
   Object.keys(audioInstances).forEach(key => {
     audioInstances[key].pause()
@@ -418,19 +412,17 @@ const createAction = () => {
   // 跳转逻辑
   stepStore.incrementStep()
 }
-
-const formData = reactive({
-    type: 'public',
-    cover: null,
-    coverPreview: null,
-    name: '',
-    description: '',
-    tags: '',
-    quickTag: false
+const formData = ref({
+    voiceType: '1',
+    voiceImage: '',
+    voiceName: '',
+    voiceDescription: '',
+    voiceTag: '',
 });
 
 const uploadSuccess = (result) => {
-    formData.value.image = result.data;
+    // console.log(result);
+    formData.value.voiceImage = result.data;
 }
 
 
