@@ -44,7 +44,7 @@
 
 <script setup>
 import SoundItem from '@/components/bank/SoundItem.vue'
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import {
     Operation,
 } from '@element-plus/icons-vue';
@@ -61,7 +61,11 @@ const languageOptions = ref([
     { value: 'en', label: 'English' },
 ]);
 const tagOptions = ref();
-//需要查询标签表
+// import {discoverTagService} from '@/api/discover'
+// onMounted(async()=>{
+//     let result=await discoverTagService();
+//     tagOptions.value=result.data;
+// })
 const sortValue = ref('');
 const languageValue = ref('1');
 const tagValue = ref('');

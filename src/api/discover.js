@@ -16,3 +16,6 @@ export const discoverUpdateLikeService = (data) => {
 export const discoverUpdateCollectService = (data) => {
     return request.put("/discover/collect",data);
 }
+export const discoverTagService = () => {
+    return request.get("/discover/tag");
+}
