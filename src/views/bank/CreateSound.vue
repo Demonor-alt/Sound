@@ -56,7 +56,7 @@
                     <el-tab-pane label="上传音频" name="second">
                         <div class="audio-upload">
                             <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
-                                :file-list="files" :on-remove="handleRemove" :limit="1">
+                                :file-list="files" :on-remove="handleRemove" :limit="0">
                                 <template #default>
                                     <div class="upload-button">
                                         <div class="insert"></div>
@@ -117,7 +117,7 @@
                             推荐 30 秒左右
                         </div>
                     </div>
-                    <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks"
+                    <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks" :show-tooltip="false"
                         :show-button="false" />
                     <div class="tip">*提示：最短10秒，最长90秒，推荐30秒</div>
                 </div>
