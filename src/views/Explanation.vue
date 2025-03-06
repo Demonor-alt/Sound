@@ -25,7 +25,7 @@
             <div class="select-output-section" v-else>
                 <el-row class="select-voice-item">
                     <el-col :span="5">
-                        <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="submitData.image"
+                        <el-image style="width: 80px; height: 80px;border-radius: 15px;" :src="submitData.image"
                             fit="cover" />
                     </el-col>
                     <el-col :span="15">
