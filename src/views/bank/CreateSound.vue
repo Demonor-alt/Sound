@@ -420,54 +420,54 @@ const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data;
 }
-import { bankInsertService, bankInsertSamplesService } from '@/api/bank/mybank'
-import { createAudioloadService } from '@/api/common'
-const sendAudiosToBackend = async () => {
-    const formData = new FormData();
-    for (const key in insertData.value) {
-        formData.append(key, insertData.value[key]);
-    }
-    files.value.forEach((file) => {
-        formData.append('files', file.file);
-    });
-    try {
-        let result = await bankInsertService(formData);
-        samples.value = result.data.sample;
-        currentVoiceId.value = result.data.voiceId;
-        console.log('音频上传成功:', samples.value, currentVoiceId.value);
-    } catch (error) {
-        console.error('音频上传失败:', error);
-    }
-};
-const createAction = async () => {
-    // 发送音频数据到后端
-    await sendAudiosToBackend();
+// import { bankInsertService, bankInsertSamplesService } from '@/api/bank/mybank'
+// import { createAudioloadService } from '@/api/common'
+// const sendAudiosToBackend = async () => {
+//     const formData = new FormData();
+//     for (const key in insertData.value) {
+//         formData.append(key, insertData.value[key]);
+//     }
+//     files.value.forEach((file) => {
+//         formData.append('files', file.file);
+//     });
+//     try {
+//         let result = await bankInsertService(formData);
+//         samples.value = result.data.sample;
+//         currentVoiceId.value = result.data.voiceId;
+//         console.log('音频上传成功:', samples.value, currentVoiceId.value);
+//     } catch (error) {
+//         console.error('音频上传失败:', error);
+//     }
+// };
+// const createAction = async () => {
+//     // 发送音频数据到后端
+//     await sendAudiosToBackend();
 
-    // 清除所有录音记录
-    files.value = [];
-    // 清除所有音频实例
-    Object.keys(audioInstances).forEach(key => {
-        audioInstances[key].pause();
-        audioInstances[key].src = '';
-        delete audioInstances[key];
-    });
-    // 跳转逻辑
-    stepStore.incrementStep();
-};
-const toMyBank = async () => {
-    router.push('/mybank');
-    stepStore.reduceStep();
-    const newSamples = samples.value.slice(1);
-    let result = await bankInsertSamplesService(newSamples);
-}
-const generateSample = async (index) => {
-    const createAudioData = {
-        voiceId: currentVoiceId.value,
-        sampleText: samples.value[index].sampleText,
-    }
-    let result = await createAudioloadService(createAudioData);
-    samples.value[index].sampleUrl = result.data;
-};
+//     // 清除所有录音记录
+//     files.value = [];
+//     // 清除所有音频实例
+//     Object.keys(audioInstances).forEach(key => {
+//         audioInstances[key].pause();
+//         audioInstances[key].src = '';
+//         delete audioInstances[key];
+//     });
+//     // 跳转逻辑
+//     stepStore.incrementStep();
+// };
+// const toMyBank = async () => {
+//     router.push('/mybank');
+//     stepStore.reduceStep();
+//     const newSamples = samples.value.slice(1);
+//     let result = await bankInsertSamplesService(newSamples);
+// }
+// const generateSample = async (index) => {
+//     const createAudioData = {
+//         voiceId: currentVoiceId.value,
+//         sampleText: samples.value[index].sampleText,
+//     }
+//     let result = await createAudioloadService(createAudioData);
+//     samples.value[index].sampleUrl = result.data;
+// };
 </script>
 
 <style scoped>
