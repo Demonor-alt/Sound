@@ -327,7 +327,7 @@
         </div>
         <el-divider direction="vertical" style="height: auto;" />
         <div class="col">
-
+            <h3>生成的音频</h3>
         </div>
     </div>
 
@@ -603,6 +603,7 @@ const decrease2 = () => {
 .text {
     font-size: large;
     padding-bottom: 15px;
+    margin-top: 10px;
 }
 
 
@@ -622,7 +623,7 @@ textarea {
 }
 
 .warning {
-    margin: 10px 0;
+    margin: 20px 0;
     padding: 10px;
     background-color: #f5f5f5;
     border-radius: 4px;
@@ -636,12 +637,16 @@ textarea {
 }
 
 .voice-selection {
+    margin-top: 30px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
 }
 
 .output-section {
+    margin-bottom: 40px;
     min-height: 50px;
     padding: 20px;
     border: 2px dashed #ddd;
@@ -685,7 +690,7 @@ textarea {
 .build {
     display: flex;
     justify-content: end;
-    margin-top: 20px;
+    margin-top: 40px;
 }
 
 input[type="range"] {
