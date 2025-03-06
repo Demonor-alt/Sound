@@ -407,6 +407,7 @@ import { storeToRefs } from 'pinia';
 const stepStore = useStepStore()
 const { step } = storeToRefs(stepStore);
 import {bankInsertService} from '@/api/bank/mybank'
+const currentVoiceId=ref('');
 const sendAudiosToBackend = async () => {
     const formData = new FormData();
     for (const key in insertData.value) {
@@ -418,7 +419,8 @@ const sendAudiosToBackend = async () => {
     try {
         let result = await bankInsertService(formData);
         samples.value=result.data;
-        console.log('音频上传成功:', samples.value);
+        currentVoiceId.value=result.voiceId;
+        console.log('音频上传成功:', samples.value,currentVoiceId.value);
     } catch (error) {
         console.error('音频上传失败:', error);
     }
