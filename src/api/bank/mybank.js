@@ -12,3 +12,7 @@ export const bankDeleteService = (voiceId) => {
 export const bankInsertService = (data) => {
     return request.post('/mybank',data);
 }
+//新增示例音频
+export const bankInsertSamplesService = (data) => {
+    return request.post('/mybank/samples',data);
+}

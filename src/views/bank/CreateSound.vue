@@ -9,7 +9,8 @@
                     <div class="form-section">
                         类型
                         <div class="radio">
-                            <el-radio-group v-model="insertData.voiceType" size="large" text-color="black" fill="#fafafa">
+                            <el-radio-group v-model="insertData.voiceType" size="large" text-color="black"
+                                fill="#fafafa">
                                 <el-radio-button label="公开" value="1" />
                                 <el-radio-button label="私有" value="0" />
                             </el-radio-group>
@@ -24,7 +25,8 @@
                         <div class="avatar">
                             <div class="upload-box">
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
-                                    action="/api/common/upload" name="file" :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
+                                    action="/api/common/upload" name="file"
+                                    :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
                                     <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
@@ -36,19 +38,19 @@
                     </div>
                     <div class="form-section">
                         名称
-                        <MyInput :message="insertData.voiceName" :placeholder="placeholderName" class="search-input" :color="grayColor"
-                            @update:message="handleMessageName" />
+                        <MyInput :message="insertData.voiceName" :placeholder="placeholderName" class="search-input"
+                            :color="grayColor" @update:message="handleMessageName" />
                     </div>
                     <div class="form-section">
                         描述 (可选)
-                        <MyInput :message="insertData.voiceDescription" :placeholder="placeholderDescription" :color="grayColor" :type="type"
-                            @update:message="handleMessageDescription" />
+                        <MyInput :message="insertData.voiceDescription" :placeholder="placeholderDescription"
+                            :color="grayColor" :type="type" @update:message="handleMessageDescription" />
 
                     </div>
                     <div class="form-section">
                         标签
-                        <MyInput :message="insertData.voiceTag" :placeholder="placeholderTag" class="search-input" :color="grayColor"
-                            @update:message="handleMessageTag" />
+                        <MyInput :message="insertData.voiceTag" :placeholder="placeholderTag" class="search-input"
+                            :color="grayColor" @update:message="handleMessageTag" />
                     </div>
                 </div>
                 <h3>输入音频</h3>
@@ -117,8 +119,8 @@
                             推荐 30 秒左右
                         </div>
                     </div>
-                    <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks" :show-tooltip="false"
-                        :show-button="false" />
+                    <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks"
+                        :show-tooltip="false" :show-button="false" />
                     <div class="tip">*提示：最短10秒，最长90秒，推荐30秒</div>
                 </div>
                 <button class="next-btn" @click="createAction">创建</button>
@@ -134,15 +136,17 @@
                     <div v-for="(sample, index) in samples" :key="sample.sampleId" class="audio-card">
                         <div>
                             <div class="card-header">
-                                <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index : sample.sampleTitle
-                                }}</span>
-                                <el-icon size="20" color="#606672" style="cursor: pointer;" @click="removeSample(index)">
+                                <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
+            sample.sampleTitle
+                                    }}</span>
+                                <el-icon size="20" color="#606672" style="cursor: pointer;"
+                                    @click="removeSample(index)">
                                     <Close />
                                 </el-icon>
                             </div>
                         </div>
                         <div class="myinput">
-                            <MyInput :message="sample.sampleTitle" :placeholder="placeholderName2" 
+                            <MyInput :message="sample.sampleTitle" :placeholder="placeholderName2"
                                 @update:message="(newMessage) => handleMessageName2(index, newMessage)" />
                             <MyInput :message="sample.sampleText" :placeholder="placeholderTextArea" :type="type"
                                 :rows="rows"
@@ -181,11 +185,8 @@
 import Recent from "@/components/bank/Recent.vue";
 import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
-import {useTokenStore} from "@/stores/token";
+import { useTokenStore } from "@/stores/token";
 const tokenStore = useTokenStore();
-const samples = ref([{
-}]);
-const nextId = ref(1);
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
@@ -193,24 +194,24 @@ const grayColor = ref('#f5f5f5');
 const placeholderDescription = ref('填写音频描述');
 const rows = ref("3");
 import audioUrl from '@/assets/sound.m4a';
+const samples = ref([{
+    sampleId: '',
+    sampleTitle: '',
+    sampleText: '',
+    sampleUrl: '',
+    sampleIsPlaying: false,
+}]);
 const addSample = () => {
     samples.value.push({
-        sampleId: nextId.value++,
         sampleTitle: '',
         sampleText: '',
-        sampleUrl: audioUrl,
+        sampleUrl: '',
+        sampleIsPlaying: false,
     });
 };
-const generateSample = (index) => {
-    // 这里可以添加生成音频的逻辑
-    console.log('生成样本:', samples.value[index]);
-};
+
 import { useRouter } from 'vue-router'
 const router = useRouter()
-const toMyBank = () => {
-    router.push('/mybank');
-    stepStore.reduceStep();
-}
 // 删除样本
 const removeSample = (index) => {
     const sample = samples.value[index]
@@ -388,7 +389,7 @@ const placeholderTag = ref('输入标签');
 function handleMessageName(newMessage) {
     insertData.value.name = newMessage;
 }
-function handleMessageDescription(newMessage){
+function handleMessageDescription(newMessage) {
     insertData.value.description = newMessage;
 }
 function handleMessageTag(newMessage) {
@@ -406,8 +407,21 @@ import { useStepStore } from '@/stores/step';
 import { storeToRefs } from 'pinia';
 const stepStore = useStepStore()
 const { step } = storeToRefs(stepStore);
-import {bankInsertService} from '@/api/bank/mybank'
-const currentVoiceId=ref('');
+const currentVoiceId = ref('');
+const insertData = ref({
+    voiceType: '1',
+    voiceImage: '',
+    voiceName: '',
+    voiceDescription: '',
+    voiceTag: '',
+});
+
+const uploadSuccess = (result) => {
+    // console.log(result);
+    insertData.value.voiceImage = result.data;
+}
+import { bankInsertService, bankInsertSamplesService } from '@/api/bank/mybank'
+import { createAudioloadService } from '@/api/common'
 const sendAudiosToBackend = async () => {
     const formData = new FormData();
     for (const key in insertData.value) {
@@ -418,9 +432,9 @@ const sendAudiosToBackend = async () => {
     });
     try {
         let result = await bankInsertService(formData);
-        samples.value=result.data;
-        currentVoiceId.value=result.voiceId;
-        console.log('音频上传成功:', samples.value,currentVoiceId.value);
+        samples.value = result.data.sample;
+        currentVoiceId.value = result.data.voiceId;
+        console.log('音频上传成功:', samples.value, currentVoiceId.value);
     } catch (error) {
         console.error('音频上传失败:', error);
     }
@@ -440,20 +454,20 @@ const createAction = async () => {
     // 跳转逻辑
     stepStore.incrementStep();
 };
-const insertData = ref({
-    voiceType: '1',
-    voiceImage: '',
-    voiceName: '',
-    voiceDescription: '',
-    voiceTag: '',
-});
-
-const uploadSuccess = (result) => {
-    // console.log(result);
-    insertData.value.voiceImage = result.data;
+const toMyBank = async () => {
+    router.push('/mybank');
+    stepStore.reduceStep();
+    const newSamples = samples.value.slice(1);
+    let result = await bankInsertSamplesService(newSamples);
 }
-
-
+const generateSample = async (index) => {
+    const createAudioData = {
+        voiceId: currentVoiceId.value,
+        sampleText: samples.value[index].sampleText,
+    }
+    let result = await createAudioloadService(createAudioData);
+    samples.value[index].sampleUrl = result.data;
+};
 </script>
 
 <style scoped>
