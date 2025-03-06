@@ -321,6 +321,10 @@ const token = useTokenStore();
         }
     }
 }
+.voice-item:hover {
+    border-color: #ccc; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+}
 
 .logo {
     width: 25px;

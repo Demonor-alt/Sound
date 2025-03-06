@@ -1,6 +1,6 @@
 <template>
     <div class="row">
-        <div class="col">
+        <div class="col1">
             <h1>文本转语音</h1>
             <div class="input-section">
                 <div class="text">您的文本</div>
@@ -326,7 +326,7 @@
             </div>
         </div>
         <el-divider direction="vertical" style="height: auto;" />
-        <div class="col">
+        <div class="col2">
             <h3>生成的音频</h3>
         </div>
     </div>
@@ -595,9 +595,13 @@ const decrease2 = () => {
     flex-direction: row;
 }
 
-.col {
+.col1 {
     margin: 0 3%;
-    width: 85vh;
+    width:44%;
+}
+.col2 {
+    margin: 1% 5%;
+    width:40%;
 }
 
 .text {

@@ -343,7 +343,7 @@ const toggleCollect = async(voice) => {
     display: flex;
     padding: 20px;
     margin-bottom: 20px;
-
+    transition: all 0.3s ease; 
     .el-col {
         display: flex;
         flex-direction: column;
@@ -415,6 +415,10 @@ const toggleCollect = async(voice) => {
             }
         }
     }
+}
+.voice-item:hover {
+    border-color: #ccc; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
 }
 
 .voice-name {
