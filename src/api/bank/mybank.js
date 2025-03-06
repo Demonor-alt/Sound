@@ -32,3 +32,7 @@ export const bankUpdateSamplesService = (data) => {
 export const bankQuerySingleDetailService = (voiceId) => {
     return request.get(`/query/${voiceId}`);
 }
+//克隆指定音色
+export const bankCloneSamplesService = (data) => {
+    return request.post('/clone',data);
+}

@@ -2,24 +2,25 @@
     <div class="common-layout">
         <el-container>
             <el-header class="header">
-                <el-image class="image" :src="voices.voiceImage" fit="cover" />
-                <div class="title">{{ voices.voiceName }}</div>
+                <el-image class="image" :src="voice.voiceImage" fit="cover" />
+                <div class="title">{{ voice.voiceName }}</div>
                 <div class="voice-detail">
-                    <span class="display-detail"> {{ voices.userName }}</span>
+                    <span class="display-detail"> {{ voice.userName }}</span>
                     <div class="dot"></div>
                     <el-icon size="20" style="color: #6b7280;">
                         <Clock />
                     </el-icon>
-                    <span class="display-detail">{{ timeDistance(voices.voiceCreationTime) }}</span>
+                    <span class="display-detail">{{ timeDistance(voice.voiceCreationTime) }}</span>
                     <div class="dot"></div>
-                    <div class="tag1"> {{ voices.voiceLanguage }}</div>
-                    <div class="tag2" v-if="voices.voiceTag !== ''" style="margin-left: 5px;"> 
-                        {{ voices.voiceTag }}
+                    <div class="tag1"> {{ voice.voiceLanguage }}</div>
+                    <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;">
+                        {{ voice.voiceTag }}
                     </div>
                 </div>
                 <div class="btns">
-                    <el-button size="large" color="black" @click="useVoice(voices.voiceId)">使用声音</el-button>
-                    <el-button size="large" color="black" @click="copyDialogVisible = true">克隆模型</el-button>
+                    <el-button size="large" color="black" @click="useVoice(voice.voiceId)">使用声音</el-button>
+                    <el-button size="large" color="black"
+                        @click="copyDialogVisible = true">克隆模型</el-button>
                     <el-dialog v-model="copyDialogVisible" width="30%" align-center :show-close="false">
                         <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">克隆模型</div>
                         <span>确认是否克隆该模型，这将为你创建一个不可变更可见性的私有模型</span>
@@ -27,7 +28,7 @@
                             <span class="dialog-footer">
                                 <el-button color="#f4f4f5" plain style="color: black; border: #e4e4e7 1px solid; "
                                     @click="copyDialogVisible = false">取消</el-button>
-                                <el-button color="black" @click="copyDialogVisible = false">
+                                <el-button color="black" @click="copyDialogVisible = false; cloneVoice()">
                                     确认
                                 </el-button>
                             </span>
@@ -37,25 +38,22 @@
                         <div class="shared" @click="open"></div>
                     </div>
                     <div class="button">
-                        <div class="like" v-if="!voices.voiceIsLiked"
-                            @click="voices.voiceIsLiked = !voices.voiceIsLiked; voices.voiceLikeCount++;">
+                        <div class="likefill" v-if="voice.voiceIsLiked === 1" @click="toggleLike(voice)">
                         </div>
-                        <div class="likefill" v-else @click="voices.voiceIsLiked = !voices.voiceIsLiked; voices.voiceLikeCount--;">
+                        <div class="like" v-else @click="toggleLike(voice)">
                         </div>
                     </div>
                     <div class="button">
-                        <div class="unlike" v-if="!voices.voiceIsUnliked" 
-                            @click="voices.voiceIsUnliked = !voices.voiceIsUnliked">
-                        </div>
-                        <div class="unlikefill" v-else @click="voices.voiceIsUnliked = !voices.voiceIsUnliked"></div>
+                        <div class="unlikefill" v-if="voice.voiceIsLiked === 2" @click="toggleDislike(voice)"></div>
+                        <div class="unlike" v-else @click="toggleDislike(voice)"></div>
                     </div>
                     <div class="button">
-                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voices.voiceIsCollected"
-                            @click="voices.voiceIsCollected = !voices.voiceIsCollected; voices.voiceCollectCount++;">
+                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voice.voiceIsCollected"
+                            @click="toggleCollect(voice)">
                             <Star />
                         </el-icon>
                         <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-else
-                            @click="voices.voiceIsCollected = !voices.voiceIsCollected; voices.voiceCollectCount--;">
+                            @click="toggleCollect(voice)">
                             <StarFilled />
                         </el-icon>
                     </div>
@@ -65,7 +63,7 @@
                                 <div class="more"></div>
                             </div>
                         </template>
-                        <div class="popper" @click="open">
+                        <div class="popper" @click="openId">
                             <el-icon size="17" style="background-color: #e0e5eb; border-radius: 6px;padding: 8px;">
                                 <CopyDocument />
                             </el-icon>
@@ -82,7 +80,7 @@
                             <div class="dialog">
                                 你为什么要举报这个模型?
                                 <MySelect :options="sortOptions" :input-width="'432px'" :color="color"
-                                    @update:value="handleSortValue" style="margin-bottom: 10px;"/>
+                                    @update:value="handleSortValue" style="margin-bottom: 10px;" />
                                 评论（至少20个字符）
                                 <MyInputW :message="reportData.desctibe" :placeholder="placeholderTextArea" :type="type"
                                     :rows="rows" @update:message="handleMessageTextArea" />
@@ -91,7 +89,8 @@
                                 <span class="dialog-footer">
                                     <el-button color="#f4f4f5" plain style="color: black; border: #e4e4e7 1px solid; "
                                         @click="reportDialogVisible = false">取消</el-button>
-                                    <el-button color="black" @click="reportDialogVisible = false; visiblePopover = false">
+                                    <el-button color="black"
+                                        @click="reportDialogVisible = false; visiblePopover = false">
                                         确认
                                     </el-button>
                                 </span>
@@ -106,7 +105,7 @@
                     <el-col :span="15">
                         <div class="audio-samples">
                             <span style="font-size: large;font-weight: 800 ;color: black;">示例</span>
-                            <el-card v-for="(sample, index) in voices.voiceSamples" :key="index" class="samples-item"
+                            <el-card v-for="(sample, index) in voice.voiceSamples" :key="index" class="samples-item"
                                 shadow="never">
                                 <div class="samples-content">
                                     <div>
@@ -114,10 +113,9 @@
                                         <span>{{ sample.sampleTitle }}</span>
                                     </div>
                                     <div class="sample-btn">
-                                        <div v-if="!sample.sampleIsPlaying" class="close"
-                                            @click="togglePlay(index)">
+                                        <div v-if="!sample.sampleIsPlaying" class="close" @click="togglePlay(index)">
                                         </div>
-                                        <div v-else class="on" @click="togglePlay( index)"></div>
+                                        <div v-else class="on" @click="togglePlay(index)"></div>
                                     </div>
                                 </div>
                                 <div style="font-size: small;color: #71717a; padding-top: 10px;">
@@ -130,27 +128,27 @@
                         <div class="audio-description">
                             <span style="font-size: large;font-weight: 800 ;color: black;">描述</span>
                             <div class="description">
-                                {{ voices.voiceDescription }}
+                                {{ voice.voiceDescription }}
                             </div>
                             <el-divider />
                             <div class="two-item">
                                 <div class="one-item">
                                     <span class="item-name">总点赞数</span>
-                                    {{ voices.voiceLikeCount }}
+                                    {{ voice.voiceLikeCount }}
                                 </div>
                                 <div class="one-item">
                                     <span class="item-name">总标记数</span>
-                                    {{ voices.voiceCollectCount }}
+                                    {{ voice.voiceCollectCount }}
                                 </div>
                             </div>
                             <div class="two-item">
                                 <div class="one-item">
                                     <span class="item-name">总分享数</span>
-                                    {{ voices.voiceShareCount }}
+                                    {{ voice.voiceShareCount }}
                                 </div>
                                 <div class="one-item">
                                     <span class="item-name">总使用数</span>
-                                    {{ voices.voiceUseCount }}
+                                    {{ voice.voiceUseCount }}
                                 </div>
                             </div>
                         </div>
@@ -178,9 +176,9 @@ import {
 import { useRouter, useRoute } from 'vue-router';
 const router = useRouter()
 const route = useRoute();
-const voiceId = route.query ? route.query.id : undefined;
+const currentVoiceId = route.query ? route.query.id : undefined;
 const useVoice = () => {
-    router.push({ path: '/explanation', query: { id: voiceId } });
+    router.push({ path: '/explanation', query: { id: currentVoiceId } });
 }
 const visiblePopover = ref(false)
 const copyDialogVisible = ref(false)
@@ -201,7 +199,7 @@ function handleMessageTextArea(newValue) {
     reportData.value.desctibe = newValue;
 }
 import audioUrl from '@/assets/sound.m4a';
-const voices = ref({
+const voice = ref({
     voiceId: 1,
     userName: 'fc',
     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
@@ -217,7 +215,7 @@ const voices = ref({
     voiceIsUsed: false,
     voiceIsShared: false,
     voiceIsLiked: '1',
-    voiceIsCollected:false,
+    voiceIsCollected: false,
     voiceSamples: [
         {
             sampleId: 1,
@@ -235,73 +233,177 @@ const voices = ref({
         }
     ]
 })
-import { ElNotification } from 'element-plus'
-const open = () => {
-    visiblePopover.value = false;
-    ElNotification({
-        message: "已复制到剪贴板",
-        position: 'bottom-right',
-    })
-}
-import { ref, reactive } from 'vue'
-
+import { ref, reactive, onMounted } from 'vue'
+const openId = () => {
+    navigator.clipboard.writeText(currentVoiceId)
+        .then(() => {
+            ElNotification({
+                message: "已复制到剪贴板",
+                position: 'bottom-right',
+            });
+        })
+        .catch((error) => {
+            ElNotification({
+                message: `复制失败: ${error.message}`,
+                position: 'bottom-right',
+                type: 'error'
+            });
+        });
+};
 // 音频实例存储对象
 const audioPlayers = reactive({})
 
 // 修改后的播放控制方法
 const togglePlay = (index) => {
-  const sample = voices.value.voiceSamples[index]
-  const playerKey = `-${index}`
+    const sample = voice.value.voiceSamples[index]
+    const playerKey = `-${index}`
 
-  // 如果已经有播放器实例
-  if (audioPlayers[playerKey]) {
-    const audio = audioPlayers[playerKey]
-    if (sample.sampleIsPlaying) {
-      audio.pause()
+    // 如果已经有播放器实例
+    if (audioPlayers[playerKey]) {
+        const audio = audioPlayers[playerKey]
+        if (sample.sampleIsPlaying) {
+            audio.pause()
+        } else {
+            // 暂停所有正在播放的音频
+            stopAllAudios()
+            audio.play()
+        }
     } else {
-      // 暂停所有正在播放的音频
-      stopAllAudios()
-      audio.play()
+        // 创建新播放器实例
+        const audio = new Audio(sample.sampleUrl)
+        audioPlayers[playerKey] = audio
+
+        // 添加播放结束监听
+        audio.addEventListener('ended', () => {
+            sample.sampleIsPlaying = false
+        })
+
+        // 暂停其他音频并播放当前
+        stopAllAudios()
+        audio.play()
     }
-  } else {
-    // 创建新播放器实例
-    const audio = new Audio(sample.sampleUrl)
-    audioPlayers[playerKey] = audio
-    
-    // 添加播放结束监听
-    audio.addEventListener('ended', () => {
-      sample.sampleIsPlaying = false
-    })
 
-    // 暂停其他音频并播放当前
-    stopAllAudios()
-    audio.play()
-  }
-
-  // 切换当前音频状态
-  sample.sampleIsPlaying = !sample.sampleIsPlaying
+    // 切换当前音频状态
+    sample.sampleIsPlaying = !sample.sampleIsPlaying
 }
 
 // 停止所有音频的方法
 const stopAllAudios = () => {
-  Object.entries(audioPlayers).forEach(([key, audio]) => {
-    if (!audio.paused) {
-      audio.pause()
-      // 更新对应样本状态
-      const [voiceId, index] = key.split('-')
-      voice.value.sample[index].isPlaying = false
-    }
-  })
+    Object.entries(audioPlayers).forEach(([key, audio]) => {
+        if (!audio.paused) {
+            audio.pause()
+            // 更新对应样本状态
+            const [voiceId, index] = key.split('-')
+            voice.value.sample[index].isPlaying = false
+        }
+    })
 }
 
 // 添加组件卸载时的清理
 import { onBeforeUnmount } from 'vue'
 onBeforeUnmount(() => {
-  Object.values(audioPlayers).forEach(audio => {
-    audio.pause()
-    audio.src = ''
-  })
+    Object.values(audioPlayers).forEach(audio => {
+        audio.pause()
+        audio.src = ''
+    })
 })
+import { bankQuerySingleDetailService,bankCloneSamplesService } from '@/api/bank/mybank'
+import { discoverUpdateShareService, discoverUpdateLikeService, discoverUpdateCollectService } from '@/api/bank/discover'
+onMounted(async () => {
+    let result = await bankQuerySingleDetailService(currentVoiceId);
+    voice.value = result.data
+})
+import { ElNotification } from 'element-plus'
+const open = () => {
+    if (voice.voiceIsShared === false) {
+        voice.voiceIsShared = true;
+        voice.voiceShareCount++;
+    }
+    const currentUrl = window.location.href;
+    const textToCopy = `${currentUrl}?id=${currentVoiceId}`;
+    navigator.clipboard.writeText(textToCopy)
+        .then(async () => {
+            ElNotification({
+                message: "已复制到剪贴板",
+                position: 'bottom-right',
+            });
+            try {
+                let result = await discoverUpdateShareService(currentVoiceId);
+                console.log('111', result);
+            } catch (error) {
+                console.error('分享服务调用失败:', error);
+                ElNotification({
+                    message: `分享服务调用失败: ${error.message}`,
+                    position: 'bottom-right',
+                    type: 'error'
+                });
+            }
+        })
+        .catch((error) => {
+            ElNotification({
+                message: `复制失败: ${error.message}`,
+                position: 'bottom-right',
+                type: 'error'
+            });
+        });
+};
+const toggleLike = async (voice) => {
+    if (voice.voiceIsLiked === 1) {
+        voice.voiceIsLiked = 0;
+        voice.voiceLikeCount--;
+    } else {
+        if (voice.voiceIsLiked === 2) {
+            voice.voiceIsUnliked = false;
+        }
+        voice.voiceIsLiked = 1;
+        voice.voiceLikeCount++;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceLikeCount: voice.voiceLikeCount,
+    }
+    let result = await discoverUpdateLikeService(editData);
+};
+const toggleDislike = async (voice) => {
+    if (voice.voiceIsLiked === 2) {
+        // 当前是不喜欢状态，切换为中立
+        voice.voiceIsLiked = 0;
+        voice.voiceIsUnliked = false;
+    } else {
+        // 当前不是不喜欢状态
+        if (voice.voiceIsLiked === 1) {
+            voice.voiceLikeCount--;
+            voice.voiceIsLiked = 0;
+        }
+        voice.voiceIsLiked = 2;
+        voice.voiceIsUnliked = true;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceLikeCount: voice.voiceLikeCount,
+    }
+    let result = await discoverUpdateLikeService(editData);
+};
+const toggleCollect = async (voice) => {
+    voice.voiceIsCollected = !voice.voiceIsCollected;
+    if (voice.voiceIsCollected) {
+        voice.voiceCollectCount++;
+    } else {
+        voice.voiceCollectCount--;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceCollectCount: voice.voiceCollectCount,
+    }
+    let result = await discoverUpdateCollectService(editData);
+};
+const cloneVoice = async () => {
+    const clone = ref({
+        ...voice.value,
+        voiceType: '0'
+    })
+    let result = await bankCloneSamplesService(clone);
+}
 </script>
 <style scoped>
 .header {
