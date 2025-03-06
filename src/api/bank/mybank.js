@@ -28,3 +28,7 @@ export const bankUpdateService = (data) => {
 export const bankUpdateSamplesService = (data) => {
     return request.put('/mybank/samples',data)
 }
+//查询指定音色
+export const bankQuerySingleDetailService = (voiceId) => {
+    return request.get(`/query/${voiceId}`);
+}

@@ -489,7 +489,6 @@ const toMyBankAndUpdate = async () => {
     stepStore.reduceStep();
     const newSamples = samples.value.slice(1);
     let result = await bankUpdateSamplesService(newSamples);
-    console.log('1111',result)
 }
 const generateSample = async (index) => {
     const createAudioData = {
