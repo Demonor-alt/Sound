@@ -99,13 +99,13 @@ const handleSelect = (item) => {
 
 .el-input {
   padding: 1px;
-  border: 3px solid v-bind(color);
+  border: 2px solid v-bind(color);
   border-radius: 8px;
 }
 
 .focused {
   padding: 1px;
-  border: 3px solid black;
+  border: 2px solid black;
   border-radius: 8px;
 }
 ::v-deep .el-input__wrapper{

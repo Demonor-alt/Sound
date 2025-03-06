@@ -38,12 +38,12 @@ watch(() => props.message, (newValue) => {
 <style scoped>
 .input {
     padding: 1px;
-    border: 3px solid v-bind(color);
+    border: 2px solid v-bind(color);
     border-radius: 8px;
 }
 
 .input.focused {
-    border: 3px solid black !important;
+    border: 2px solid black !important;
     border-radius: 8px;
 }
 
