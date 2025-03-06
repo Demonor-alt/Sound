@@ -2,22 +2,23 @@
     <div class="common-layout">
         <el-container>
             <el-header class="header">
-                <el-image class="image" :src="voice.image" fit="cover" />
-                <div class="title">{{ voice.name }}</div>
+                <el-image class="image" :src="voices.voiceImage" fit="cover" />
+                <div class="title">{{ voices.voiceName }}</div>
                 <div class="voice-detail">
-                    <span class="display-detail"> {{ voice.userName }}</span>
+                    <span class="display-detail"> {{ voices.userName }}</span>
                     <div class="dot"></div>
                     <el-icon size="20" style="color: #6b7280;">
                         <Clock />
                     </el-icon>
-                    <span class="display-detail">{{ timeDistance(voice.creationTime) }}</span>
+                    <span class="display-detail">{{ timeDistance(voices.voiceCreationTime) }}</span>
                     <div class="dot"></div>
-                    <div class="tag1"> {{ voice.language }}</div>
-                    <div class="tag2" v-if="voice.tag !== ''" style="margin-left: 5px;"> {{ voice.tag }}
+                    <div class="tag1"> {{ voices.voiceLanguage }}</div>
+                    <div class="tag2" v-if="voices.voiceTag !== ''" style="margin-left: 5px;"> 
+                        {{ voices.voiceTag }}
                     </div>
                 </div>
                 <div class="btns">
-                    <el-button size="large" color="black" @click="useVoice(voice.id)">使用声音</el-button>
+                    <el-button size="large" color="black" @click="useVoice(voices.voiceId)">使用声音</el-button>
                     <el-button size="large" color="black" @click="copyDialogVisible = true">克隆模型</el-button>
                     <el-dialog v-model="copyDialogVisible" width="30%" align-center :show-close="false">
                         <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">克隆模型</div>
@@ -36,23 +37,25 @@
                         <div class="shared" @click="open"></div>
                     </div>
                     <div class="button">
-                        <div class="like" v-if="!voice.isLiked"
-                            @click="voice.isLiked = !voice.isLiked; voice.likeCount++;"></div>
-                        <div class="likefill" v-else @click="voice.isLiked = !voice.isLiked; voice.likeCount--;">
+                        <div class="like" v-if="!voices.voiceIsLiked"
+                            @click="voices.voiceIsLiked = !voices.voiceIsLiked; voices.voiceLikeCount++;">
+                        </div>
+                        <div class="likefill" v-else @click="voices.voiceIsLiked = !voices.voiceIsLiked; voices.voiceLikeCount--;">
                         </div>
                     </div>
                     <div class="button">
-                        <div class="unlike" v-if="!voice.isUnliked" @click="voice.isUnliked = !voice.isUnliked">
+                        <div class="unlike" v-if="!voices.voiceIsUnliked" 
+                            @click="voices.voiceIsUnliked = !voices.voiceIsUnliked">
                         </div>
-                        <div class="unlikefill" v-else @click="voice.isUnliked = !voice.isUnliked"></div>
+                        <div class="unlikefill" v-else @click="voices.voiceIsUnliked = !voices.voiceIsUnliked"></div>
                     </div>
                     <div class="button">
-                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voice.isCollected"
-                            @click="voice.isCollected = !voice.isCollected; voice.collectCount++;">
+                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-if="!voices.voiceIsCollected"
+                            @click="voices.voiceIsCollected = !voices.voiceIsCollected; voices.voiceCollectCount++;">
                             <Star />
                         </el-icon>
                         <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-else
-                            @click="voice.isCollected = !voice.isCollected; voice.collectCount--;">
+                            @click="voices.voiceIsCollected = !voices.voiceIsCollected; voices.voiceCollectCount--;">
                             <StarFilled />
                         </el-icon>
                     </div>
@@ -103,22 +106,22 @@
                     <el-col :span="15">
                         <div class="audio-samples">
                             <span style="font-size: large;font-weight: 800 ;color: black;">示例</span>
-                            <el-card v-for="(sample, index) in voice.sample" :key="index" class="samples-item"
+                            <el-card v-for="(sample, index) in voices.voiceSamples" :key="index" class="samples-item"
                                 shadow="never">
                                 <div class="samples-content">
                                     <div>
                                         <span class="samples-index">{{ index + 1 }}</span>
-                                        <span>{{ sample.title }}</span>
+                                        <span>{{ sample.sampleTitle }}</span>
                                     </div>
                                     <div class="sample-btn">
-                                        <div v-if="!sample.isPlaying" class="close"
+                                        <div v-if="!sample.sampleIsPlaying" class="close"
                                             @click="togglePlay(index)">
                                         </div>
                                         <div v-else class="on" @click="togglePlay( index)"></div>
                                     </div>
                                 </div>
                                 <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                    {{ sample.text }}
+                                    {{ sample.sampleText }}
                                 </div>
                             </el-card>
                         </div>
@@ -127,27 +130,27 @@
                         <div class="audio-description">
                             <span style="font-size: large;font-weight: 800 ;color: black;">描述</span>
                             <div class="description">
-                                {{ voice.description }}
+                                {{ voices.voiceDescription }}
                             </div>
                             <el-divider />
                             <div class="two-item">
                                 <div class="one-item">
                                     <span class="item-name">总点赞数</span>
-                                    {{ voice.likeCount }}
+                                    {{ voices.voiceLikeCount }}
                                 </div>
                                 <div class="one-item">
                                     <span class="item-name">总标记数</span>
-                                    {{ voice.collectCount }}
+                                    {{ voices.voiceCollectCount }}
                                 </div>
                             </div>
                             <div class="two-item">
                                 <div class="one-item">
                                     <span class="item-name">总分享数</span>
-                                    {{ voice.shareCount }}
+                                    {{ voices.voiceShareCount }}
                                 </div>
                                 <div class="one-item">
                                     <span class="item-name">总使用数</span>
-                                    {{ voice.peopleCount }}
+                                    {{ voices.voiceUseCount }}
                                 </div>
                             </div>
                         </div>
@@ -198,40 +201,39 @@ function handleMessageTextArea(newValue) {
     reportData.value.desctibe = newValue;
 }
 import audioUrl from '@/assets/sound.m4a';
-const voice = ref({
-    id: 1,
+const voices = ref({
+    voiceId: 1,
     userName: 'fc',
-    image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-    name: '55',
-    description: '1212',
-    creationTime: new Date(2025, 1, 9, 19, 11),
-    status: "成功",
-    audioUrl: '/samples/sample1.mp3',
-    peopleCount: 110000,
-    shareCount: 11,
-    likeCount: 20,
-    collectCount: 10,
-    language: 'ch',
-    tag: 'aaaaaaaaa',
-    isLiked: false,
-    isUnliked: false,
-    isCollected: false,
-    sample: [
+    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+    voiceName: '55',
+    voiceDescription: '1212',
+    voiceCreationTime: new Date(2025, 1, 9, 19, 11),
+    voiceUseCount: 110000,
+    voiceShareCount: 11,
+    voiceLikeCount: 20,
+    voiceCollectCount: 10,
+    voiceLanguage: 'ch',
+    voiceTag: 'aaaaaaaaa',
+    voiceIsUsed: false,
+    voiceIsShared: false,
+    voiceIsLiked: '1',
+    voiceIsCollected:false,
+    voiceSamples: [
         {
-            id: 1,
-            isPlaying: false,
-            title: 'Default Sample',
-            text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-            url: audioUrl
+            sampleId: 1,
+            sampleIsPlaying: false,
+            sampleTitle: 'Default Sample',
+            sampleText: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
+            sampleUrl: audioUrl
         },
         {
-            id: 2,
-            isPlaying: false,
-            title: '方可让父母',
-            text: '对侧人防热非人发热功耗一节课iklo',
-            url: audioUrl
+            sampleId: 2,
+            sampleIsPlaying: false,
+            sampleTitle: '可以让父母',
+            sampleText: '对侧人防热非人发热功耗一节课iklo',
+            sampleUrl: audioUrl
         }
-    ],
+    ]
 })
 import { ElNotification } from 'element-plus'
 const open = () => {
@@ -248,13 +250,13 @@ const audioPlayers = reactive({})
 
 // 修改后的播放控制方法
 const togglePlay = (index) => {
-  const sample = voice.value.sample[index]
+  const sample = voices.value.voiceSamples[index]
   const playerKey = `-${index}`
 
   // 如果已经有播放器实例
   if (audioPlayers[playerKey]) {
     const audio = audioPlayers[playerKey]
-    if (sample.isPlaying) {
+    if (sample.sampleIsPlaying) {
       audio.pause()
     } else {
       // 暂停所有正在播放的音频
@@ -263,12 +265,12 @@ const togglePlay = (index) => {
     }
   } else {
     // 创建新播放器实例
-    const audio = new Audio(sample.url)
+    const audio = new Audio(sample.sampleUrl)
     audioPlayers[playerKey] = audio
     
     // 添加播放结束监听
     audio.addEventListener('ended', () => {
-      sample.isPlaying = false
+      sample.sampleIsPlaying = false
     })
 
     // 暂停其他音频并播放当前
@@ -277,7 +279,7 @@ const togglePlay = (index) => {
   }
 
   // 切换当前音频状态
-  sample.isPlaying = !sample.isPlaying
+  sample.sampleIsPlaying = !sample.sampleIsPlaying
 }
 
 // 停止所有音频的方法
