@@ -183,7 +183,13 @@ import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 import {useTokenStore} from "@/stores/token";
 const tokenStore = useTokenStore();
-const samples = reactive([]);
+const samples = reactive([{
+    sampleId:'',
+    sampleTitle:'',
+    sampleText:'',
+    sampleUrl:'',
+    sampleIsPlaying:''
+}]);
 const nextId = ref(1);
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
@@ -264,14 +270,15 @@ function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
     const differenceInSeconds = Math.floor(differenceInMillis / 1000);
     return differenceInSeconds;
 }
-const createRecording = (blob) => {
+const createRecording = async (blob) => {
     end.value = new Date();
     const newRecording = {
         name: `record-${files.value.length + 1}.mp3`,
         url: URL.createObjectURL(blob),
         blob: blob,
         duration: `${calculateTimeDifferenceInSeconds(start.value, end.value)}s`,
-        size: formatFileSize(blob.size) 
+        size: formatFileSize(blob.size),
+        file: new File([blob], `record-${files.value.length + 1}.mp3`, { type: 'audio/mp3' })
     };
     files.value.unshift(newRecording);
 };
@@ -292,7 +299,7 @@ const formatDuration = (seconds) => {
     return `${Math.floor(seconds)}s`;
 };
 //上传音频
-const handleFileUpload = (file) => {
+const handleFileUpload = async (file) => {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(URL.createObjectURL(file));
     audio.addEventListener('loadedmetadata', () => {
@@ -304,6 +311,7 @@ const handleFileUpload = (file) => {
             duration: formattedDuration,
             isPlaying: false,
             url: audioUrl,
+            file: file // 保存文件对象
         };
         files.value.push(fileInfo);
     });
@@ -404,20 +412,35 @@ import { useStepStore } from '@/stores/step';
 import { storeToRefs } from 'pinia';
 const stepStore = useStepStore()
 const { step } = storeToRefs(stepStore);
-const createAction = () => {
-  // 清除所有录音记录
-  files.value = []
-  // 清除所有音频实例
-  Object.keys(audioInstances).forEach(key => {
-    audioInstances[key].pause()
-    audioInstances[key].src = ''
-  })
-  Object.keys(audioInstances).forEach(key => {
-  delete audioInstances[key];
-});
-  // 跳转逻辑
-  stepStore.incrementStep()
-}
+import {uploadAudioloadService} from '@/api/upload'
+const sendAudiosToBackend = async () => {
+    const formData = new FormData();
+    files.value.forEach((fileInfo, index) => {
+        formData.append(`audio_${index}`, fileInfo.file);
+    });
+
+    try {
+        let result = await uploadAudioloadService(formData);
+        console.log('音频上传成功:', result.data);
+    } catch (error) {
+        console.error('音频上传失败:', error);
+    }
+};
+const createAction = async () => {
+    // 发送音频数据到后端
+    await sendAudiosToBackend();
+
+    // 清除所有录音记录
+    files.value = [];
+    // 清除所有音频实例
+    Object.keys(audioInstances).forEach(key => {
+        audioInstances[key].pause();
+        audioInstances[key].src = '';
+        delete audioInstances[key];
+    });
+    // 跳转逻辑
+    stepStore.incrementStep();
+};
 const formData = ref({
     voiceType: '1',
     voiceImage: '',
