@@ -9,12 +9,12 @@
                     <div class="form-section">
                         类型
                         <div class="radio">
-                            <el-radio-group v-model="formData.voiceType" size="large" text-color="black" fill="#fafafa">
+                            <el-radio-group v-model="insertData.voiceType" size="large" text-color="black" fill="#fafafa">
                                 <el-radio-button label="公开" value="1" />
                                 <el-radio-button label="私有" value="0" />
                             </el-radio-group>
                         </div>
-                        <div v-if="formData.voiceType === '1'" style="font-size: small; color: #6b748b;">
+                        <div v-if="insertData.voiceType === '1'" style="font-size: small; color: #6b748b;">
                             此语音模型将在发现页面中可见，每个人都可以看到。
                         </div>
                         <div v-else style="font-size: small; color: #6b748b;">此语音模型仅对创建者可见，不能共享且不会出现在发现页面。</div>
@@ -25,7 +25,7 @@
                             <div class="upload-box">
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
                                     action="/api/common/upload" name="file" :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
-                                    <img v-if="formData.voiceImage" :src="formData.voiceImage" class="avatar" />
+                                    <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
                                     </el-icon>
@@ -36,18 +36,18 @@
                     </div>
                     <div class="form-section">
                         名称
-                        <MyInput :message="formData.voiceName" :placeholder="placeholderName" class="search-input" :color="grayColor"
+                        <MyInput :message="insertData.voiceName" :placeholder="placeholderName" class="search-input" :color="grayColor"
                             @update:message="handleMessageName" />
                     </div>
                     <div class="form-section">
                         描述 (可选)
-                        <MyInput :message="formData.voiceDescription" :placeholder="placeholderDescription" :color="grayColor" :type="type"
+                        <MyInput :message="insertData.voiceDescription" :placeholder="placeholderDescription" :color="grayColor" :type="type"
                             @update:message="handleMessageDescription" />
 
                     </div>
                     <div class="form-section">
                         标签
-                        <MyInput :message="formData.voiceTag" :placeholder="placeholderTag" class="search-input" :color="grayColor"
+                        <MyInput :message="insertData.voiceTag" :placeholder="placeholderTag" class="search-input" :color="grayColor"
                             @update:message="handleMessageTag" />
                     </div>
                 </div>
@@ -131,20 +131,20 @@
                 <h3>音频样本</h3>
                 <div class="audio-container">
                     <!-- 样本列表 -->
-                    <div v-for="(sample, index) in samples" :key="sample.id" class="audio-card">
+                    <div v-for="(sample, index) in samples" :key="sample.sampleId" class="audio-card">
                         <div>
                             <div class="card-header">
-                                <span style="font-weight: 600;">{{ sample.title === '' ? "样本" + sample.id : sample.title
+                                <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index : sample.sampleTitle
                                 }}</span>
-                                <el-icon size="20" color="#606672" @click="removeSample(index)">
+                                <el-icon size="20" color="#606672" style="cursor: pointer;" @click="removeSample(index)">
                                     <Close />
                                 </el-icon>
                             </div>
                         </div>
                         <div class="myinput">
-                            <MyInput :message="sample.title" :placeholder="placeholderName2" 
+                            <MyInput :message="sample.sampleTitle" :placeholder="placeholderName2" 
                                 @update:message="(newMessage) => handleMessageName2(index, newMessage)" />
-                            <MyInput :message="sample.text" :placeholder="placeholderTextArea" :type="type"
+                            <MyInput :message="sample.sampleText" :placeholder="placeholderTextArea" :type="type"
                                 :rows="rows"
                                 @update:message="(newMessage) => handleMessageTextArea(index, newMessage)" />
                             <el-button color="#e7e7e8" @click="generateSample(index)"
@@ -152,7 +152,7 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <AudioPlayer :audioUrl="ttsAudioUrl" :isPauseTtsAudio="isPauseTtsAudio"></AudioPlayer>
+                            <AudioPlayer :audioUrl="sample.sampleUrl"></AudioPlayer>
                         </div>
                     </div>
                     <!-- 添加按钮 -->
@@ -183,12 +183,7 @@ import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 import {useTokenStore} from "@/stores/token";
 const tokenStore = useTokenStore();
-const samples = reactive([{
-    sampleId:'',
-    sampleTitle:'',
-    sampleText:'',
-    sampleUrl:'',
-    sampleIsPlaying:''
+const samples = ref([{
 }]);
 const nextId = ref(1);
 const placeholderName2 = ref("输入音频样本标题");
@@ -198,18 +193,17 @@ const grayColor = ref('#f5f5f5');
 const placeholderDescription = ref('填写音频描述');
 const rows = ref("3");
 import audioUrl from '@/assets/sound.m4a';
-const ttsAudioUrl = ref(audioUrl);
 const addSample = () => {
-    samples.push({
-        id: nextId.value++,
-        title: '',
-        text: '',
-        audioUrl: '',
+    samples.value.push({
+        sampleId: nextId.value++,
+        sampleTitle: '',
+        sampleText: '',
+        sampleUrl: audioUrl,
     });
 };
 const generateSample = (index) => {
     // 这里可以添加生成音频的逻辑
-    console.log('生成样本:', samples[index]);
+    console.log('生成样本:', samples.value[index]);
 };
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -219,18 +213,18 @@ const toMyBank = () => {
 }
 // 删除样本
 const removeSample = (index) => {
-    const sample = samples[index]
+    const sample = samples.value[index]
     if (sample.audio) {
         sample.audio.pause()
         sample.audio.currentTime = 0
     }
-    samples.splice(index, 1)
+    samples.value.splice(index, 1)
 }
 function handleMessageName2(index, newMessage) {
-    samples[index].title = newMessage;
+    samples.value[index].sampleTitle = newMessage;
 }
 function handleMessageTextArea(index, newMessage) {
-    samples[index].text = newMessage;
+    samples.value[index].sampleText = newMessage;
 }
 const files = ref([]);
 const recording = ref(false);
@@ -392,13 +386,13 @@ import { ref, reactive, computed } from 'vue';
 const placeholderName = ref('填写声音名称');
 const placeholderTag = ref('输入标签');
 function handleMessageName(newMessage) {
-    formData.value.name = newMessage;
+    insertData.value.name = newMessage;
 }
 function handleMessageDescription(newMessage){
-    formData.value.description = newMessage;
+    insertData.value.description = newMessage;
 }
 function handleMessageTag(newMessage) {
-    formData.value.tag = newMessage;
+    insertData.value.tag = newMessage;
 }
 import {
     Plus,
@@ -412,16 +406,19 @@ import { useStepStore } from '@/stores/step';
 import { storeToRefs } from 'pinia';
 const stepStore = useStepStore()
 const { step } = storeToRefs(stepStore);
-import {uploadAudioloadService} from '@/api/upload'
+import {bankInsertService} from '@/api/bank/mybank'
 const sendAudiosToBackend = async () => {
     const formData = new FormData();
-    files.value.forEach((fileInfo, index) => {
-        formData.append(`audio_${index}`, fileInfo.file);
+    for (const key in insertData.value) {
+        formData.append(key, insertData.value[key]);
+    }
+    files.value.forEach((file) => {
+        formData.append('files', file.file);
     });
-
     try {
-        let result = await uploadAudioloadService(formData);
-        console.log('音频上传成功:', result.data);
+        let result = await bankInsertService(formData);
+        samples.value=result.data;
+        console.log('音频上传成功:', samples.value);
     } catch (error) {
         console.error('音频上传失败:', error);
     }
@@ -441,7 +438,7 @@ const createAction = async () => {
     // 跳转逻辑
     stepStore.incrementStep();
 };
-const formData = ref({
+const insertData = ref({
     voiceType: '1',
     voiceImage: '',
     voiceName: '',
@@ -451,7 +448,7 @@ const formData = ref({
 
 const uploadSuccess = (result) => {
     // console.log(result);
-    formData.value.voiceImage = result.data;
+    insertData.value.voiceImage = result.data;
 }
 
 

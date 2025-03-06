@@ -8,3 +8,7 @@ export const bankQueryService = (userId) => {
 export const bankDeleteService = (voiceId) => {
     return request.delete("mybank?voiceId=" + voiceId);
 }
+//新增
+export const bankInsertService = (data) => {
+    return request.post('/mybank',data);
+}
