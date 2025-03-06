@@ -20,3 +20,11 @@ export const bankInsertService = (data) => {
 export const bankInsertSamplesService = (data) => {
     return request.post('/mybank/samples',data);
 }
+//修改音色详情
+export const bankUpdateService = (data) => {
+    return request.put('/mybank/detail',data)
+}
+//修改音色示例
+export const bankUpdateSamplesService = (data) => {
+    return request.put('/mybank/samples',data)
+}

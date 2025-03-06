@@ -127,7 +127,7 @@
                 </div>
                 <button v-if="queryVoiceId === undefined" class="next-btn" @click="createAction">创建</button>
                 <div v-else class="btnssecond">
-                    <button class="next-btn">保存</button>
+                    <button class="next-btn" @click="toStep2AndUpdate">保存</button>
                     <button class="skip" @click="toStep2">跳过</button>
                 </div>
             </div>
@@ -174,7 +174,8 @@
                         </button>
                     </div>
                     <div class="btnssecond">
-                        <button class="next-btn" @click="toMyBankAndInsert">保存</button>
+                        <button class="next-btn" v-if="queryVoiceId === undefined" @click="toMyBankAndInsert">保存</button>
+                        <button class="next-btn" v-else @click="toMyBankAndUpdate">保存</button>
                         <button class="skip" @click="toMyBank">跳过</button>
                     </div>
                 </div>
@@ -435,7 +436,7 @@ const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data;
 }
-import { bankInsertService, bankInsertSamplesService, bankQueryDetailService } from '@/api/bank/mybank'
+import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService,bankUpdateSamplesService } from '@/api/bank/mybank'
 import { createAudioloadService } from '@/api/common'
 const sendAudiosToBackend = async () => {
     const formData = new FormData();
@@ -483,6 +484,13 @@ const toMyBankAndInsert = async () => {
     const newSamples = samples.value.slice(1);
     let result = await bankInsertSamplesService(newSamples);
 }
+const toMyBankAndUpdate = async () => {
+    router.push('/mybank');
+    stepStore.reduceStep();
+    const newSamples = samples.value.slice(1);
+    let result = await bankUpdateSamplesService(newSamples);
+    console.log('1111',result)
+}
 const generateSample = async (index) => {
     const createAudioData = {
         voiceId: currentVoiceId.value,
@@ -496,9 +504,12 @@ onMounted(async () => {
         let result = await bankQueryDetailService(queryVoiceId);
         insertData.value = result.data.insertData;
         samples.value = result.data.samples;
-        console.log(insertData.value);
     }
 })
+const toStep2AndUpdate = async () => {
+    let result = await bankUpdateService(insertData.value);
+    stepStore.incrementStep();
+}
 </script>
 
 <style scoped>
