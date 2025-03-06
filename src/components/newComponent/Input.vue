@@ -29,7 +29,10 @@ const input = ref(props.message || '');
 const isFocused = ref(false);
 watch(() => input.value, (newValue) => {
     emit('update:message', newValue);
-});
+}, { deep: true });
+watch(() => props.message, (newValue) => {
+    input.value = newValue;
+}, { deep: true });
 </script>
 
 <style scoped>

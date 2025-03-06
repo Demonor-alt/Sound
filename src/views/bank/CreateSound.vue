@@ -27,7 +27,7 @@
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
                                     action="/api/common/upload" name="file"
                                     :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
-                                    <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar"  />
+                                    <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
                                     </el-icon>
@@ -125,9 +125,9 @@
                         <div class="tip">*提示：最短10秒，最长90秒，推荐30秒</div>
                     </div>
                 </div>
-                <button  v-if="queryVoiceId !== undefined" class="next-btn" @click="createAction">创建</button>
+                <button v-if="queryVoiceId === undefined" class="next-btn" @click="createAction">创建</button>
                 <div v-else class="btnssecond">
-                    <button class="next-btn" >保存</button>
+                    <button class="next-btn">保存</button>
                     <button class="skip" @click="toStep2">跳过</button>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                         <div>
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
-            sample.sampleTitle
+                                    sample.sampleTitle
                                     }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
@@ -174,8 +174,8 @@
                         </button>
                     </div>
                     <div class="btnssecond">
-                        <button class="next-btn" @click="toMyBank">保存</button>
-                        <button class="skip">跳过</button>
+                        <button class="next-btn" @click="toMyBankAndInsert">保存</button>
+                        <button class="skip" @click="toMyBank">跳过</button>
                     </div>
                 </div>
             </div>
@@ -209,7 +209,7 @@ const samples = ref([{
 }]);
 const addSample = () => {
     samples.value.push({
-        sampleTitle: '',    
+        sampleTitle: '',
         sampleText: '',
         sampleUrl: '',
         sampleIsPlaying: false,
@@ -371,7 +371,7 @@ const handleRemove = (file, files) => {
     }
 };
 const activeName = ref('first');
-const toStep2=()=>{
+const toStep2 = () => {
     stepStore.incrementStep();
 }
 //声音长度总和
@@ -402,13 +402,13 @@ import { ref, reactive, computed, onMounted } from 'vue';
 const placeholderName = ref('填写声音名称');
 const placeholderTag = ref('输入标签');
 function handleMessageName(newMessage) {
-    insertData.value.name = newMessage;
+    insertData.value.voiceName = newMessage;
 }
 function handleMessageDescription(newMessage) {
-    insertData.value.description = newMessage;
+    insertData.value.voiceDescription = newMessage;
 }
 function handleMessageTag(newMessage) {
-    insertData.value.tag = newMessage;
+    insertData.value.voiceTag = newMessage;
 }
 import {
     Plus,
@@ -473,7 +473,11 @@ const createAction = async () => {
     stepStore.incrementStep();
 };
 
-const toMyBank = async () => {
+const toMyBank = () => {
+    router.push('/mybank');
+    stepStore.reduceStep();
+}
+const toMyBankAndInsert = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
     const newSamples = samples.value.slice(1);
@@ -488,11 +492,12 @@ const generateSample = async (index) => {
     samples.value[index].sampleUrl = result.data;
 };
 onMounted(async () => {
-   if(queryVoiceId!==undefined){
-    let result = await bankQueryDetailService(queryVoiceId);
-    insertData.value=result.data.insertData;
-    samples.value=result.data.samples;
-   }
+    if (queryVoiceId !== undefined) {
+        let result = await bankQueryDetailService(queryVoiceId);
+        insertData.value = result.data.insertData;
+        samples.value = result.data.samples;
+        console.log(insertData.value);
+    }
 })
 </script>
 
@@ -552,6 +557,8 @@ onMounted(async () => {
 }
 
 .avatar-uploader .el-upload {
+    width: 200px;
+    height: 200px;
     overflow: hidden;
     border: 2px dashed var(--el-border-color);
     border-radius: 6px;
@@ -573,7 +580,11 @@ onMounted(async () => {
     text-align: center;
     background-color: #f5f5f5;
 }
-
+.avatar {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
 :deep(.el-tabs__active-bar) {
     background-color: #09090b !important;
     height: 2px;
