@@ -4,6 +4,10 @@ import request from '@/utils/request.js'
 export const bankQueryService = (userId) => {
     return request.get(`/mybank/${userId}`);
 }
+//查询我的音色详情
+export const bankQueryDetailService = (voiceId) => {
+    return request.get(`/mybank/detail/${voiceId}`);
+}
 //删除
 export const bankDeleteService = (voiceId) => {
     return request.delete("mybank?voiceId=" + voiceId);

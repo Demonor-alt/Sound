@@ -27,7 +27,7 @@
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
                                     action="/api/common/upload" name="file"
                                     :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
-                                    <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
+                                    <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar"  />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
                                     </el-icon>
@@ -53,77 +53,83 @@
                             :color="grayColor" @update:message="handleMessageTag" />
                     </div>
                 </div>
-                <h3>输入音频</h3>
-                <el-tabs v-model="activeName" class="demo-tabs">
-                    <el-tab-pane label="上传音频" name="second">
+                <div v-if="queryVoiceId === undefined">
+                    <h3>输入音频</h3>
+                    <el-tabs v-model="activeName" class="demo-tabs">
+                        <el-tab-pane label="上传音频" name="second">
+                            <div class="audio-upload">
+                                <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
+                                    :file-list="files" :on-remove="handleRemove" :limit="0">
+                                    <template #default>
+                                        <div class="upload-button">
+                                            <div class="insert"></div>
+                                            <h5>添加或删除您的音频文件</h5>
+                                        </div>
+                                    </template>
+                                </el-upload>
+                            </div>
+                        </el-tab-pane>
+                        <el-tab-pane label="录制音频" name="first">
+                            <div class="audio-player">
+                                <div v-if="!recording" @click="startRecording" class="record">
+                                    <div class="inRecord"></div>
+                                    点击开始录制
+                                </div>
+                                <div v-else @click="stopRecording" class="record">
+                                    <div class="noRecord"></div>
+                                    停止录制
+                                </div>
+                                <div style="font-size: small;color: #6b7280;">*您可以使用自己的文本或下面的建议文本录制您的声音。</div>
+                                <Store />
+                            </div>
+                        </el-tab-pane>
                         <div class="audio-upload">
-                            <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
-                                :file-list="files" :on-remove="handleRemove" :limit="0">
-                                <template #default>
-                                    <div class="upload-button">
-                                        <div class="insert"></div>
-                                        <h5>添加或删除您的音频文件</h5>
-                                    </div>
-                                </template>
-                            </el-upload>
+                            <el-row v-for="(file, index) in files" :key="index" class="files">
+                                <el-col :span="2" class="logo"></el-col>
+                                <el-col :span="13" class="file">
+                                    {{ file.name }}
+                                    <div class="size">{{ file.size }}</div>
+                                </el-col>
+                                <el-col :span="4">{{ file.duration }}</el-col>
+                                <el-col :span="4" class="btns">
+                                    <div v-if="!file.isPlaying" class="close" @click="togglePlay(index)"></div>
+                                    <div v-else class="on" @click="togglePlay(index)"></div>
+                                    <el-icon @click="deleteFile(index)" class="delete-btn" size="25">
+                                        <Close />
+                                    </el-icon>
+                                </el-col>
+                            </el-row>
                         </div>
-                    </el-tab-pane>
-                    <el-tab-pane label="录制音频" name="first">
-                        <div class="audio-player">
-                            <div v-if="!recording" @click="startRecording" class="record">
-                                <div class="inRecord"></div>
-                                点击开始录制
-                            </div>
-                            <div v-else @click="stopRecording" class="record">
-                                <div class="noRecord"></div>
-                                停止录制
-                            </div>
-                            <div style="font-size: small;color: #6b7280;">*您可以使用自己的文本或下面的建议文本录制您的声音。</div>
-                            <Store />
-                        </div>
-                    </el-tab-pane>
-                    <div class="audio-upload">
-                        <el-row v-for="(file, index) in files" :key="index" class="files">
-                            <el-col :span="2" class="logo"></el-col>
-                            <el-col :span="13" class="file">
-                                {{ file.name }}
-                                <div class="size">{{ file.size }}</div>
-                            </el-col>
-                            <el-col :span="4">{{ file.duration }}</el-col>
-                            <el-col :span="4" class="btns">
-                                <div v-if="!file.isPlaying" class="close" @click="togglePlay(index)"></div>
-                                <div v-else class="on" @click="togglePlay(index)"></div>
-                                <el-icon @click="deleteFile(index)" class="delete-btn" size="25">
-                                    <Close />
+                    </el-tabs>
+                    <div class="time-picker">
+                        <div class="loadHeader">
+                            已上传：{{ selectedTime }}s
+                            <div v-if="selectedTime <= 90 && selectedTime >= 10" class="icon">
+                                <el-icon size="20" color="#16a149">
+                                    <CircleCheck />
                                 </el-icon>
-                            </el-col>
-                        </el-row>
+                                不错
+                            </div>
+                            <div v-if="selectedTime > 90 || selectedTime < 10 && selectedTime > 0" class="icon">
+                                <el-icon size="20" color="#ef4343">
+                                    <CircleClose />
+                                </el-icon>
+                                过长/过短
+                            </div>
+                            <div v-if="selectedTime === 0" class="icon">
+                                推荐 30 秒左右
+                            </div>
+                        </div>
+                        <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks"
+                            :show-tooltip="false" :show-button="false" />
+                        <div class="tip">*提示：最短10秒，最长90秒，推荐30秒</div>
                     </div>
-                </el-tabs>
-                <div class="time-picker">
-                    <div class="loadHeader">
-                        已上传：{{ selectedTime }}s
-                        <div v-if="selectedTime <= 90 && selectedTime >= 10" class="icon">
-                            <el-icon size="20" color="#16a149">
-                                <CircleCheck />
-                            </el-icon>
-                            不错
-                        </div>
-                        <div v-if="selectedTime > 90 || selectedTime < 10 && selectedTime > 0" class="icon">
-                            <el-icon size="20" color="#ef4343">
-                                <CircleClose />
-                            </el-icon>
-                            过长/过短
-                        </div>
-                        <div v-if="selectedTime === 0" class="icon">
-                            推荐 30 秒左右
-                        </div>
-                    </div>
-                    <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks"
-                        :show-tooltip="false" :show-button="false" />
-                    <div class="tip">*提示：最短10秒，最长90秒，推荐30秒</div>
                 </div>
-                <button class="next-btn" @click="createAction">创建</button>
+                <button  v-if="queryVoiceId !== undefined" class="next-btn" @click="createAction">创建</button>
+                <div v-else class="btnssecond">
+                    <button class="next-btn" >保存</button>
+                    <button class="skip" @click="toStep2">跳过</button>
+                </div>
             </div>
         </el-col>
         <el-col :span="12" v-else>
@@ -203,15 +209,17 @@ const samples = ref([{
 }]);
 const addSample = () => {
     samples.value.push({
-        sampleTitle: '',
+        sampleTitle: '',    
         sampleText: '',
         sampleUrl: '',
         sampleIsPlaying: false,
     });
 };
 
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
+const route = useRoute();
+const queryVoiceId = route.query ? route.query.id : undefined;
 // 删除样本
 const removeSample = (index) => {
     const sample = samples.value[index]
@@ -297,18 +305,22 @@ const formatDuration = (seconds) => {
 const handleFileUpload = async (file) => {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(URL.createObjectURL(file));
-    audio.addEventListener('loadedmetadata', () => {
-        const duration = audio.duration;
-        const formattedDuration = formatDuration(duration);
-        const fileInfo = {
-            name: file.name,
-            size: formatFileSize(file.size),
-            duration: formattedDuration,
-            isPlaying: false,
-            url: audioUrl,
-            file: file // 保存文件对象
-        };
-        files.value.push(fileInfo);
+    await new Promise((resolve) => {
+        audio.addEventListener('loadedmetadata', () => {
+            const duration = audio.duration;
+            const formattedDuration = formatDuration(duration);
+            const fileInfo = {
+                name: file.name,
+                size: formatFileSize(file.size),
+                duration: formattedDuration,
+                isPlaying: false,
+                url: audioUrl,
+                file: file, // 保存文件对象
+                actualDuration: duration // 新增：将实际音频时长（秒）添加到文件信息中
+            };
+            files.value.push(fileInfo);
+            resolve();
+        });
     });
     return false;
 };
@@ -359,6 +371,9 @@ const handleRemove = (file, files) => {
     }
 };
 const activeName = ref('first');
+const toStep2=()=>{
+    stepStore.incrementStep();
+}
 //声音长度总和
 const selectedTime = computed(() => {
     let totalSeconds = 0;
@@ -383,7 +398,7 @@ const marks = computed(() => ({
         label: '最大'
     },
 }));
-import { ref, reactive, computed } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 const placeholderName = ref('填写声音名称');
 const placeholderTag = ref('输入标签');
 function handleMessageName(newMessage) {
@@ -420,54 +435,65 @@ const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data;
 }
-// import { bankInsertService, bankInsertSamplesService } from '@/api/bank/mybank'
-// import { createAudioloadService } from '@/api/common'
-// const sendAudiosToBackend = async () => {
-//     const formData = new FormData();
-//     for (const key in insertData.value) {
-//         formData.append(key, insertData.value[key]);
-//     }
-//     files.value.forEach((file) => {
-//         formData.append('files', file.file);
-//     });
-//     try {
-//         let result = await bankInsertService(formData);
-//         samples.value = result.data.sample;
-//         currentVoiceId.value = result.data.voiceId;
-//         console.log('音频上传成功:', samples.value, currentVoiceId.value);
-//     } catch (error) {
-//         console.error('音频上传失败:', error);
-//     }
-// };
-// const createAction = async () => {
-//     // 发送音频数据到后端
-//     await sendAudiosToBackend();
+import { bankInsertService, bankInsertSamplesService, bankQueryDetailService } from '@/api/bank/mybank'
+import { createAudioloadService } from '@/api/common'
+const sendAudiosToBackend = async () => {
+    const formData = new FormData();
+    for (const key in insertData.value) {
+        formData.append(key, insertData.value[key]);
+    }
+    files.value.forEach((file) => {
+        formData.append('files', file.file);
+    });
+    for (const [key, value] of formData.entries()) {
+        console.log(`${key}:`, value);
+    }
+    try {
+        let result = await bankInsertService(formData);
+        samples.value = result.data.sample;
+        currentVoiceId.value = result.data.voiceId;
+        console.log('音频上传成功:', samples.value, currentVoiceId.value);
+    } catch (error) {
+        console.error('音频上传失败:', error);
+    }
+};
+const createAction = async () => {
+    // 发送音频数据到后端
+    await sendAudiosToBackend();
 
-//     // 清除所有录音记录
-//     files.value = [];
-//     // 清除所有音频实例
-//     Object.keys(audioInstances).forEach(key => {
-//         audioInstances[key].pause();
-//         audioInstances[key].src = '';
-//         delete audioInstances[key];
-//     });
-//     // 跳转逻辑
-//     stepStore.incrementStep();
-// };
-// const toMyBank = async () => {
-//     router.push('/mybank');
-//     stepStore.reduceStep();
-//     const newSamples = samples.value.slice(1);
-//     let result = await bankInsertSamplesService(newSamples);
-// }
-// const generateSample = async (index) => {
-//     const createAudioData = {
-//         voiceId: currentVoiceId.value,
-//         sampleText: samples.value[index].sampleText,
-//     }
-//     let result = await createAudioloadService(createAudioData);
-//     samples.value[index].sampleUrl = result.data;
-// };
+    // 清除所有录音记录
+    files.value = [];
+    // 清除所有音频实例
+    Object.keys(audioInstances).forEach(key => {
+        audioInstances[key].pause();
+        audioInstances[key].src = '';
+        delete audioInstances[key];
+    });
+    // 跳转逻辑
+    stepStore.incrementStep();
+};
+
+const toMyBank = async () => {
+    router.push('/mybank');
+    stepStore.reduceStep();
+    const newSamples = samples.value.slice(1);
+    let result = await bankInsertSamplesService(newSamples);
+}
+const generateSample = async (index) => {
+    const createAudioData = {
+        voiceId: currentVoiceId.value,
+        sampleText: samples.value[index].sampleText,
+    }
+    let result = await createAudioloadService(createAudioData);
+    samples.value[index].sampleUrl = result.data;
+};
+onMounted(async () => {
+   if(queryVoiceId!==undefined){
+    let result = await bankQueryDetailService(queryVoiceId);
+    insertData.value=result.data.insertData;
+    samples.value=result.data.samples;
+   }
+})
 </script>
 
 <style scoped>
