@@ -1,1 +1,0 @@
-import{i as a}from"./request-BstXfnQ0.js";const t=e=>a.get(`/mybank/detail/${e}`),r=e=>a.post("/mybank",e),s=e=>a.post("/mybank/samples",e),c=e=>a.put("/mybank/detail",e),i=e=>a.put("/mybank/samples",e),o=e=>a.get(`/query/${e}`),p=e=>a.post("/clone",e);export{p as a,o as b,t as c,c as d,s as e,i as f,r as g};
