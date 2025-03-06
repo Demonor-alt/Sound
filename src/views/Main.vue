@@ -5,7 +5,7 @@
       <div class="menu">
         <el-popover placement="bottom" :width="170" trigger="hover">
           <template #reference>
-            <div class="menu-item">
+            <div class="menu-item" :class="{ active: activeMenu === 'discover' || activeMenu === 'mybank' || activeMenu === 'collect'}" @click="setActive('discover')">
               <el-icon size="20">
                 <Bell />
               </el-icon>音色库
@@ -27,27 +27,27 @@
             </el-icon>模型收藏
           </div>
         </el-popover>
-        <div class="menu-item" @click="setActive('explanation')">
+        <div class="menu-item" :class="{ active: activeMenu === 'explanation' }" @click="setActive('explanation')">
           <el-icon size="20">
             <Service />
           </el-icon>语音讲解
         </div>
-        <div class="menu-item" @click="setActive('teach')">
+        <div class="menu-item" :class="{ active: activeMenu === 'teach' }" @click="setActive('teach')">
           <el-icon size="20">
             <DataBoard />
           </el-icon>语言教学
         </div>
-        <div class="menu-item" @click="setActive('courseware')">
+        <div class="menu-item" :class="{ active: activeMenu === 'courseware' }" @click="setActive('courseware')">
           <el-icon size="20">
             <Tickets />
           </el-icon>有声课件
         </div>
-        <div class="menu-item" @click="setActive('teacher')">
+        <div class="menu-item" :class="{ active: activeMenu === 'teacher' }" @click="setActive('teacher')">
           <el-icon size="20">
             <User />
           </el-icon>虚拟教师
         </div>
-        <div class="menu-item" @click="setActive('voice')">
+        <div class="menu-item" :class="{ active: activeMenu === 'voice' }" @click="setActive('voice')">
           <el-icon size="20">
             <VideoCamera />
           </el-icon>视频变声
@@ -63,6 +63,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   Bell,
@@ -77,8 +78,10 @@ import {
   Folder
 } from '@element-plus/icons-vue';
 const router = useRouter();
+const activeMenu = ref('');
 function setActive(index) {
   router.push(`/${index}`);
+  activeMenu.value = index;
 }
 import { useTokenStore } from '@/stores/token'
 const { token } = useTokenStore();
@@ -106,7 +109,7 @@ const { token } = useTokenStore();
 .menu {
   display: flex;
   flex-direction: row;
-  gap: 80px;
+  gap: 20px;
 }
 
 .submenu-item {
@@ -126,12 +129,22 @@ const { token } = useTokenStore();
 }
 
 .menu-item {
+  padding: 10px 20px;
+  border-radius: 6px;
   font-size: 16px;
   display: flex;
   flex-direction: row;
-  gap: 10px;
   align-items: center;
   cursor: pointer;
+  gap: 10px;
+}
+
+.menu-item:hover {
+  background-color: #e0e5eb;
+}
+
+.menu-item.active {
+  background-color: #e0e5eb;
 }
 
 .avatar {
