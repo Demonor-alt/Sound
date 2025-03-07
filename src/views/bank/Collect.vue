@@ -196,29 +196,28 @@ const useVoice = (id) => {
 }
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
-// import { collectQueryService, collectBatchDeleteService } from '@/api/bank/collect'
-// onMounted(async () => {
-//     let result = await collectQueryService(token.token.userId);
-//     voices.value = result.data;
-// })
+import { collectQueryService, collectBatchDeleteService } from '@/api/bank/collect'
+onMounted(async () => {
+    let result = await collectQueryService(token.token.userId);
+    voices.value = result.data;
+})
 const toggleCollect = (voice) => {
     voice.voiceIsCollected = !voice.voiceIsCollected;
 };
-// onBeforeUnmount(async () => {
-//     const deleteIds = [];
-//     if (voices.value.length > 0) {
-//         voices.value.forEach(voice => {
-//             if (!voice.voiceIsCollected) {
-//                 deleteIds.push(voice.voiceId);
-//             }
-//         });
-//         if (deleteIds.length > 0) {
-//             const ids = deleteIds.join(',');
-//             let result = await collectBatchDeleteService({ userId: token.token.userId, ids: ids })
-//             console.log(result);
-//         }
-//     }
-// });
+onBeforeUnmount(async () => {
+    const deleteIds = [];
+    if (voices.value.length > 0) {
+        voices.value.forEach(voice => {
+            if (!voice.voiceIsCollected) {
+                deleteIds.push(voice.voiceId);
+            }
+        });
+        if (deleteIds.length > 0) {
+            const ids = deleteIds.join(',');
+            let result = await collectBatchDeleteService({ userId: token.token.userId, ids: ids })
+        }
+    }
+});
 
 </script>
 <style scoped>

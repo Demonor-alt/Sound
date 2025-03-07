@@ -228,24 +228,24 @@ const useVoice = (id) => {
 }
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
-// import { bankQueryService, bankDeleteService } from '@/api/bank/mybank';
-// const bankList = async () => {
-//     try {
-//         const result = await bankQueryService(token.token.userId);
-//         voiceList.value = result.data;
-//     } catch (error) {
-//         console.error('Failed to ', error);
-//         voiceList.value = [];
-//     }
-// };
+import { bankQueryService, bankDeleteService } from '@/api/bank/mybank';
+const bankList = async () => {
+    try {
+        const result = await bankQueryService(token.token.userId);
+        voiceList.value = result.data;
+    } catch (error) {
+        console.error('Failed to ', error);
+        voiceList.value = [];
+    }
+};
 
-// onMounted(() => {
-//     bankList();
-// });
-// const deleteService = async(id) => {
-//     let result = await bankDeleteService(id);
-//     bankList();
-// };
+onMounted(() => {
+    bankList();
+});
+const deleteService = async(id) => {
+    let result = await bankDeleteService(id);
+    bankList();
+};
 </script>
 
 <style scoped>

@@ -61,11 +61,11 @@ const languageOptions = ref([
     { value: 'en', label: 'English' },
 ]);
 const tagOptions = ref();
-// import {discoverTagService} from '@/api/bank/discover'
-// onMounted(async()=>{
-//     let result=await discoverTagService();
-//     tagOptions.value=result.data;
-// })
+import {discoverTagService} from '@/api/bank/discover'
+onMounted(async()=>{
+    let result=await discoverTagService();
+    tagOptions.value=result.data;
+})
 const sortValue = ref('');
 const languageValue = ref('1');
 const tagValue = ref('');

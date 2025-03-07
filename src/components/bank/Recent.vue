@@ -47,11 +47,11 @@ const voiceList = ref([
 ]);
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
-// import { bankQueryService } from "@/api/bank/mybank";
-// onMounted(async () => {
-//     let result = await bankQueryService(token.token.userId);
-//     voiceList.value = result.data;
-// })
+import { bankQueryService } from "@/api/bank/mybank";
+onMounted(async () => {
+    let result = await bankQueryService(token.token.userId);
+    voiceList.value = result.data;
+})
 </script>
 <style scoped>
 .reactivity {

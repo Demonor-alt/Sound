@@ -329,7 +329,6 @@ const open = () => {
             });
             try {
                 let result = await discoverUpdateShareService(currentVoiceId);
-                console.log('111', result);
             } catch (error) {
                 console.error('分享服务调用失败:', error);
                 ElNotification({
@@ -404,7 +403,7 @@ const cloneVoice = async () => {
         ...voice.value,
         voiceType: '0'
     })
-    // let result = await bankCloneSamplesService(token.token.userId,clone);
+    let result = await bankCloneSamplesService(token.token.userId,clone);
 }
 </script>
 <style scoped>
