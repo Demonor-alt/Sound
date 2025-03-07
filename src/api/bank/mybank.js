@@ -2,11 +2,11 @@ import request from '@/utils/request.js'
 //音色库 - 我的音色
 //查询
 export const bankQueryService = (userId) => {
-    return request.get(`/mybank/${userId}`);
+    return request.get(`/mybank/all/${userId}`);
 }
 //查询我的音色详情
 export const bankQueryDetailService = (voiceId) => {
-    return request.get(`/mybank/detail/${voiceId}`);
+    return request.get(`/query/${voiceId}`);
 }
 //删除
 export const bankDeleteService = (voiceId) => {
