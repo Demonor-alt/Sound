@@ -36,3 +36,7 @@ export const bankQuerySingleDetailService = (voiceId) => {
 export const bankCloneSamplesService = (data) => {
     return request.post('/clone',data);
 }
+//查询我的音色所有信息
+export const bankQueryAllService = (userId) => {
+    return request.get(`/mybank/all/${userId}`);
+}

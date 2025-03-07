@@ -215,8 +215,11 @@ const togglePlay = (voiceId, sampleIndex) => {
     })
 }
 // import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/bank/discover'
+// import { collectQueryAllService } from '@/api/bank/collect'
+// import { useTokenStore } from '@/stores/token';
+// const token = useTokenStore();
 // onMounted(async () => {
-//     let result = await discoverQueryService();
+//     let result = await collectQueryAllService(token.token.userId);
 //     voices.value = result.data;
 // })
 import { ElNotification } from 'element-plus'

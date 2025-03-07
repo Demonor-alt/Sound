@@ -171,7 +171,7 @@ const voices = ref([
 ]);
 const filteredVoices = computed(() => {
     let result = voices.value.filter(voice =>
-        voice.userName.includes(props.nameValue)
+        voice.voiceName.includes(props.nameValue)
     );
     return result;
 });
@@ -227,8 +227,11 @@ const togglePlay = (voiceId, sampleIndex) => {
     })
 }
 // import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/bank/discover'
+// import {bankQueryAllService} from '@/api/bank/mybank'
+// import { useTokenStore } from '@/stores/token';
+// const token = useTokenStore();
 // onMounted(async () => {
-//     let result = await discoverQueryService();
+//     let result = await bankQueryAllService(token.token.userId);
 //     voices.value = result.data;
 // })
 import { ElNotification } from 'element-plus'

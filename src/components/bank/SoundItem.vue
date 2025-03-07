@@ -188,7 +188,7 @@ const voices = ref([
 ]);
 const filteredVoices = computed(() => {
     let result = voices.value.filter(voice =>
-        voice.userName.includes(props.nameValue)
+        voice.voiceName.includes(props.nameValue)
     );
     if (props.tagValue !== '') {
         result = result.filter(voice => voice.voiceTag === props.tagValue);

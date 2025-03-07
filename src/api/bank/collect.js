@@ -8,3 +8,7 @@ export const collectQueryService = (userId) => {
 export const collectBatchDeleteService = (params) => {
     return request.delete('/collect',{ params: params })
 }
+//查询收藏音色所有信息
+export const collectQueryAllService = (userId) => {
+    return request.get(`/collect/all/${userId}`);
+}
