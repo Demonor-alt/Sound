@@ -40,7 +40,7 @@
                             <div class="dot"></div>
                             <div class="tag1"> {{ voice.voiceLanguage }}</div>
                             <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
-                            }}
+                                }}
                             </div>
                         </div>
                         <div class="select-btns">
@@ -260,50 +260,50 @@
                 </div>
             </div>
             <h3>最新活动</h3>
-            <div>
-                <div v-for="audio in audios" :key="audio.audioId" class="audio-item">
-                    <div class="audio-top">
-                        <el-image :src="audio.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;"
-                            fit="cover" />
-                        <div class="audio-content">
-                            <div class="audio-info">
-                                <div class="audio-text">{{ audio.audioText }}</div>
-                                <div class="audio-name">
-                                    <el-icon size="20">
-                                        <User />
-                                    </el-icon>
-                                    {{ audio.voiceName }}
-                                </div>
-                            </div>
-                            <div class="audio-actions">
-                                <div class="dontagree" @click="showDontAgreeDialog = true"></div>
-                                <el-dialog v-model="showDontAgreeDialog" width="30%" align-center :show-close="false">
-                                    <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 20px;">
-                                        音频质量反馈</div>
-                                    <div class="dialog">
-                                        反馈类型
-                                        <MySelect :options="reportOptions" :input-width="'432px'" :color="colorSelect"
-                                            @update:value="handleReportValue" style="margin-bottom: 10px;" />
-                                    </div>
-                                    <template #footer>
-                                        <span class="dialog-footer">
-                                            <el-button color="black" plain @click="showDontAgreeDialog = false;">
-                                                取消
-                                            </el-button>
-                                            <el-button color="black" @click="showDontAgreeDialog = false;">
-                                                确认
-                                            </el-button>
-                                        </span>
-                                    </template>
-                                </el-dialog>
-                                <div class="share" @click="open(audio.audioId)"></div>
-                                <div class="download" @click="downloadAudio(audio.audioURL)"></div>
+            <div v-if="audios" v-for="audio in audios" :key="audio.audioId" class="audio-item">
+                <div class="audio-top">
+                    <el-image :src="audio.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;"
+                        fit="cover" />
+                    <div class="audio-content">
+                        <div class="audio-info">
+                            <div class="audio-text">{{ audio.audioText }}</div>
+                            <div class="audio-name">
+                                <el-icon size="20">
+                                    <User />
+                                </el-icon>
+                                {{ audio.voiceName }}
                             </div>
                         </div>
+                        <div class="audio-actions">
+                            <div class="dontagree" @click="showDontAgreeDialog = true"></div>
+                            <el-dialog v-model="showDontAgreeDialog" width="30%" align-center :show-close="false">
+                                <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 20px;">
+                                    音频质量反馈</div>
+                                <div class="dialog">
+                                    反馈类型
+                                    <MySelect :options="reportOptions" :input-width="'432px'" :color="colorSelect"
+                                        @update:value="handleReportValue" style="margin-bottom: 10px;" />
+                                </div>
+                                <template #footer>
+                                    <span class="dialog-footer">
+                                        <el-button color="black" plain @click="showDontAgreeDialog = false;">
+                                            取消
+                                        </el-button>
+                                        <el-button color="black" @click="showDontAgreeDialog = false;">
+                                            确认
+                                        </el-button>
+                                    </span>
+                                </template>
+                            </el-dialog>
+                            <div class="share" @click="open(audio.audioId)"></div>
+                            <div class="download" @click="downloadAudio(audio.audioURL)"></div>
+                        </div>
                     </div>
-                    <div class="divide"></div>
-                    <AudioPlayer :audioUrl="audio.audioURL" :buttonSize="20" :sliderLength="300"></AudioPlayer>
                 </div>
+                <div class="divide"></div>
+                <AudioPlayer :audioUrl="audio.audioURL" :buttonSize="20" :sliderLength="300"></AudioPlayer>
+            </div>
+            <div v-else><el-empty description="暂无数据" />
             </div>
         </div>
     </div>
@@ -594,6 +594,13 @@ const toggleCollect = async (voice) => {
     }
     let result = await discoverUpdateCollectService(editData);
 };
+import { audioQueryService } from '@/api/explanation'
+import { useTokenStore } from '@/stores/token';
+const token = useTokenStore();
+onMounted(async () => {
+    let result = await audioQueryService(token.token.userId);
+    audios.value = result.data;
+})
 </script>
 
 <style scoped>
@@ -1013,6 +1020,7 @@ input[type="range"] {
     border-radius: 8px;
     background-color: #FFFFFF;
     transition: all 0.3s ease;
+    margin-bottom: 20px;
 }
 
 .audio-item:hover {
