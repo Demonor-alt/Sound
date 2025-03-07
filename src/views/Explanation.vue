@@ -722,6 +722,7 @@ input[type="range"] {
     border: #86efac 1px solid;
     padding: 2px 10px;
     border-radius: 20px;
+    font-size: small;
 }
 
 .tag2 {
@@ -730,6 +731,7 @@ input[type="range"] {
     border: #93c5fd 1px solid;
     padding: 2px 10px;
     border-radius: 20px;
+    font-size: small;
 }
 
 .advanced-settings {
