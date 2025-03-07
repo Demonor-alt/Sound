@@ -106,7 +106,7 @@
                     <el-tab-pane label="探索" name="first">
                         <div class="action-sum">
                             <div style="width: 155px;">
-                                <MyInputW :message="nameValue" :placeholder="placeholder" class="search-input"
+                                <MyInputW :message="nameValue" :placeholder="placeholder"
                                     @update:message="handleMessage" />
                             </div>
                             <div class="action-bar">
@@ -138,134 +138,24 @@
                                 </el-popover>
                             </div>
                         </div>
-                        <SoundItem :nameValue="nameValue" :sortValue="sortValue" :languageValue="languageValue" :tagValue="tagValue" />
-
+                        <div style="max-height: 53vh;overflow-y: auto;">
+                            <SoundItem :nameValue="nameValue" :sortValue="sortValue" :languageValue="languageValue"
+                                :tagValue="tagValue" />
+                        </div>
                     </el-tab-pane>
                     <el-tab-pane label="收藏" name="second">
+                        <div style="max-height: 53vh;overflow-y: auto;">
+                            <CollectSoundItem />
+                        </div>
                     </el-tab-pane>
                     <el-tab-pane label="我的语音" name="third">
-                        <MyInputW :message="nameValue" :placeholder="placeholder" class="search-input"
+                        <MyInputW :message="nameValue" :placeholder="placeholder" class="action-bar"
                             @update:message="handleMessage" style="width: 20%;" />
+                        <div style="max-height: 53vh;overflow-y: auto;">
+                            <MySoundItem :nameValue="nameValue"></MySoundItem>
+                        </div>
                     </el-tab-pane>
                 </el-tabs>
-                <div v-if="filteredVoices.length === 0">
-                    <el-empty description="暂无数据" />
-                </div>
-                <div style="height: 58vh;overflow-y: auto;">
-                    <el-row v-for="voice in filteredVoices" :key="voice.id" class="voice-item">
-                        <el-col :span="4">
-                            <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="voice.image"
-                                fit="cover" />
-                        </el-col>
-                        <el-col :span="20">
-                            <div class="voice-name" @click="MoreDetail(voice.id)">{{ voice.name }}</div>
-                            <div class="voice-detail">
-                                <span class="display-detail"> {{ voice.userName }}</span>
-                                <div class="dot"></div>
-                                <el-icon size="20" style="color: #6b7280;">
-                                    <Clock />
-                                </el-icon>
-                                <span class="display-detail">{{ timeDistance(voice.creationTime) }}</span>
-                                <div class="dot"></div>
-                                <el-popover placement="bottom" :width="400" trigger="click">
-                                    <template #reference>
-                                        <div style="display: flex;flex-direction: row;gap: 10px;cursor: pointer;">
-                                            <div class="logo"></div>
-                                            <span class="display-detail"> {{ voice.sample.length }}&nbsp音频示例</span>
-                                        </div>
-                                    </template>
-                                    <div class="audio-samples">
-                                        <span style="font-size: large;font-weight: 800 ;color: black;">示例</span>
-                                        <el-card v-for="(sample, index) in voice.sample" :key="index"
-                                            class="samples-item" shadow="never">
-                                            <div class="samples-content">
-                                                <div>
-                                                    <span class="samples-index">{{ index + 1 }}</span>
-                                                    <span>{{ sample.title }}</span>
-                                                </div>
-                                                <div class="sample-btn">
-                                                    <div v-if="!sample.isPlaying" class="close"
-                                                        @click="togglePlay(voice.id, index)">
-                                                    </div>
-                                                    <div v-else class="on" @click="togglePlay(voice.id, index)"></div>
-                                                </div>
-                                            </div>
-                                            <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                                {{ sample.text }}
-                                            </div>
-                                        </el-card>
-                                    </div>
-                                </el-popover>
-                                <div class="dot"></div>
-                                <div class="tag1"> {{ voice.language }}</div>
-                                <div class="tag2" v-if="voice.tag !== ''" style="margin-left: 5px;"> {{ voice.tag }}
-                                </div>
-                            </div>
-                            <div class="voice-sample">
-                                <div v-for="(sample, index) in voice.sample" :key="index" class="voice-sample-item">
-                                    <div class="sample-btn">
-                                        <div v-if="!sample.isPlaying" class="close-plus"
-                                            @click="togglePlay(voice.id, index)">
-                                        </div>
-                                        <div v-else class="on-plus" @click="togglePlay(voice.id, index)"></div>
-                                    </div>
-                                    <div
-                                        style="width: 50%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: small;">
-                                        {{ sample.text }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="btns">
-                                <el-button size="large" color="black" @click="useVoice(voice.id)">使用声音</el-button>
-                                <div class="btns-plus">
-                                    <div class="button">
-                                        <div class="used"></div>
-                                        <div class="number">
-                                            {{ formatNumberWithK(voice.peopleCount) }}&nbsp;Used
-                                        </div>
-                                    </div>
-                                    <div class="button">
-                                        <div class="shared" @click="open"></div>
-                                        <div class="number">
-                                            {{ formatNumberWithK(voice.shareCount) }}&nbsp;Shares
-                                        </div>
-                                    </div>
-                                    <div class="button">
-                                        <div class="like" v-if="!voice.isLiked"
-                                            @click="voice.isLiked = !voice.isLiked; voice.likeCount++;">
-                                        </div>
-                                        <div class="likefill" v-else
-                                            @click="voice.isLiked = !voice.isLiked; voice.likeCount--;"></div>
-                                        <div class="number">
-                                            {{ formatNumberWithK(voice.likeCount) }}
-                                        </div>
-                                    </div>
-                                    <div class="button">
-                                        <div class="unlike" v-if="!voice.isUnliked"
-                                            @click="voice.isUnliked = !voice.isUnliked">
-                                        </div>
-                                        <div class="unlikefill" v-else @click="voice.isUnliked = !voice.isUnliked">
-                                        </div>
-                                    </div>
-                                    <div class="button">
-                                        <el-icon size="20" color="#6b7280" style="cursor: pointer;"
-                                            v-if="!voice.isCollected"
-                                            @click="voice.isCollected = !voice.isCollected; voice.collectCount++;">
-                                            <Star />
-                                        </el-icon>
-                                        <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-else
-                                            @click="voice.isCollected = !voice.isCollected; voice.collectCount--;">
-                                            <StarFilled />
-                                        </el-icon>
-                                        <div class="number">
-                                            {{ formatNumberWithK(voice.collectCount) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </el-col>
-                    </el-row>
-                </div>
             </el-dialog>
             <div class="advanced-settings">
                 <div class="toggle-button" @click="toggle" :class="{ 'active': isExpanded }">
@@ -336,7 +226,9 @@
 </template>
 
 <script setup>
-import SoundItem from '@/components/bank/SoundItem.vue'
+import SoundItem from '@/components/bank/SoundItem.vue';
+import CollectSoundItem from '@/components/bank/CollectSoundItem.vue';
+import MySoundItem from '@/components/bank/MySoundItem.vue';
 import { ref, computed } from 'vue';
 import MyInputW from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
@@ -600,11 +492,12 @@ const decrease2 = () => {
 
 .col1 {
     margin: 0 3%;
-    width:44%;
+    width: 44%;
 }
+
 .col2 {
     margin: 1% 5%;
-    width:40%;
+    width: 40%;
 }
 
 .text {
@@ -679,11 +572,12 @@ textarea {
     align-items: center;
     background-color: white;
     border-radius: 6px;
-    transition: all 0.3s ease; 
+    transition: all 0.3s ease;
 }
+
 .select-output-section:hover {
-    border-color: #ccc; 
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 
