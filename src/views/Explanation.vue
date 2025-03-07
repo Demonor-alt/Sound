@@ -208,7 +208,7 @@
                 </transition>
             </div>
             <div class="build">
-                <el-button color="black">创建</el-button>
+                <el-button color="black" @click="addNewAudio">创建</el-button>
             </div>
         </div>
         <el-divider direction="vertical" style="height: auto;" />
@@ -447,13 +447,14 @@ const audios = ref([{
     audioText: '1232ssssssssss',
     audioURL: audioUrl
 }]);
-const addNewAudios = ref({
-    audioId: 1,
-    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-    voiceName: '66',
-    audioText: '11111111111111111',
-    audioURL: audioUrl
-});
+// const addNewAudios = ref({
+//     audioId: 1,
+//     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+//     voiceName: '66',
+//     audioText: '11111111111111111',
+//     audioURL: audioUrl
+// });
+const addNewAudios = ref();
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {
         return num;
@@ -507,6 +508,19 @@ const increase2 = () => {
 const decrease2 = () => {
     volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
 };
+const addNewAudio = async () => {
+    const addData = {
+        voiceId:voice.value.voiceId,
+        audioText: inputText.value,
+        audioMode: mode.value,
+        audioSpeed: speedPercentage.value,
+        audioVolume: volumePercentage.value,
+    }
+    let result = await audioInsertService(addData);
+    addNewAudios.value = result.data;
+    console.log(result.data)
+
+}
 import { ElNotification } from 'element-plus'
 const open = (audioId) => {
     const currentUrl = window.location.href;
@@ -594,7 +608,7 @@ const toggleCollect = async (voice) => {
     }
     let result = await discoverUpdateCollectService(editData);
 };
-import { audioQueryService } from '@/api/explanation'
+import { audioQueryService, audioInsertService } from '@/api/explanation'
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
 onMounted(async () => {
@@ -714,7 +728,7 @@ onMounted(async () => {
 
 .select-voice-item {
     width: 100%;
-    padding: 5px;
+    padding: 10px;
     display: flex;
     align-items: center;
 }
