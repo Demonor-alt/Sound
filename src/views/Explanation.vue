@@ -24,11 +24,11 @@
             </div>
             <div class="select-output-section" v-else>
                 <el-row class="select-voice-item">
-                    <el-col :span="5">
+                    <el-col :span="4">
                         <el-image style="width: 80px; height: 80px;border-radius: 15px;" :src="voice.voiceImage"
                             fit="cover" />
                     </el-col>
-                    <el-col :span="15">
+                    <el-col :span="17">
                         <div class="select-voice-name">{{ voice.voiceName }}</div>
                         <div class="select-voice-detail">
                             <span class="display-detail"> {{ voice.userName }}</span>
@@ -40,7 +40,7 @@
                             <div class="dot"></div>
                             <div class="tag1"> {{ voice.voiceLanguage }}</div>
                             <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
-                                }}
+                            }}
                             </div>
                         </div>
                         <div class="select-btns">
@@ -340,10 +340,17 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
         currentId.value = '';
     }
     visible.value = false;
-    console.log(currentId.value);
+    queryById(currentId);
 });
-onMounted(() => {
-
+import { bankQueryDetailService } from '@/api/bank/mybank'
+const queryById = async (id) => {
+    let result = await bankQueryDetailService(id);
+    voice.value = result.data;
+}
+onMounted(async () => {
+    if (currentVoiceId) {
+        queryById(currentVoiceId);
+    }
 })
 const createNewSound = () => {
     router.push('/createbank')
@@ -389,11 +396,11 @@ const handleReportValue = (newValue) => {
     reportType.value = newValue;
 };
 const tagOptions = ref();
-// import {discoverTagService} from '@/api/bank/discover'
-// onMounted(async()=>{
-//     let result=await discoverTagService();
-//     tagOptions.value=result.data;
-// })
+import { discoverTagService } from '@/api/bank/discover'
+onMounted(async () => {
+    let result = await discoverTagService();
+    tagOptions.value = result.data;
+})
 const sortValue = ref('');
 const languageValue = ref('1');
 const tagValue = ref('');
@@ -422,25 +429,17 @@ function handleMessage(newMessage) {
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 const showDontAgreeDialog = ref(false);
-const voice = ref({
-    voiceId: 1,
-    userName: 'fc',
-    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-    voiceName: '55',
-    voiceDescription: '1212',
-    voiceCreationTime: new Date(2025, 1, 9, 19, 11),
-    voiceUseCount: 110000,
-    voiceShareCount: 11,
-    voiceLikeCount: 20,
-    voiceCollectCount: 10,
-    voiceLanguage: 'ch',
-    voiceTag: 'aaaaaaaaa',
-    voiceIsUsed: false,
-    voiceIsShared: false,
-    voiceIsLiked: false,
-    voiceIsUnliked: false,
-    voiceIsCollected: false,
-});
+// const voice = ref({
+//     voiceId: 1,
+//     userName: 'fc',
+//     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+//     voiceName: '55',
+//     voiceDescription: '1212',
+//     voiceCreationTime: new Date(2025, 1, 9, 19, 11),
+//     voiceUseCount: 110000,
+//     voiceShareCount: 11,
+// });
+const voice = ref();
 const audios = ref([{
     audioId: 1,
     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
@@ -560,7 +559,7 @@ const toggleLike = async (voice) => {
         voiceId: voice.voiceId,
         voiceLikeCount: voice.voiceLikeCount,
     }
-    // let result = await discoverUpdateLikeService(editData);
+    let result = await discoverUpdateLikeService(editData);
 };
 const toggleDislike = async (voice) => {
     if (voice.voiceIsLiked === 2) {
@@ -580,7 +579,7 @@ const toggleDislike = async (voice) => {
         voiceId: voice.voiceId,
         voiceLikeCount: voice.voiceLikeCount,
     }
-    // let result = await discoverUpdateLikeService(editData);
+    let result = await discoverUpdateLikeService(editData);
 };
 const toggleCollect = async (voice) => {
     voice.voiceIsCollected = !voice.voiceIsCollected;
@@ -593,7 +592,7 @@ const toggleCollect = async (voice) => {
         voiceId: voice.voiceId,
         voiceCollectCount: voice.voiceCollectCount,
     }
-    // let result = await discoverUpdateCollectService(editData);
+    let result = await discoverUpdateCollectService(editData);
 };
 </script>
 
@@ -708,7 +707,7 @@ const toggleCollect = async (voice) => {
 
 .select-voice-item {
     width: 100%;
-    padding: 10px;
+    padding: 5px;
     display: flex;
     align-items: center;
 }

@@ -4,10 +4,6 @@ import request from '@/utils/request.js'
 export const bankQueryService = (userId) => {
     return request.get(`/mybank/all/${userId}`);
 }
-//查询我的音色详情
-export const bankQueryDetailService = (voiceId) => {
-    return request.get(`/query/${voiceId}`);
-}
 //删除
 export const bankDeleteService = (voiceId) => {
     return request.delete("mybank?voiceId=" + voiceId);
@@ -28,6 +24,14 @@ export const bankUpdateService = (data) => {
 export const bankUpdateSamplesService = (data) => {
     return request.put('/mybank/samples',data)
 }
+//查询我的音色所有信息
+export const bankQueryAllService = (userId) => {
+    return request.get(`/mybank/all/${userId}`);
+}
+//查询音色详情
+export const bankQueryDetailService = (voiceId) => {
+    return request.get(`/query/${voiceId}`);
+}
 //查询指定音色
 export const bankQuerySingleDetailService = (voiceId) => {
     return request.get(`/query/${voiceId}`);
@@ -35,8 +39,4 @@ export const bankQuerySingleDetailService = (voiceId) => {
 //克隆指定音色
 export const bankCloneSamplesService = (userId,data) => {
     return request.post(`/clone/${userId}`,data);
-}
-//查询我的音色所有信息
-export const bankQueryAllService = (userId) => {
-    return request.get(`/mybank/all/${userId}`);
 }
