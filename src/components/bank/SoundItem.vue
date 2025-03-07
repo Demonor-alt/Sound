@@ -3,10 +3,10 @@
         <el-empty description="暂无数据" />
     </div>
     <el-row v-for="voice in filteredVoices" :key="voice.voiceId" class="voice-item">
-        <el-col :span="3">
+        <el-col :span="col1==='4'?4:3">
             <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="voice.voiceImage" fit="cover" />
         </el-col>
-        <el-col :span="21">
+        <el-col :span="col2==='20'?20:21">
             <div class="voice-name" @click="MoreDetail(voice.voiceId)">{{ voice.voiceName }}</div>
             <div class="voice-detail">
                 <span class="display-detail"> {{ voice.userName }}</span>
@@ -126,6 +126,10 @@ import {
 import { ref, defineProps, computed, reactive, onMounted } from 'vue';
 import { timeDistance } from '@/hooks/time';
 const props = defineProps({
+    nameValue: {
+        type: String,
+        default: '',
+    },
     sortValue: {
         type: String,
     },
@@ -134,7 +138,15 @@ const props = defineProps({
     },
     tagValue: {
         type: String,
-    }
+    },
+    col1: {
+        type: String,
+        default: '4',
+    },
+    col2: {
+        type: String,
+        default: '20',
+    },
 });
 import audioUrl from '@/assets/sound.m4a';
 const voices = ref([
@@ -175,11 +187,10 @@ const voices = ref([
     },
 ]);
 const filteredVoices = computed(() => {
-    let result = [...voices.value];
-    if (props.tagValue === '') {
-        result = [...voices.value];
-    }
-    else if (props.tagValue !== '') {
+    let result = voices.value.filter(voice =>
+        voice.userName.includes(props.nameValue)
+    );
+    if (props.tagValue !== '') {
         result = result.filter(voice => voice.voiceTag === props.tagValue);
     }
     if (props.languageValue !== '1') {
@@ -300,7 +311,7 @@ const toggleLike = async (voice) => {
     }
     // let result = await discoverUpdateLikeService(editData);
 };
-const toggleDislike =async(voice) => {
+const toggleDislike = async (voice) => {
     if (voice.voiceIsLiked === 2) {
         // 当前是不喜欢状态，切换为中立
         voice.voiceIsLiked = 0;
@@ -320,7 +331,7 @@ const toggleDislike =async(voice) => {
     }
     // let result = await discoverUpdateLikeService(editData);
 };
-const toggleCollect = async(voice) => {
+const toggleCollect = async (voice) => {
     voice.voiceIsCollected = !voice.voiceIsCollected;
     if (voice.voiceIsCollected) {
         voice.voiceCollectCount++;
@@ -343,7 +354,8 @@ const toggleCollect = async(voice) => {
     display: flex;
     padding: 20px;
     margin-bottom: 20px;
-    transition: all 0.3s ease; 
+    transition: all 0.3s ease;
+
     .el-col {
         display: flex;
         flex-direction: column;
@@ -416,9 +428,10 @@ const toggleCollect = async(voice) => {
         }
     }
 }
+
 .voice-item:hover {
-    border-color: #ccc; 
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .voice-name {

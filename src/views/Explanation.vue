@@ -138,8 +138,10 @@
                                 </el-popover>
                             </div>
                         </div>
+                        <SoundItem :nameValue="nameValue" :sortValue="sortValue" :languageValue="languageValue" :tagValue="tagValue" />
+
                     </el-tab-pane>
-                    <el-tab-pane label="我的收藏" name="second">
+                    <el-tab-pane label="收藏" name="second">
                     </el-tab-pane>
                     <el-tab-pane label="我的语音" name="third">
                         <MyInputW :message="nameValue" :placeholder="placeholder" class="search-input"
@@ -334,6 +336,7 @@
 </template>
 
 <script setup>
+import SoundItem from '@/components/bank/SoundItem.vue'
 import { ref, computed } from 'vue';
 import MyInputW from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
@@ -676,6 +679,11 @@ textarea {
     align-items: center;
     background-color: white;
     border-radius: 6px;
+    transition: all 0.3s ease; 
+}
+.select-output-section:hover {
+    border-color: #ccc; 
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
 }
 
 

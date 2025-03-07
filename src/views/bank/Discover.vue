@@ -34,7 +34,7 @@
                     </div>
                 </el-header>
                 <el-main>
-                    <SoundItem :sortValue="sortValue" :languageValue="languageValue" :tagValue="tagValue" />
+                    <SoundItem :sortValue="sortValue" :languageValue="languageValue" :tagValue="tagValue" :col1="col1" :col2="col2" />
                 </el-main>
             </el-container>
         </el-col>
@@ -70,7 +70,8 @@ const sortValue = ref('');
 const languageValue = ref('1');
 const tagValue = ref('');
 const tagTemp = ref('');
-
+const col1=ref('3');
+const col2=ref('21');
 
 const handleSortValue = (newValue) => {
     sortValue.value = newValue;
