@@ -1,0 +1,1 @@
+import{i as a}from"./request-BzXBxJDY.js";const n=e=>a.get(`/mybank/detail/${e}`),r=e=>a.post("/mybank",e),s=e=>a.post("/mybank/samples",e),c=e=>a.put("/mybank/detail",e),i=e=>a.put("/mybank/samples",e),b=e=>a.get(`/query/${e}`);export{n as a,b,c,s as d,i as e,r as f};
