@@ -40,7 +40,7 @@
                             <div class="dot"></div>
                             <div class="tag1"> {{ voice.voiceLanguage }}</div>
                             <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
-                                }}
+                            }}
                             </div>
                         </div>
                         <div class="select-btns">
@@ -80,7 +80,7 @@
                             <el-icon size="28" style="cursor: pointer;" @click="visible = true;">
                                 <RefreshRight />
                             </el-icon>
-                            <el-icon size="28" style="cursor: pointer;" @click="submitData = ''">
+                            <el-icon size="28" style="cursor: pointer;" @click="voice = ''">
                                 <Close />
                             </el-icon>
                         </div>
@@ -214,6 +214,34 @@
         <el-divider direction="vertical" style="height: auto;" />
         <div class="col2">
             <h3>生成的音频</h3>
+
+            <h3>最新活动</h3>
+            <div>
+                <div v-for="audio in audios" :key="audio.audioId" class="audio-item">
+                    <div class="audio-top">
+                        <el-image :src="audio.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;"
+                            fit="cover" />
+                        <div class="audio-content">
+                            <div class="audio-info">
+                                <div class="audio-text">{{ audio.audioText }}</div>
+                                <div class="audio-name">
+                                    <el-icon>
+                                        <User />
+                                    </el-icon>
+                                    {{ audio.voiceName }}
+                                </div>
+                            </div>
+                            <div class="audio-actions">
+                                <div class="dontagree"></div>
+                                <div class="share"></div>
+                                <div class="download"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divide"></div>
+                    <AudioPlayer :audioUrl="audio.audioURL" :buttonSize="20" :sliderLength="300"></AudioPlayer>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -223,7 +251,8 @@
 import SoundItem from '@/components/bank/SoundItem.vue';
 import CollectSoundItem from '@/components/bank/CollectSoundItem.vue';
 import MySoundItem from '@/components/bank/MySoundItem.vue';
-import { ref, computed, watch,onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
+import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 import MyInput from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
 const type = ref('textarea');
@@ -239,6 +268,7 @@ const router = useRouter();
 const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
+import audioUrl from '@/assets/sound.m4a';
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
     const idMatch = newPath.match(/\?id=(\d+)/);
     if (idMatch) {
@@ -267,7 +297,7 @@ import {
     Close,
     Memo,
     RefreshRight,
-    ArrowDown, ArrowUp, Minus, Plus
+    ArrowDown, ArrowUp, Minus, Plus, User
 } from '@element-plus/icons-vue';
 import MySelect from '@/components/newComponent/Select.vue'
 const color = ref('#ffffff');
@@ -314,25 +344,32 @@ function handleMessage(newMessage) {
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 
-const voice = ref(  {
-        voiceId: 1,
-        userName: 'fc',
-        voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        voiceName: '55',
-        voiceDescription: '1212',
-        voiceCreationTime: new Date(2025, 1, 9, 19, 11),
-        voiceUseCount: 110000,
-        voiceShareCount: 11,
-        voiceLikeCount: 20,
-        voiceCollectCount: 10,
-        voiceLanguage: 'ch',
-        voiceTag: 'aaaaaaaaa',
-        voiceIsUsed: false,
-        voiceIsShared: false,
-        voiceIsLiked: false,
-        voiceIsUnliked: false,
-        voiceIsCollected: false,
-    });
+const voice = ref({
+    voiceId: 1,
+    userName: 'fc',
+    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+    voiceName: '55',
+    voiceDescription: '1212',
+    voiceCreationTime: new Date(2025, 1, 9, 19, 11),
+    voiceUseCount: 110000,
+    voiceShareCount: 11,
+    voiceLikeCount: 20,
+    voiceCollectCount: 10,
+    voiceLanguage: 'ch',
+    voiceTag: 'aaaaaaaaa',
+    voiceIsUsed: false,
+    voiceIsShared: false,
+    voiceIsLiked: false,
+    voiceIsUnliked: false,
+    voiceIsCollected: false,
+});
+const audios = ref([{
+    audioId: 1,
+    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+    voiceName: '55',
+    audioText: '1232',
+    audioURL: audioUrl
+}]);
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {
         return num;
@@ -439,6 +476,27 @@ const toggleCollect = async (voice) => {
 </script>
 
 <style scoped>
+.dontagree {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background: url('../assets/icons/dontagree.svg') no-repeat center / contain;
+}
+
+.share {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background: url('../assets/icons/share.svg') no-repeat center / contain;
+}
+
+.download {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    background: url('../assets/icons/download.svg') no-repeat center / contain;
+}
+
 .row {
     display: flex;
     flex-direction: row;
@@ -450,8 +508,8 @@ const toggleCollect = async (voice) => {
 }
 
 .col2 {
-    margin: 1% 5%;
-    width: 40%;
+    margin: 1% 8%;
+    width: 34%;
 }
 
 .text {
@@ -532,6 +590,7 @@ const toggleCollect = async (voice) => {
     display: flex;
     align-items: center;
 }
+
 .select-voice-detail {
     display: flex;
     flex-direction: row;
@@ -787,5 +846,63 @@ input[type="range"] {
 
 :deep() .el-slider__button {
     border-color: black !important;
+}
+
+
+.audio-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 85%;
+    align-items: baseline
+}
+
+.audio-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.audio-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.audio-name {
+    font-size: 14px;
+    color: #666;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.audio-text {
+    font-size: 18px;
+}
+
+.audio-item {
+    padding: 10px 10px 0 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+    transition: all 0.3s ease;
+}
+
+.audio-item:hover {
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+.audio-top{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+.divide{
+    margin-top: 15px;
+    height: 1px;
+    width: 100%;
+    background-color: #e4e4e7;
 }
 </style>

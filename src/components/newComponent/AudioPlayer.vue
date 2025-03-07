@@ -6,16 +6,17 @@
         </audio>
         <div class="audio_right">
             <div class="gap">
-                <img v-if="audioIsPlay" @click="playAudio" class="audio_icon" src="../../assets/icons/close2.svg"
+                <img v-if="audioIsPlay" @click="playAudio" class="audio_icon" :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../../assets/icons/close2.svg"
                     alt="播放" />
-                <img v-else @click="playAudio" class="audio_icon" src="../../assets/icons/on.svg" alt="暂停" />
+                <img v-else @click="playAudio" class="audio_icon" :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../../assets/icons/on.svg"
+                    alt="暂停" />
                 <div class="audio_time">
                     <span>{{ audioStart }}</span>
                     &nbsp;/&nbsp;
                     <span>{{ durationTime }}</span>
                 </div>
                 <el-slider class="slider_box" v-model="currentProgress" :show-tooltip="false"
-                    @input="handleProgressChange" />
+                    @input="handleProgressChange" :style="{ width: sliderLength + 'px' }" />
                 <div class="volume">
                     <div class="volume_progress" v-show="audioHuds">
                         <el-slider show-tooltip="false" vertical height="100px" class="volume_bar" v-model="audioVolume"
@@ -35,18 +36,24 @@
 <script setup>
 import { ref, onMounted, watch } from "vue";
 const props = defineProps({
-    audioUrl: String,        //试听的链接
-    isPauseTtsAudio: Boolean     //是否暂停播放试听
+    audioUrl: String,        // 试听的链接
+    buttonSize: {
+        type: String,
+        default: '30'
+    },
+    sliderLength: {
+        type: String,
+        default: '420'
+    }
 });
-const audioIsPlay = ref(true); //音频是否在播放
+const audioIsPlay = ref(true);
 const audioStart = ref("0:00");
-const durationTime = ref("0:00"); //音频的总时长，显示的时间格式
-const duration = ref(0); //音频的总时长
-const audioVolume = ref(80); //音量的默认值是0.8
-const audioHuds = ref(false); //是否显示音量slider
+const durationTime = ref("0:00");
+const duration = ref(0);
+const audioVolume = ref(80);
+const audioHuds = ref(false);
 const audioRef = ref(null);
 const currentProgress = ref(0);
-
 
 watch(() => props.isPauseTtsAudio, (newVal, oldVal) => {
     if (newVal) {
@@ -144,7 +151,6 @@ const handleAudioVolume = (val) => {
     }
 
     .slider_box {
-        width: 420px;
         height: 8px;
         border-radius: 5px;
         flex: 1;
@@ -152,8 +158,7 @@ const handleAudioVolume = (val) => {
     }
 
     .audio_icon {
-        width: 30px;
-        height: 30px;
+        /* 移除固定的 width 和 height */
         margin-bottom: 4px;
         cursor: pointer;
     }
