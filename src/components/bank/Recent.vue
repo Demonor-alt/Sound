@@ -65,6 +65,8 @@ const token = useTokenStore();
     display: flex;
     padding: 15px;
     margin-bottom: 20px;
+    transition: all 0.3s ease; 
+
     .tag {
         padding-top: 3%;
         display: flex;

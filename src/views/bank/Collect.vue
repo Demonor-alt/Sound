@@ -264,6 +264,7 @@ const toggleCollect = (voice) => {
     display: flex;
     padding: 20px;
     margin-bottom: 20px;
+    transition: all 0.3s ease; 
 
     .el-col {
         display: flex;
