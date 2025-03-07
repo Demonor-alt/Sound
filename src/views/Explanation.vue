@@ -4,7 +4,7 @@
             <h1>文本转语音</h1>
             <div class="input-section">
                 <div class="text">您的文本</div>
-                <MyInputW :message="inputText" :placeholder="placeholderTextArea" :type="type" :maxlength="maxlength"
+                <MyInput :message="inputText" :placeholder="placeholderTextArea" :type="type" :maxlength="maxlength"
                     :rows="rows" :color="color1" @update:message="handleMessageTextArea" />
                 <div class="counter">{{ inputText.length }}/500</div>
             </div>
@@ -106,7 +106,7 @@
                     <el-tab-pane label="探索" name="first">
                         <div class="action-sum">
                             <div style="width: 155px;">
-                                <MyInputW :message="nameValue" :placeholder="placeholder"
+                                <MyInput :message="nameValue" :placeholder="placeholder"
                                     @update:message="handleMessage" />
                             </div>
                             <div class="action-bar">
@@ -149,7 +149,7 @@
                         </div>
                     </el-tab-pane>
                     <el-tab-pane label="我的语音" name="third">
-                        <MyInputW :message="nameValue" :placeholder="placeholder" class="action-bar"
+                        <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar"
                             @update:message="handleMessage" style="width: 20%;" />
                         <div style="max-height: 53vh;overflow-y: auto;">
                             <MySoundItem :nameValue="nameValue"></MySoundItem>
@@ -229,8 +229,8 @@
 import SoundItem from '@/components/bank/SoundItem.vue';
 import CollectSoundItem from '@/components/bank/CollectSoundItem.vue';
 import MySoundItem from '@/components/bank/MySoundItem.vue';
-import { ref, computed } from 'vue';
-import MyInputW from "@/components/newComponent/Input.vue";
+import { ref, computed,watch } from 'vue';
+import MyInput from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
 const type = ref('textarea');
 const rows = ref("5");
@@ -242,9 +242,10 @@ function handleMessageTextArea(newValue) {
 }
 import { useRouter } from 'vue-router'
 const router = useRouter()
-
+watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
+    visible.value = false;
+});
 const createNewSound = () => {
-    // 跳转到添加员工的页面
     router.push('/createbank')
 }
 import { timeDistance } from '@/hooks/time';
@@ -261,75 +262,6 @@ import {
     RefreshRight,
     ArrowDown, ArrowUp, Minus, Plus
 } from '@element-plus/icons-vue';
-const MoreDetail = (id) => {
-    router.push({ path: '/detail', query: { id: id } });
-
-}
-const voices = ref([
-    {
-        id: 1,
-        userName: 'fc',
-        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        name: '55',
-        description: '1212',
-        creationTime: new Date(2025, 1, 9, 19, 11),
-        status: "成功",
-        audioUrl: '/samples/sample1.mp3',
-        peopleCount: 110000,
-        shareCount: 11,
-        likeCount: 20,
-        collectCount: 10,
-        language: 'ch',
-        tag: 'aaaaaaaaa',
-        isLiked: false,
-        isUnliked: false,
-        isCollected: false,
-        sample: [
-            {
-                id: 1,
-                isPlaying: false,
-                title: 'Default Sample',
-                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: ''
-            },
-            {
-                id: 2,
-                isPlaying: false,
-                title: '方可让父母',
-                text: '对侧人防热非人发热功耗一节课iklo',
-                url: ''
-            }
-        ],
-    },
-    {
-        id: 2,
-        userName: 'fcds',
-        image: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        name: '55',
-        description: '1212',
-        creationTime: new Date(2025, 1, 9, 19, 10),
-        status: "成功",
-        audioUrl: '/samples/sample1.mp3',
-        peopleCount: 15,
-        shareCount: 11,
-        likeCount: 20,
-        collectCount: 10,
-        language: 'en',
-        tag: '1',
-        isLiked: false,
-        isUnliked: false,
-        isCollected: false,
-        sample: [
-            {
-                id: 1,
-                isPlaying: false,
-                title: 'Default Sample',
-                text: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                url: ''
-            },
-        ],
-    },
-]);
 import MySelect from '@/components/newComponent/Select.vue'
 const color = ref('#ffffff');
 const sortOptions = ref([
@@ -342,11 +274,7 @@ const languageOptions = ref([
     { value: 'en', label: 'English' },
 ]);
 const tagOptions = computed(() => {
-    const tags = new Set();
-    voices.value.forEach(voice => {
-        tags.add(voice.tag);
-    });
-    return Array.from(tags).map(tag => ({ value: tag, label: tag }));
+
 });
 const sortValue = ref('');
 const languageValue = ref('1');
@@ -358,7 +286,6 @@ const handleTabClick = () => {
     languageValue.value = '1';
     tagValue.value = '';
     nameValue.value = '';
-
 };
 const placeholder = ref('搜索声音...');
 const handleSortValue = (newValue) => {
@@ -374,53 +301,10 @@ const handletagValue = (newValue) => {
 function handleMessage(newMessage) {
     nameValue.value = newMessage;
 }
-const filteredVoices = computed(() => {
-    let result = voices.value.filter(voice =>
-        voice.name.includes(nameValue.value)
-    );
-
-    if (tagValue.value) {
-        result = result.filter(voice => voice.tag === tagValue.value);
-    }
-
-    if (languageValue.value !== '1') {
-        result = result.filter(voice => voice.language === languageValue.value);
-    }
-
-    if (sortValue.value === '2') {
-        result.sort((a, b) => new Date(b.creationTime) - new Date(a.creationTime));
-    } else if (sortValue.value === '1') {
-        result.sort((a, b) => b.peopleCount - a.peopleCount);
-    }
-    return result;
-});
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 
-const togglePlay = (id, index) => {
-    if (!voices.value[id].sample[index].url) {
-        console.error('Audio URL is empty');
-        return;
-    }
-    const audio = new Audio(voices.value[id].sample[index].url);
-    const fileInfo = voices.value[id].sample[index];
-
-    if (fileInfo.isPlaying) {
-        audio.pause();
-        fileInfo.isPlaying = false;
-    } else {
-        audio.play();
-        fileInfo.isPlaying = true;
-    }
-    audio.addEventListener('ended', () => {
-        voices.value[id].sample[index].isPlaying = false;
-    });
-};
 const submitData = ref();
-const useVoice = (id) => {
-    submitData.value = voices.value.find(voice => voice.id === id);
-    visible.value = false;
-}
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {
         return num;
@@ -430,14 +314,6 @@ function formatNumberWithK(num) {
         return (num / thousand).toFixed(2) + 'K';
     }
     return num;
-}
-import { ElNotification } from 'element-plus'
-
-const open = () => {
-    ElNotification({
-        message: "已复制到剪贴板",
-        position: 'bottom-right',
-    })
 }
 const isExpanded = ref(false);
 const mode = ref(false)
@@ -505,17 +381,6 @@ const decrease2 = () => {
     padding-bottom: 15px;
     margin-top: 10px;
 }
-
-
-textarea {
-    width: 100%;
-    height: 150px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-}
-
 .counter {
     text-align: right;
     color: #666;
@@ -589,12 +454,6 @@ textarea {
     align-items: center;
 }
 
-.select-voice-detail {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-}
-
 .build {
     display: flex;
     justify-content: end;
@@ -616,11 +475,6 @@ input[type="range"] {
     width: 100%;
 }
 
-.actions {
-    display: flex;
-    flex-direction: row;
-}
-
 :deep(.el-tabs__active-bar) {
     background-color: #09090b !important;
     height: 2px;
@@ -639,27 +493,6 @@ input[type="range"] {
 
 :deep(.el-tabs__item:hover) {
     color: #444;
-}
-
-.sound-manager {
-    padding: 5px 45px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-
-.display {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
-    .title {
-        font-size: 25px;
-        margin-bottom: 24px;
-        color: #333;
-        font-weight: 800;
-    }
 }
 
 .action-sum {
@@ -690,88 +523,6 @@ input[type="range"] {
         display: flex;
         flex-direction: row;
         margin-bottom: 10px;
-    }
-}
-
-.voice-item {
-    width: 100%;
-    background-color: white;
-    border-radius: 10px;
-    border: #e4e4e7 1px solid;
-    display: flex;
-    padding: 20px;
-    margin-bottom: 20px;
-
-    .el-col {
-        display: flex;
-        flex-direction: column;
-        gap: 1px;
-    }
-
-
-    .btns {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        .btns-plus {
-            display: flex;
-            flex-direction: row;
-            gap: 25px;
-
-            .button {
-                display: flex;
-                flex-direction: row;
-                gap: 10px;
-                align-items: center;
-
-                .number {
-                    font-size: small;
-                }
-
-                .used {
-                    width: 20px;
-                    height: 20px;
-                    background: url('../assets/icons/close2.svg') no-repeat center / contain;
-                }
-
-                .shared {
-                    cursor: pointer;
-                    width: 20px;
-                    height: 20px;
-                    background: url('../assets/icons/share.svg') no-repeat center / contain;
-                }
-
-                .like {
-                    cursor: pointer;
-                    width: 20px;
-                    height: 20px;
-                    background: url('../assets/icons/like.svg') no-repeat center / contain;
-                }
-
-                .likefill {
-                    cursor: pointer;
-                    width: 20px;
-                    height: 20px;
-                    background: url('../assets/icons/likefill.svg') no-repeat center / contain;
-                }
-
-                .unlike {
-                    cursor: pointer;
-                    width: 20px;
-                    height: 20px;
-                    background: url('../assets/icons/unlike.svg') no-repeat center / contain;
-                }
-
-                .unlikefill {
-                    cursor: pointer;
-                    width: 20px;
-                    height: 20px;
-                    background: url('../assets/icons/unlikefill.svg') no-repeat center / contain;
-                }
-            }
-        }
     }
 }
 
@@ -854,41 +605,6 @@ input[type="range"] {
     color: #71717a;
 }
 
-.audio-samples {
-    padding: 1%;
-
-    .samples-item {
-        border: #e4e4e7 1px solid;
-        margin-top: 15px;
-    }
-
-    .samples-content {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-
-        .samples-index {
-            background-color: #e0e5eb;
-            border-radius: 25px;
-            padding: 2px 7px;
-            margin-right: 10px;
-        }
-    }
-
-    .close {
-        width: 25px;
-        height: 25px;
-        background: url('../assets/icons/close.svg') no-repeat center / contain;
-    }
-
-    .on {
-        width: 25px;
-        height: 25px;
-        background: url('../assets/icons/on.svg') no-repeat center / contain;
-    }
-
-}
-
 .close-plus {
     width: 15px;
     height: 15px;
@@ -901,26 +617,12 @@ input[type="range"] {
     background: url('../assets/icons/on.svg') no-repeat center / contain;
 }
 
-.voice-name {
-    font-size: 23px;
-    font-weight: 800;
-    cursor: pointer;
-}
-
 .select-voice-name {
     font-size: 23px;
     font-weight: 800;
     cursor: pointer;
     display: flex;
     justify-content: left;
-}
-
-.voice-detail {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    align-items: center;
-    font-size: small;
 }
 
 .voice-sample-item {
@@ -963,12 +665,6 @@ input[type="range"] {
     padding: 12px 16px;
     cursor: pointer;
     transition: background 0.3s;
-}
-
-.expand-enter-active,
-.expand-leave-active {
-    transition: height 0.3s ease-in-out;
-    overflow: hidden;
 }
 
 .content-wrapper {
