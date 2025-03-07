@@ -79,8 +79,8 @@
                             <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">报告模型</div>
                             <div class="dialog">
                                 你为什么要举报这个模型?
-                                <MySelect :options="sortOptions" :input-width="'432px'" :color="color"
-                                    @update:value="handleSortValue" style="margin-bottom: 10px;" />
+                                <MySelect :options="reportOptions" :input-width="'432px'" :color="color"
+                                    @update:value="handleReportValue" style="margin-bottom: 10px;" />
                                 评论（至少20个字符）
                                 <MyInputW :message="reportData.desctibe" :placeholder="placeholderTextArea" :type="type"
                                     :rows="rows" @update:message="handleMessageTextArea" />
@@ -187,12 +187,12 @@ const reportData = ref({
     type: '',
     desctibe: ''
 })
-const sortOptions = ref([
+const reportOptions = ref([
     { value: '1', label: '无法工作' },
     { value: '2', label: '侵犯版本' },
     { value: '3', label: '其他' },
 ]);
-const handleSortValue = (newValue) => {
+const handleReportValue = (newValue) => {
     reportData.value.type = newValue;
 };
 function handleMessageTextArea(newValue) {

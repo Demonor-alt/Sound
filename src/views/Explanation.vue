@@ -232,9 +232,28 @@
                                 </div>
                             </div>
                             <div class="audio-actions">
-                                <div class="dontagree"></div>
-                                <div class="share"></div>
-                                <div class="download"></div>
+                                <div class="dontagree" @click="showDontAgreeDialog = true"></div>
+                                <el-dialog v-model="showDontAgreeDialog" width="30%" align-center :show-close="false">
+                                    <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 20px;">
+                                        音频质量反馈</div>
+                                    <div class="dialog">
+                                        反馈类型
+                                        <MySelect :options="reportOptions" :input-width="'432px'" :color="colorSelect"
+                                            @update:value="handleReportValue" style="margin-bottom: 10px;" />
+                                    </div>
+                                    <template #footer>
+                                        <span class="dialog-footer">
+                                            <el-button color="black" plain @click="showDontAgreeDialog = false;">
+                                                取消
+                                            </el-button>
+                                            <el-button color="black" @click="showDontAgreeDialog = false;">
+                                                确认
+                                            </el-button>
+                                        </span>
+                                    </template>
+                                </el-dialog>
+                                <div class="share" @click="open(audio.audioId)"></div>
+                                <div class="download" @click="downloadAudio(audio.audioURL)"></div>
                             </div>
                         </div>
                     </div>
@@ -310,6 +329,21 @@ const languageOptions = ref([
     { value: 'ch', label: '汉语' },
     { value: 'en', label: 'English' },
 ]);
+const reportOptions = ref([
+    { value: '1', label: '暂无问题' },
+    { value: '2', label: '音频存在截断' },
+    { value: '3', label: '有多个人说话（音色跳变）' },
+    { value: '4', label: '噪音' },
+    { value: '5', label: '超长空白' },
+    { value: '6', label: '声音太小/声音模糊' },
+    { value: '7', label: '混响很大' },
+    { value: '8', label: '吞字漏字错字' },
+]);
+const colorSelect = ref('#ffffff');
+const reportType = ref();
+const handleReportValue = (newValue) => {
+    reportType.value = newValue;
+};
 const tagOptions = ref();
 // import {discoverTagService} from '@/api/bank/discover'
 // onMounted(async()=>{
@@ -343,7 +377,7 @@ function handleMessage(newMessage) {
 }
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
-
+const showDontAgreeDialog = ref(false);
 const voice = ref({
     voiceId: 1,
     userName: 'fc',
@@ -367,9 +401,16 @@ const audios = ref([{
     audioId: 1,
     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
     voiceName: '55',
-    audioText: '1232',
+    audioText: '1232ssssssssss',
     audioURL: audioUrl
 }]);
+const addNewAudios = ref({
+    audioId: 1,
+    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+    voiceName: '55',
+    audioText: '1232ssssssssss',
+    audioURL: audioUrl
+});
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {
         return num;
@@ -422,6 +463,43 @@ const increase2 = () => {
 };
 const decrease2 = () => {
     volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
+};
+import { ElNotification } from 'element-plus'
+const open = (audioId) => {
+    const currentUrl = window.location.href;
+    const textToCopy = `${currentUrl}?id=${audioId}`;
+    navigator.clipboard.writeText(textToCopy)
+        .then(async () => {
+            ElNotification({
+                message: "已复制到剪贴板",
+                position: 'bottom-right',
+            });
+        })
+        .catch((error) => {
+            ElNotification({
+                message: `复制失败: ${error.message}`,
+                position: 'bottom-right',
+                type: 'error'
+            });
+        });
+};
+
+const downloadAudio = (audioUrl) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', audioUrl, true);
+    xhr.responseType = 'blob';
+    xhr.onload = () => {
+        if (xhr.status === 200) {
+            const blob = new Blob([xhr.response], { type: 'audio/mpeg' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'audio.mp3';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    };
+    xhr.send();
 };
 const toggleLike = async (voice) => {
     if (voice.voiceIsLiked === 1) {
@@ -866,7 +944,7 @@ input[type="range"] {
 .audio-actions {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 15px;
 }
 
 .audio-name {
@@ -880,6 +958,10 @@ input[type="range"] {
 
 .audio-text {
     font-size: 18px;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .audio-item {
@@ -894,15 +976,24 @@ input[type="range"] {
     border-color: #ccc;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
-.audio-top{
+
+.audio-top {
     display: flex;
     flex-direction: row;
     gap: 10px;
 }
-.divide{
+
+.divide {
     margin-top: 15px;
     height: 1px;
     width: 100%;
     background-color: #e4e4e7;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    color: black;
+    gap: 10px;
 }
 </style>
