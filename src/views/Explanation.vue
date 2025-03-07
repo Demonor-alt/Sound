@@ -18,64 +18,58 @@
                 <div class="text">语音声音</div>
                 <div>没有模型? <el-button link @click="createNewSound">一分钟创建</el-button></div>
             </div>
-            <div class="output-section" @click="visible = true" v-if="!submitData">
+            <div class="output-section" @click="visible = true" v-if="!voice">
                 <div class="add"></div>
                 <div style="font-weight: 600;">选择语音声音</div>
             </div>
             <div class="select-output-section" v-else>
                 <el-row class="select-voice-item">
                     <el-col :span="5">
-                        <el-image style="width: 80px; height: 80px;border-radius: 15px;" :src="submitData.image"
+                        <el-image style="width: 80px; height: 80px;border-radius: 15px;" :src="voice.voiceImage"
                             fit="cover" />
                     </el-col>
                     <el-col :span="15">
-                        <div class="select-voice-name">{{ submitData.name }}</div>
+                        <div class="select-voice-name">{{ voice.voiceName }}</div>
                         <div class="select-voice-detail">
-                            <span class="display-detail"> {{ submitData.userName }}</span>
+                            <span class="display-detail"> {{ voice.userName }}</span>
                             <div class="dot"></div>
                             <el-icon size="20" style="color: #6b7280;">
                                 <Clock />
                             </el-icon>
-                            <span class="display-detail">{{ timeDistance(submitData.creationTime) }}</span>
+                            <span class="display-detail">{{ timeDistance(voice.voiceCreationTime) }}</span>
                             <div class="dot"></div>
-                            <div class="tag1"> {{ submitData.language }}</div>
-                            <div class="tag2" v-if="submitData.tag !== ''" style="margin-left: 5px;"> {{ submitData.tag
+                            <div class="tag1"> {{ voice.voiceLanguage }}</div>
+                            <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
                                 }}
                             </div>
                         </div>
                         <div class="select-btns">
                             <div class="btns-plus">
                                 <div class="button">
-                                    <div class="like" v-if="!submitData.isLiked"
-                                        @click="submitData.isLiked = !submitData.isLiked; submitData.likeCount++;">
+                                    <div class="likefill" v-if="voice.voiceIsLiked === 1" @click="toggleLike(voice)">
                                     </div>
-                                    <div class="likefill" v-else
-                                        @click="submitData.isLiked = !submitData.isLiked; submitData.likeCount--;">
+                                    <div class="like" v-else @click="toggleLike(voice)">
                                     </div>
                                     <div class="number">
-                                        {{ formatNumberWithK(submitData.likeCount) }}
+                                        {{ formatNumberWithK(voice.voiceLikeCount) }}
                                     </div>
                                 </div>
                                 <div class="button">
-                                    <div class="unlike" v-if="!submitData.isUnliked"
-                                        @click="submitData.isUnliked = !submitData.isUnliked">
-                                    </div>
-                                    <div class="unlikefill" v-else
-                                        @click="submitData.isUnliked = !submitData.isUnliked">
-                                    </div>
+                                    <div class="unlikefill" v-if="voice.voiceIsLiked === 2"
+                                        @click="toggleDislike(voice)"></div>
+                                    <div class="unlike" v-else @click="toggleDislike(voice)"></div>
                                 </div>
                                 <div class="button">
                                     <el-icon size="20" color="#6b7280" style="cursor: pointer;"
-                                        v-if="!submitData.isCollected"
-                                        @click="submitData.isCollected = !submitData.isCollected; submitData.collectCount++;">
+                                        v-if="!voice.voiceIsCollected" @click="toggleCollect(voice)">
                                         <Star />
                                     </el-icon>
                                     <el-icon size="20" color="#6b7280" style="cursor: pointer;" v-else
-                                        @click="submitData.isCollected = !submitData.isCollected; submitData.collectCount--;">
+                                        @click="toggleCollect(voice)">
                                         <StarFilled />
                                     </el-icon>
                                     <div class="number">
-                                        {{ formatNumberWithK(submitData.collectCount) }}
+                                        {{ formatNumberWithK(voice.voiceCollectCount) }}
                                     </div>
                                 </div>
                             </div>
@@ -229,7 +223,7 @@
 import SoundItem from '@/components/bank/SoundItem.vue';
 import CollectSoundItem from '@/components/bank/CollectSoundItem.vue';
 import MySoundItem from '@/components/bank/MySoundItem.vue';
-import { ref, computed,watch } from 'vue';
+import { ref, computed, watch,onMounted } from 'vue';
 import MyInput from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
 const type = ref('textarea');
@@ -240,11 +234,24 @@ const inputText = ref('');
 function handleMessageTextArea(newValue) {
     inputText.value = newValue;
 }
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { useRouter, useRoute } from 'vue-router'
+const router = useRouter();
+const currentId = ref('');
+const route = useRoute();
+const currentVoiceId = route.query ? route.query.id : undefined;
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
+    const idMatch = newPath.match(/\?id=(\d+)/);
+    if (idMatch) {
+        currentId.value = idMatch[1];
+    } else {
+        currentId.value = '';
+    }
     visible.value = false;
+    console.log(currentId.value);
 });
+onMounted(() => {
+
+})
 const createNewSound = () => {
     router.push('/createbank')
 }
@@ -307,7 +314,25 @@ function handleMessage(newMessage) {
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 
-const submitData = ref();
+const voice = ref(  {
+        voiceId: 1,
+        userName: 'fc',
+        voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+        voiceName: '55',
+        voiceDescription: '1212',
+        voiceCreationTime: new Date(2025, 1, 9, 19, 11),
+        voiceUseCount: 110000,
+        voiceShareCount: 11,
+        voiceLikeCount: 20,
+        voiceCollectCount: 10,
+        voiceLanguage: 'ch',
+        voiceTag: 'aaaaaaaaa',
+        voiceIsUsed: false,
+        voiceIsShared: false,
+        voiceIsLiked: false,
+        voiceIsUnliked: false,
+        voiceIsCollected: false,
+    });
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {
         return num;
@@ -361,6 +386,56 @@ const increase2 = () => {
 const decrease2 = () => {
     volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
 };
+const toggleLike = async (voice) => {
+    if (voice.voiceIsLiked === 1) {
+        voice.voiceIsLiked = 0;
+        voice.voiceLikeCount--;
+    } else {
+        if (voice.voiceIsLiked === 2) {
+            voice.voiceIsUnliked = false;
+        }
+        voice.voiceIsLiked = 1;
+        voice.voiceLikeCount++;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceLikeCount: voice.voiceLikeCount,
+    }
+    // let result = await discoverUpdateLikeService(editData);
+};
+const toggleDislike = async (voice) => {
+    if (voice.voiceIsLiked === 2) {
+        // 当前是不喜欢状态，切换为中立
+        voice.voiceIsLiked = 0;
+        voice.voiceIsUnliked = false;
+    } else {
+        // 当前不是不喜欢状态
+        if (voice.voiceIsLiked === 1) {
+            voice.voiceLikeCount--;
+            voice.voiceIsLiked = 0;
+        }
+        voice.voiceIsLiked = 2;
+        voice.voiceIsUnliked = true;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceLikeCount: voice.voiceLikeCount,
+    }
+    // let result = await discoverUpdateLikeService(editData);
+};
+const toggleCollect = async (voice) => {
+    voice.voiceIsCollected = !voice.voiceIsCollected;
+    if (voice.voiceIsCollected) {
+        voice.voiceCollectCount++;
+    } else {
+        voice.voiceCollectCount--;
+    }
+    const editData = {
+        voiceId: voice.voiceId,
+        voiceCollectCount: voice.voiceCollectCount,
+    }
+    // let result = await discoverUpdateCollectService(editData);
+};
 </script>
 
 <style scoped>
@@ -384,6 +459,7 @@ const decrease2 = () => {
     padding-bottom: 15px;
     margin-top: 10px;
 }
+
 .counter {
     text-align: right;
     color: #666;
@@ -455,6 +531,11 @@ const decrease2 = () => {
     padding: 10px;
     display: flex;
     align-items: center;
+}
+.select-voice-detail {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .build {
