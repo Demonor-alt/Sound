@@ -33,8 +33,8 @@ export const bankQuerySingleDetailService = (voiceId) => {
     return request.get(`/query/${voiceId}`);
 }
 //克隆指定音色
-export const bankCloneSamplesService = (data) => {
-    return request.post('/clone',data);
+export const bankCloneSamplesService = (userId,data) => {
+    return request.post(`/clone/${userId}`,data);
 }
 //查询我的音色所有信息
 export const bankQueryAllService = (userId) => {
