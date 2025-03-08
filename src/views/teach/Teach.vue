@@ -115,7 +115,6 @@ onMounted(async() => {
         }
         let result=await teachQueryService(languageType);
         pronounces.value = result.data;
-        console.log(pronounces.value);
     }
 })
 const toPractise = () => {
