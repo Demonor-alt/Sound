@@ -16,7 +16,7 @@
                         {{ lan }}
                     </div>
                     <div class="myclass" @click="toStep1">
-                        <div class="addplus"></div>
+                        <div class="switch"></div>
                         切换新的课程
                     </div>
                 </div>
@@ -42,32 +42,6 @@
                         <div style="font-size: 25px;">宝石</div>
                         你有{{ languageData.gemCount }}颗宝石
                         <el-button link style="color: #1cb0f6;">访问宝石小店</el-button>
-                    </div>
-                </div>
-            </el-popover>
-            <el-popover placement="bottom" :width="300" trigger="hover">
-                <template #reference>
-                    <div class="topitems">
-                        <div class="heart"></div>
-                        <div style="color: #ff4b4b;">{{ languageData.heartCount }}</div>
-                    </div>
-                </template>
-                <div class="heart-content">
-                    <h1>红心</h1>
-                    <div v-if="languageData.heartCount === 5">
-                        <div class="hearts">
-                            <div v-for="index in languageData.heartCount" class="heart"></div>
-                        </div>
-                        <h2>红心满满</h2>
-                        继续加油吧！
-                    </div>
-                    <div v-else>
-                        <div class="hearts">
-                            <div v-for="index in languageData.heartCount" class="heart"></div>
-                            <div v-for="index in 5 - languageData.heartCount" class="heartplus"></div>
-                        </div>
-                        <h2>获取下一颗红心还要等<span style="color: #ff4b4b;">5小时</span></h2>
-                        你还有红心呢！接着练吧！
                     </div>
                 </div>
             </el-popover>
@@ -113,7 +87,8 @@ const toStep1 = () => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 400px;
+    width: 300px;
+    margin-left: 50px;
 
     .topitems {
         display: flex;
@@ -185,10 +160,10 @@ const toStep1 = () => {
     background: url('../../assets/icons/boxopen.svg') no-repeat center / contain;
 }
 
-.addplus {
+.switch {
     width: 30px;
     height: 30px;
-    background: url('../../assets/icons/addplus.svg') no-repeat center / contain;
+    background: url('../../assets/icons/switch.svg') no-repeat center / contain;
 }
 
 .power {
