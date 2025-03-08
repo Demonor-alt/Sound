@@ -56,7 +56,7 @@
                         10 }}经验</div>
                     <el-progress :text-inside="true" :stroke-width="24" :percentage="percentage" color="black" />
                 </div>
-                <div class="boxopen" v-if="percentage===100"></div>
+                <div class="boxopen" v-if="percentage === 100"></div>
                 <div class="boxplus" v-else></div>
             </div>
         </div>
@@ -72,7 +72,7 @@ import { ref } from 'vue';
 import { useLanguageStore } from '@/stores/language';
 import { storeToRefs } from 'pinia';
 const languageStore = useLanguageStore()
-const { language,sparkCount,gemCount } = storeToRefs(languageStore);
+const { language, sparkCount, gemCount } = storeToRefs(languageStore);
 const { showLanguage } = useLanguageStore();
 const currentLanguage = ref(showLanguage());
 const percentage = ref(100);
@@ -247,7 +247,8 @@ const toTeach = () => {
     width: 80%;
     margin: 0 10px;
 }
-.actions{
+
+.actions {
     display: flex;
     justify-content: center;
     margin-top: 20px;

@@ -14,7 +14,9 @@
                                 <p>{{ item.descripe }}</p>
                             </el-col>
                             <el-col :span="6" class="price">
-                                <div class="price-item"> 价格：{{ item.price }}</div>
+                                <div class="price-item"> 价格：<div class="gem"></div>
+                                    {{ item.price }}
+                                </div>
                             </el-col>
                         </el-row>
                     </div>
@@ -109,10 +111,17 @@ h3 {
     background: url('../../assets/icons/correction.svg') no-repeat center / contain;
     border-radius: 10px;
 }
-.price{
+.gem {
+    width: 20px;
+    height: 20px;
+    background: url('../../assets/icons/gem.svg') no-repeat center / contain;
+}
+
+.price {
     display: flex;
     align-items: end;
 }
+
 .price-item {
     margin: 10px;
     padding: 10px;
