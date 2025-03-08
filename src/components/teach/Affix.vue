@@ -60,6 +60,11 @@
                 <div class="boxplus" v-else></div>
             </div>
         </div>
+        <div class="actions">
+            <el-button link style="color: #afafaf;" @click="toTeach">发音练习</el-button>
+            <el-divider direction="vertical" />
+            <el-button link style="color: #afafaf;" @click="toShop">宝石小店</el-button>
+        </div>
     </el-affix>
 </template>
 <script setup>
@@ -82,6 +87,9 @@ const toStep1 = () => {
 }
 const toShop = () => {
     router.push('/teach/shop');
+}
+const toTeach = () => {
+    router.push('/teach');
 }
 </script>
 <style scoped>
@@ -237,5 +245,10 @@ const toShop = () => {
 .experience {
     width: 80%;
     margin: 0 10px;
+}
+.actions{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 </style>

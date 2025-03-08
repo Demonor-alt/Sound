@@ -5,28 +5,18 @@
                 <div class="store-container">
                     <h1>道具</h1>
                     <div class="props-list">
-                        <div class="prop-card">
-                            <div class="freeze"></div>
-                            <div class="prop-header">
-                                <h3>连胜激冻</h3>
-                                <span class="equip-status">已装备 {{ equipped }}/2</span>
-                            </div>
-                            <p>即使一整天不练习，你的连胜天数也能保持不变。</p>
-                            <div class="price-section">
-                                <span class="price">价格：{{ items[0].price }}</span>
-                                <button class="buy-btn">购买</button>
-                            </div>
-                        </div>
-
-                        <div class="prop-card">
-                            <div class="wager"></div>
-                            <h3>翻倍或全赔</h3>
-                            <p>保持 7 天连胜，你投入的 50 颗宝石筹码就能赢回双倍！</p>
-                            <div class="price-section">
-                                <span class="price">价格：{{ items[1].price }}</span>
-                                <button class="buy-btn">购买</button>
-                            </div>
-                        </div>
+                        <el-row class="prop-card" v-for="item in items" :key="item.name">
+                            <el-col :span="4">
+                                <div :class="item.imageClass"></div>
+                            </el-col>
+                            <el-col :span="15">
+                                <div style="font-size: larger;font-weight: 600 ;">{{ item.name }}</div>
+                                <p>{{ item.descripe }}</p>
+                            </el-col>
+                            <el-col :span="5">
+                                <button class="buy-btn">价格：{{ item.price }}</button>
+                            </el-col>
+                        </el-row>
                     </div>
                 </div>
             </el-col>
@@ -43,10 +33,10 @@
 import { ref } from 'vue'
 import Myaffix from '@/components/teach/Affix.vue';
 
-const equipped = ref(0)
 const items = ref([
-    { name: '连胜激冻', price: 200 },
-    { name: '翻倍或全赔', price: 50 }
+    { name: '连胜激冻', descripe: '即使一整天不练习，你的连胜天数也能保持不变。', price: 200, imageClass: 'freeze' },
+    { name: '翻倍或全赔', descripe: '保持 7 天连胜，你投入的 50 颗宝石筹码就能赢回双倍！', price: 50, imageClass: 'wager' },
+    { name: '记忆面包', descripe: '智能生成错题集', price: 50, imageClass: 'memory-bread' } // 假设你有对应的样式类
 ])
 </script>
 
@@ -82,29 +72,14 @@ h3 {
     padding: 20px;
     margin: 15px 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.prop-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: row;
 }
 
-.equip-status {
-    color: #7f8c8d;
-    font-size: 0.9em;
-}
-
-.price-section {
+.props-list {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 15px;
-}
-
-.price {
-    color: #27ae60;
-    font-weight: bold;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .buy-btn {
@@ -125,16 +100,27 @@ h3 {
     border: 1px solid #eee;
     margin: 15px 0;
 }
+
 .freeze {
     width: 90px;
     height: 90px;
     background: url('../../assets/pictures/freeze.png') no-repeat center / contain;
     border-radius: 10px;
 }
+
 .wager {
     width: 90px;
     height: 90px;
     background: url('../../assets/pictures/wager.png') no-repeat center / contain;
+    border-radius: 10px;
+}
+
+/* 假设的记忆面包样式类 */
+.memory-bread {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+    background: url('../../assets/icons/correction.svg') no-repeat center / contain;
     border-radius: 10px;
 }
 </style>
