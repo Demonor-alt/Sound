@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits } from 'vue';
+import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted } from 'vue';
 
 const props = defineProps({
     dataItem: {
@@ -21,7 +21,9 @@ const props = defineProps({
 
 const audioRef = ref(null);
 const selectedOption = ref(null);
-const emits = defineEmits(['option-selected']);
+
+// 合并事件定义
+const emits = defineEmits(['option-selected', 'clear-selection']);
 
 const playAudio = () => {
     if (audioRef.value) {
@@ -33,6 +35,22 @@ const selectOption = (option) => {
     selectedOption.value = option;
     emits('option-selected', option);
 };
+// 新增：清空选择状态的方法
+const clearSelection = () => {
+    selectedOption.value = null;
+};
+
+// 新增：监听父组件的清空事件
+onMounted(() => {
+    const handleClearSelection = () => {
+        clearSelection();
+    };
+    // 监听自定义事件
+    window.addEventListener('clear-selection', handleClearSelection);
+    onBeforeUnmount(() => {
+        window.removeEventListener('clear-selection', handleClearSelection);
+    });
+});
 </script>
 
 <style scoped>

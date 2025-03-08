@@ -26,12 +26,10 @@
             <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]"
                 @option-selected="handleOptionSelected"></component>
         </div>
-        <el-button @click="toggleComponent" :disabled="isButtonDisabled">切换组件</el-button>
     </div>
     <el-divider />
-    <div class="action-btns">
-        <button class="skip-btn" @click="handleSkip">跳过</button>
-        <button class="check-btn" @click="handleCheck">检查</button>
+    <div>
+        <el-button @click="toggleComponent" :disabled="isButtonDisabled">检查</el-button>
     </div>
 </template>
 
@@ -74,8 +72,11 @@ const data = ref([
 const dataIndex = ref(1);
 
 const toggleComponent = () => {
+    const event = new Event('clear-selection');
+    window.dispatchEvent(event);
     if (dataIndex.value < data.value.length) {
         dataIndex.value++;
+        isButtonDisabled.value = true;
     } else {
         dataIndex.value = 1;
         currentIndex.value = (currentIndex.value + 1) % componentList.length
@@ -83,9 +84,7 @@ const toggleComponent = () => {
 }
 const handleOptionSelected = (option) => {
     console.log('接收到来自 Listen 组件的选项:', option);
-    // 当接收到值时，将按钮设置为可点击
     isButtonDisabled.value = false;
-    // 这里可以添加你处理接收到的值的逻辑
 };
 </script>
 <style scoped>
@@ -117,6 +116,9 @@ const handleOptionSelected = (option) => {
 ::v-deep .el-slider__bar {
     height: 10px !important;
     background-color: #09090b !important;
+}
+.demo-container{
+    height: 60vh;
 }
 .col::-webkit-scrollbar {
     width: 8px;
