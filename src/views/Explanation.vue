@@ -210,6 +210,16 @@
             <div class="build">
                 <el-button color="black" @click="addNewAudio">创建</el-button>
             </div>
+            <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在创建语言" align-center>
+                <div style="margin: 20px;">
+                    <div class="loading-dots">
+                        <span class="dot dot1"></span>
+                        <span class="dot dot2"></span>
+                        <span class="dot dot3"></span>
+                    </div>
+                    <div style="display: flex;justify-content: center;margin: 10px;">正在分析文本</div>
+                </div>
+            </el-dialog>
         </div>
         <el-divider direction="vertical" style="height: auto;" />
         <div class="col2">
@@ -508,18 +518,21 @@ const increase2 = () => {
 const decrease2 = () => {
     volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
 };
-const addNewAudio = async () => {
+const loadingDialogVisible = ref(false);
+const addNewAudio = () => {
+    loadingDialogVisible.value = true;
     const addData = {
-        voiceId:voice.value.voiceId,
+        voiceId: voice.value.voiceId,
         audioText: inputText.value,
         audioMode: mode.value,
         audioSpeed: speedPercentage.value,
         audioVolume: volumePercentage.value,
     }
-    let result = await audioInsertService(addData);
-    addNewAudios.value = result.data;
-    console.log(result.data)
-
+    setTimeout(async () => {
+        let result = await audioInsertService(addData);
+        addNewAudios.value = result.data;
+        loadingDialogVisible.value = false;
+    }, 2000);
 }
 import { ElNotification } from 'element-plus'
 const open = (audioId) => {
@@ -1060,5 +1073,47 @@ input[type="range"] {
     flex-direction: column;
     color: black;
     gap: 10px;
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 50%;
+    margin: 0 4px;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* 为每个点设置不同的动画延迟 */
+.dot1 {
+    animation-delay: -0.32s;
+}
+
+.dot2 {
+    animation-delay: -0.16s;
+}
+
+.dot3 {
+    animation-delay: 0s;
+}
+
+/* 定义跳动动画 */
+@keyframes bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1.0);
+    }
 }
 </style>
