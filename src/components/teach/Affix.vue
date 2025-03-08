@@ -17,7 +17,7 @@
                     </div>
                     <div class="myclass" @click="toStep1">
                         <div class="addplus"></div>
-                        添加新的课程
+                        切换新的课程
                     </div>
                 </div>
             </el-popover>

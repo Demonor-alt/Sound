@@ -41,6 +41,7 @@ const toMain = () => {
 .language-selection{
     display: flex;
     flex-direction: column;
+    gap: 10px;
     justify-content: center;
     padding: 5% 35%;
     h1{
@@ -74,6 +75,6 @@ const toMain = () => {
 .build {
   display: flex;
   justify-content: end;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 </style>
