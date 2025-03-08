@@ -14,22 +14,10 @@
                         <div style="font-size: 20px;font-weight: 600;"> 元音</div>
                         <el-divider style="width: 40%;" />
                     </div>
-                    <div class="vowel-list">
-                        <div v-for="(vowel, index) in englishVowels" :key="index" class="vowel-item">
+                    <div class="voice-list">
+                        <div v-for="(vowel, index) in englishVowels" :key="index" class="voice-item">
                             <span style="font-size: large;">{{ vowel.symbol }}</span>
                             <span style="color: #ababab;">{{ vowel.word }}</span>
-                            <div class="slider"></div>
-                        </div>
-                    </div>
-                    <div class="divider">
-                        <el-divider style="width: 40%;" />
-                        <div style="font-size: 20px;font-weight: 600;"> 辅音</div>
-                        <el-divider style="width: 40%;" />
-                    </div>
-                    <div class="consonant-list">
-                        <div v-for="(consonant, index) in englishConsonants" :key="index" class="consonant-item">
-                            <span style="font-size: large;">{{ consonant.symbol }}</span>
-                            <span style="color: #ababab;">{{ consonant.word }}</span>
                             <div class="slider"></div>
                         </div>
                     </div>
@@ -65,32 +53,32 @@ const englishVowels = ref([
     { symbol: 'ɔɪ', word: 'boy' }
 ]);
 
-const englishConsonants = ref([
-    { symbol: 'b', word: 'book' },
-    { symbol: 'tʃ', word: 'chair' },
-    { symbol: 'd', word: 'day' },
-    { symbol: 'f', word: 'fish' },
-    { symbol: 'g', word: 'go' },
-    { symbol: 'h', word: 'home' },
-    { symbol: 'dʒ', word: 'job' },
-    { symbol: 'k', word: 'key' },
-    { symbol: 'l', word: 'lion' },
-    { symbol: 'm', word: 'moon' },
-    { symbol: 'n', word: 'nose' },
-    { symbol: 'ŋ', word: 'sing' },
-    { symbol: 'p', word: 'pig' },
-    { symbol: 'ɹ', word: 'red' },
-    { symbol: 's', word: 'see' },
-    { symbol: 'ʒ', word: 'measure' },
-    { symbol: 'ʃ', word: 'shoe' },
-    { symbol: 't', word: 'time' },
-    { symbol: 'ð', word: 'then' },
-    { symbol: 'θ', word: 'think' },
-    { symbol: 'v', word: 'very' },
-    { symbol: 'w', word: 'water' },
-    { symbol: 'j', word: 'you' },
-    { symbol: 'z', word: 'zoo' }
-]);
+// const englishConsonants = ref([
+//     { symbol: 'b', word: 'book' },
+//     { symbol: 'tʃ', word: 'chair' },
+//     { symbol: 'd', word: 'day' },
+//     { symbol: 'f', word: 'fish' },
+//     { symbol: 'g', word: 'go' },
+//     { symbol: 'h', word: 'home' },
+//     { symbol: 'dʒ', word: 'job' },
+//     { symbol: 'k', word: 'key' },
+//     { symbol: 'l', word: 'lion' },
+//     { symbol: 'm', word: 'moon' },
+//     { symbol: 'n', word: 'nose' },
+//     { symbol: 'ŋ', word: 'sing' },
+//     { symbol: 'p', word: 'pig' },
+//     { symbol: 'ɹ', word: 'red' },
+//     { symbol: 's', word: 'see' },
+//     { symbol: 'ʒ', word: 'measure' },
+//     { symbol: 'ʃ', word: 'shoe' },
+//     { symbol: 't', word: 'time' },
+//     { symbol: 'ð', word: 'then' },
+//     { symbol: 'θ', word: 'think' },
+//     { symbol: 'v', word: 'very' },
+//     { symbol: 'w', word: 'water' },
+//     { symbol: 'j', word: 'you' },
+//     { symbol: 'z', word: 'zoo' }
+// ]);
 
 
 import { useRouter } from 'vue-router'
@@ -131,16 +119,14 @@ header {
     padding-left: 10%;
 }
 
-.vowel-list,
-.consonant-list {
+.voice-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: end;
 }
 
-.vowel-item,
-.consonant-item {
+.voice-item {
     margin: 10px;
     padding: 10px;
     border: 2px solid #e5e5e5;
@@ -155,9 +141,11 @@ header {
     justify-content: center;
     align-items: center;
 }
+.voice-item:hover{
+    background-color: #f0f0f0;
+}
 
-.vowel-item:active,
-.consonant-item:active {
+.voice-item:active {
     border-bottom-width: 2px;
 }
 

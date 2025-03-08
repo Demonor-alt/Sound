@@ -239,7 +239,7 @@ const toTeach = () => {
 .task-content {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: end;
 }
 
 .experience {
