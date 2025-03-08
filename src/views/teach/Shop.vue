@@ -14,7 +14,8 @@
                                 <p>{{ item.descripe }}</p>
                             </el-col>
                             <el-col :span="6" class="price">
-                                <div class="price-item"> 价格：<div class="gem"></div>
+                                <div :class="{ 'price-item': true, 'unaffordable': gemCount < item.price }">
+                                    价格：<div :class="{ 'gem': true, 'graygem': gemCount < item.price }"></div>
                                     {{ item.price }}
                                 </div>
                             </el-col>
@@ -34,7 +35,10 @@
 <script setup>
 import { ref } from 'vue'
 import Myaffix from '@/components/teach/Affix.vue';
-
+import { useLanguageStore } from '@/stores/language';
+import { storeToRefs } from 'pinia';
+const languageStore = useLanguageStore()
+const { gemCount } = storeToRefs(languageStore);
 const items = ref([
     { name: '连胜激冻', descripe: '即使一整天不练习，你的连胜天数也能保持不变。', price: 200, imageClass: 'freeze' },
     { name: '翻倍或全赔', descripe: '保持 7 天连胜，你投入的 50 颗宝石筹码就能赢回双倍！', price: 50, imageClass: 'wager' },
@@ -116,6 +120,11 @@ h3 {
     height: 20px;
     background: url('../../assets/icons/gem.svg') no-repeat center / contain;
 }
+.graygem {
+    width: 20px;
+    height: 20px;
+    background: url('../../assets/icons/graygem.svg') no-repeat center / contain;
+}
 
 .price {
     display: flex;
@@ -143,4 +152,11 @@ h3 {
 .price-item:active {
     border-bottom-width: 2px;
 }
+
+.unaffordable {
+    background-color: #f0f0f0;
+    border-bottom-width: 2px;
+    color: #c5c5c5;
+}
+
 </style>
