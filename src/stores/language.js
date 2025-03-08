@@ -3,6 +3,8 @@ import { ref } from 'vue';
 export const useLanguageStore = defineStore('language', () => {
     const language = ref('');
     const difficulty = ref('');
+    const sparkCount=ref(0);
+    const gemCount=ref(50);
     function changeLanguage(newValue) {
         language.value = newValue;
     }
@@ -24,5 +26,7 @@ export const useLanguageStore = defineStore('language', () => {
         showLanguage,
         difficulty,
         changeDifficulty,
+        sparkCount,
+        gemCount
     };
 })

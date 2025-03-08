@@ -13,7 +13,7 @@
                         <div
                             :class="{ america: language === 'english', china: language === 'mandarin' || language === 'cantonese' }">
                         </div>
-                        {{ lan }}
+                        {{ currentLanguage }}
                     </div>
                     <div class="myclass" @click="toStep1">
                         <div class="switch"></div>
@@ -23,24 +23,24 @@
             </el-popover>
             <div v-if="languageData.isSparked === false" class="topitems">
                 <div class="spark"></div>
-                <div style="color: #afafaf;">{{ languageData.sparkCount }}</div>
+                <div style="color: #afafaf;">{{ sparkCount }}</div>
             </div>
             <div v-else class="topitems">
                 <div class="sparkfill"></div>
-                <div style="color: #ff9f17;">{{ languageData.sparkCount }}</div>
+                <div style="color: #ff9f17;">{{ sparkCount }}</div>
             </div>
             <el-popover placement="bottom" :width="250" trigger="hover">
                 <template #reference>
                     <div class="topitems">
                         <div class="gem"></div>
-                        <div style="color: #1cb0f6;">{{ languageData.gemCount }}</div>
+                        <div style="color: #1cb0f6;">{{ gemCount }}</div>
                     </div>
                 </template>
                 <div class="gem-content">
                     <div class="box"></div>
                     <div class="gem-item">
                         <div style="font-size: 25px;">宝石</div>
-                        你有{{ languageData.gemCount }}颗宝石
+                        你有{{ gemCount }}颗宝石
                         <el-button link style="color: #1cb0f6;" @click="toShop">访问宝石小店</el-button>
                     </div>
                 </div>
@@ -52,7 +52,7 @@
                 <div class="power"></div>
                 <div class="experience">
                     <div style="margin-bottom: 10px;display: flex;justify-content: center;">获取{{
-                        (languageData.sparkCount + 1) *
+                        (sparkCount + 1) *
                         10 }}经验</div>
                     <el-progress :text-inside="true" :stroke-width="24" :percentage="percentage" color="black" />
                 </div>
@@ -70,14 +70,15 @@
 <script setup>
 import { ref } from 'vue';
 import { useLanguageStore } from '@/stores/language';
-const { language, showLanguage } = useLanguageStore();
-const lan = ref(showLanguage());
+import { storeToRefs } from 'pinia';
+const languageStore = useLanguageStore()
+const { language,sparkCount,gemCount } = storeToRefs(languageStore);
+const { showLanguage } = useLanguageStore();
+const currentLanguage = ref(showLanguage());
 const percentage = ref(100);
+
 const languageData = ref({
     isSparked: false,
-    sparkCount: 0,
-    gemCount: 500,
-    heartCount: 5,
     currentExperience: 0,
 });
 import { useRouter } from 'vue-router';
