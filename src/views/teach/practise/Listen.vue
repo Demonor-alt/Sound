@@ -1,10 +1,13 @@
 <template>
     <h1>你听到了什么?</h1>
-    <div class="blueplay" @click="playAudio"></div>
-    <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
-    <div class="items">
-        <div v-for="option in dataItem.options" :key="option">
-            <div class="voice-item" :class="{ 'selected': selectedOption === option }" @click="selectOption(option)">{{ option }}</div>
+    <div class="content">
+        <div class="blueplay" @click="playAudio"></div>
+        <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
+        <div class="items">
+            <div v-for="option in dataItem.options" :key="option">
+                <div class="voice-item" :class="{ 'selected': selectedOption === option }"
+                    @click="selectOption(option)">{{ option }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -54,7 +57,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.items{
+.items {
     display: flex;
     flex-direction: row;
     gap: 10px;
@@ -72,7 +75,7 @@ onMounted(() => {
     padding: 10px;
     border: 2px solid #e5e5e5;
     border-radius: 15px;
-    width: 150px;
+    width: 200px;
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -93,6 +96,13 @@ onMounted(() => {
 
 .selected {
     border-color: #84d8ff;
-    background-color: #ddf4ff!important;
+    background-color: #ddf4ff !important;
+}
+.content{
+    margin-top: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 </style>

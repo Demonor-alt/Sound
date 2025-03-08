@@ -22,7 +22,7 @@
         </el-dialog>
     </div>
     <div class="demo-container">
-        <div class="col" style="overflow-y: auto; max-height: 100vh;">
+        <div class="col" style="overflow-y: auto;">
             <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]"
                 @option-selected="handleOptionSelected"></component>
         </div>
@@ -65,7 +65,7 @@ const data = ref([
         type: 'select',
         audioURL: audioUrl,
         options: [
-            '1', '2'
+            '3', '4'
         ]
     },
 ])
@@ -95,7 +95,10 @@ const handleOptionSelected = (option) => {
     margin: 1% 15%;
     gap: 20px;
 }
-
+.demo-container{
+    margin: 0 30%;
+    height: 55vh;
+}
 ::v-deep .el-slider__button {
     display: none !important;
 }
@@ -116,9 +119,6 @@ const handleOptionSelected = (option) => {
 ::v-deep .el-slider__bar {
     height: 10px !important;
     background-color: #09090b !important;
-}
-.demo-container{
-    height: 60vh;
 }
 .col::-webkit-scrollbar {
     width: 8px;
