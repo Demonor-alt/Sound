@@ -32,12 +32,12 @@
                         <div class="select-voice-name">{{ voice.voiceName }}</div>
                         <div class="select-voice-detail">
                             <span class="display-detail"> {{ voice.userName }}</span>
-                            <div class="dot"></div>
+                            <div class="mydot"></div>
                             <el-icon size="20" style="color: #6b7280;">
                                 <Clock />
                             </el-icon>
                             <span class="display-detail">{{ timeDistance(voice.voiceCreationTime) }}</span>
-                            <div class="dot"></div>
+                            <div class="mydot"></div>
                             <div class="tag1"> {{ voice.voiceLanguage }}</div>
                             <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
                                 }}
@@ -450,13 +450,14 @@ const showDontAgreeDialog = ref(false);
 //     voiceShareCount: 11,
 // });
 const voice = ref();
-const audios = ref([{
-    audioId: 1,
-    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-    voiceName: '55',
-    audioText: '1232ssssssssss',
-    audioURL: audioUrl
-}]);
+// const audios = ref([{
+//     audioId: 1,
+//     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+//     voiceName: '55',
+//     audioText: '1232ssssssssss',
+//     audioURL: audioUrl
+// }]);
+const audios = ref();
 // const addNewAudios = ref({
 //     audioId: 1,
 //     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
@@ -887,7 +888,7 @@ input[type="range"] {
     background: url('../assets/icons/sound.svg') no-repeat center / contain;
 }
 
-.dot {
+.mydot {
     width: 8px;
     height: 8px;
     margin: 5px;
