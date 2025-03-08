@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from "vue-router
 const routes = [
     {
         path: '/',
-        component: () => import("@/views/Login.vue"),
+        component: () => import("@/views/Main.vue"),
     },
     {
         path: '/login',
@@ -52,6 +52,10 @@ const routes = [
             {
                 path: '/teach/step3',
                 component: () => import("@/views/teach/Step3.vue"),
+            },
+            {
+                path: '/teach/shop',
+                component: () => import("@/views/teach/Shop.vue"),
             },
             {
                 path: '/courseware',

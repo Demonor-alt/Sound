@@ -41,7 +41,7 @@
                     <div class="gem-item">
                         <div style="font-size: 25px;">宝石</div>
                         你有{{ languageData.gemCount }}颗宝石
-                        <el-button link style="color: #1cb0f6;">访问宝石小店</el-button>
+                        <el-button link style="color: #1cb0f6;" @click="toShop">访问宝石小店</el-button>
                     </div>
                 </div>
             </el-popover>
@@ -79,6 +79,9 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 const toStep1 = () => {
     router.push('/teach/step1');
+}
+const toShop = () => {
+    router.push('/teach/shop');
 }
 </script>
 <style scoped>
