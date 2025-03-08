@@ -9,12 +9,12 @@
                             <el-col :span="4">
                                 <div :class="item.imageClass"></div>
                             </el-col>
-                            <el-col :span="15">
+                            <el-col :span="13">
                                 <div style="font-size: larger;font-weight: 600 ;">{{ item.name }}</div>
                                 <p>{{ item.descripe }}</p>
                             </el-col>
-                            <el-col :span="5">
-                                <button class="buy-btn">价格：{{ item.price }}</button>
+                            <el-col :span="6" class="price">
+                                <div class="price-item"> 价格：{{ item.price }}</div>
                             </el-col>
                         </el-row>
                     </div>
@@ -42,7 +42,7 @@ const items = ref([
 
 <style scoped>
 .mbody {
-    margin: 1% 10%;
+    margin: 0 10%;
 }
 
 .store-container {
@@ -74,26 +74,13 @@ h3 {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 
 .props-list {
     display: flex;
     flex-direction: column;
     gap: 20px;
-}
-
-.buy-btn {
-    background: #3498db;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.buy-btn:hover {
-    background: #2980b9;
 }
 
 .free-experience hr {
@@ -115,12 +102,36 @@ h3 {
     border-radius: 10px;
 }
 
-/* 假设的记忆面包样式类 */
 .memory-bread {
     width: 80px;
     height: 80px;
     margin: 10px;
     background: url('../../assets/icons/correction.svg') no-repeat center / contain;
     border-radius: 10px;
+}
+.price{
+    display: flex;
+    align-items: end;
+}
+.price-item {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #e5e5e5;
+    border-radius: 15px;
+    width: 150px;
+    display: flex;
+    border-bottom-width: 4px;
+    transition: border-bottom-width 0.1s;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+
+.price-item:hover {
+    background-color: #f0f0f0;
+}
+
+.price-item:active {
+    border-bottom-width: 2px;
 }
 </style>

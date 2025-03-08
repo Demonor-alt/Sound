@@ -98,8 +98,8 @@ const toTeach = () => {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 300px;
-    margin-left: 50px;
+    width: 250px;
+    margin-left: 80px;
 
     .topitems {
         display: flex;
@@ -231,7 +231,7 @@ const toTeach = () => {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    padding: 20px;
+    padding: 10px 20px 30px 20px;
     border: #e5e5e5 2px solid;
     border-radius: 10px;
 }
