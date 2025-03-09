@@ -1,17 +1,23 @@
 <template>
     <h1>听音辩词</h1>
     <div class="content">
-        <div>
-            <div class="audioplay" @click="playAudio"></div>
-            <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
+        <div class="audiodisplay" @click="playAudio">
+            <div class="audioplay"></div>
+            <div>{{ dataItem.options[0].practiseWord }}</div>
+            <audio ref="audioRef" :src="dataItem.options[0].audioURL" preload="auto"></audio>
         </div>
-        <h4>你听到的词是？</h4>
-        <div class="items">
-            <div class="voice-item" :class="{ 'selected': selectedOption === dataItem.answer }"
-                @click="selectOption(selectedOption === dataItem.answer)">同一个词</div>
-            <div class="voice-item" :class="{ 'selected': selectedOption === dataItem.answer }"
-                @click="selectOption(selectedOption === dataItem.answer)">两个不同的词</div>
+        <div class="audiodisplay" @click="playAudio">
+            <div class="audioplay"></div>
+            <div>{{ dataItem.options[1].practiseWord }}</div>
+            <audio ref="audioRef" :src="dataItem.options[1].audioURL" preload="auto"></audio>
         </div>
+    </div>
+    <h4>你听到的词是？</h4>
+    <div class="items">
+        <div class="voice-item" :class="{ selected: selectedOption === 'same' }" @click="selectOption('same')">同一个词
+        </div>
+        <div class="voice-item" :class="{ selected: selectedOption === 'notsame' }" @click="selectOption('notsame')">
+            两个不同的词</div>
     </div>
 </template>
 
@@ -39,7 +45,11 @@ const playAudio = () => {
 
 const selectOption = (option) => {
     selectedOption.value = option;
-    emits('option-selected', option);
+    if (option === 'same') {
+        emits('option-selected', true);
+        return;
+    }
+    emits('option-selected', false);
 };
 // 新增：清空选择状态的方法
 const clearSelection = () => {
@@ -62,8 +72,8 @@ onMounted(() => {
 <style scoped>
 .items {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex-direction: row;
+    gap: 5px;
     align-items: end;
 }
 
@@ -72,7 +82,21 @@ onMounted(() => {
     height: 30px;
     border-radius: 20px;
     background: url('../../../assets/icons/audioplay.svg') no-repeat center / contain;
+}
+
+.audiodisplay {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
     cursor: pointer;
+    padding: 10px 30px;
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+}
+
+.audiodisplay:hover {
+    background-color: #f0f0f0;
 }
 
 .voice-item {
@@ -105,10 +129,10 @@ onMounted(() => {
 }
 
 .content {
-    margin-top: 12%;
+    margin-top: 4%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    margin-bottom: 5%;
 }
 </style>

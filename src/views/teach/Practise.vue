@@ -129,7 +129,8 @@ import MySelect from './practise/Select.vue'
 import MyCompare from './practise/Compare.vue'
 import MySpeak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
-const componentList = [MyListen, MyCompare, MySelect, MySpeak]
+// const componentList = [MyListen, MyCompare, MySelect, MySpeak]
+const componentList = [ MyCompare, MySelect, MySpeak]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0);
@@ -174,11 +175,11 @@ const data = ref([
     {
         options: [
             {
-                word: '1',
+                practiseWord: '1',
                 audioURL: audioUrl,
             },
             {
-                word: '2',
+                practiseWord: '2',
                 audioURL: audioUrl,
             },
         ],
@@ -187,11 +188,11 @@ const data = ref([
     {
         options: [
             {
-                word: '1',
+                practiseWord: '1',
                 audioURL: audioUrl,
             },
             {
-                word: '2',
+                practiseWord: '2',
                 audioURL: audioUrl,
             },
         ],
@@ -253,7 +254,7 @@ const handleOptionSelected = (option) => {
 
 .demo-container {
     margin: 0 30%;
-    height: 55vh;
+    height: 60vh;
 }
 
 ::v-deep .el-slider__button {
@@ -305,7 +306,7 @@ const handleOptionSelected = (option) => {
     padding-right: 10%;
     padding-bottom: 40px;
     flex-grow: 0;
-    height: 20.3vh;
+    height: 15.3vh;
     border-radius: 6px;
     margin: -5px -20px -200px -20px;
 }

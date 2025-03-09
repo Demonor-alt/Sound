@@ -58,6 +58,7 @@ onMounted(() => {
 
 <style scoped>
 .items {
+    margin-top: 30px;
     display: flex;
     flex-direction: row;
     gap: 10px;
