@@ -24,8 +24,8 @@
         </div>
         <div class="demo-container">
             <div class="col" style="overflow-y: auto;">
-                <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]" :shouldShowWord="shouldShowWord"
-                    @option-selected="handleOptionSelected"></component>
+                <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]"
+                    :shouldShowWord="shouldShowWord" @option-selected="handleOptionSelected"></component>
             </div>
         </div>
         <div class="divide"
@@ -126,12 +126,11 @@ const toTeach = () => {
     router.push('/teach');
 };
 import MyListen from './practise/Listen.vue'
-import MySelect from './practise/Select.vue'
 import MyCompare from './practise/Compare.vue'
 import MySpeak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
-// const componentList = [MyListen, MyCompare, MySelect, MySpeak]
-const componentList = [ MyCompare, MySelect, MySpeak]
+// const componentList = [MyListen, MyCompare, MySpeak]
+const componentList = [MySpeak]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0);
@@ -172,32 +171,38 @@ const checkedErroeOptions = ref([]);
 //         answer: '3'
 //     },
 // ])
+// const data = ref([
+//     {
+//         options: [
+//             {
+//                 practiseWord: '1',
+//                 audioURL: audioUrl,
+//             },
+//             {
+//                 practiseWord: '2',
+//                 audioURL: audioUrl,
+//             },
+//         ],
+//         answer: true,//是否是同一个词
+//     },
+//     {
+//         options: [
+//             {
+//                 practiseWord: '1',
+//                 audioURL: audioUrl,
+//             },
+//             {
+//                 practiseWord: '2',
+//                 audioURL: audioUrl,
+//             },
+//         ],
+//         answer: true,
+//     },
+// ]);
 const data = ref([
     {
-        options: [
-            {
-                practiseWord: '1',
-                audioURL: audioUrl,
-            },
-            {
-                practiseWord: '2',
-                audioURL: audioUrl,
-            },
-        ],
-        answer: true,//是否是同一个词
-    },
-    {
-        options: [
-            {
-                practiseWord: '1',
-                audioURL: audioUrl,
-            },
-            {
-                practiseWord: '2',
-                audioURL: audioUrl,
-            },
-        ],
-        answer: true,
+        audioURL: audioUrl,
+        practiseWord:'1',
     },
 ])
 const dataIndex = ref(1);
