@@ -28,13 +28,23 @@
         </div>
     </div>
     <el-divider />
-    <div class="btn">
+    <div class="btn" v-if="isAnswerCorrect === null">
         <div class="voice-item" v-if="isButtonDisabled"
             :style="{ opacity: '0.5', cursor: 'not-allowed', 'border-bottom-width': '2px' }">
             检查
         </div>
         <div class="voice-item" v-else @click="toggleComponent" :style="{ opacity: '1', cursor: 'pointer' }">
             检查
+        </div>
+    </div>
+    <div class="btn" v-if="isAnswerCorrect === 0">
+        <div class="voice-item" @click="changeComponent" :style="{ opacity: '1', cursor: 'pointer' }">
+            继续
+        </div>
+    </div>
+    <div class="btn" v-if="isAnswerCorrect === 1">
+        <div class="voice-item"  @click="changeComponent" :style="{ opacity: '1', cursor: 'pointer' }">
+            继续
         </div>
     </div>
 </template>
@@ -56,8 +66,9 @@ import Select from './practise/Select.vue'
 import Compare from './practise/Compare.vue'
 import Speak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
-const componentList = [Listen,Compare, Select, Speak]
+const componentList = [Listen, Compare, Select, Speak]
 const isButtonDisabled = ref(true);
+const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0)
 const data = ref([
     {
@@ -66,7 +77,8 @@ const data = ref([
         audioURL: audioUrl,
         options: [
             '1', '2'
-        ]
+        ],
+        answer: '1'
     },
     {
         title: 'select',
@@ -74,12 +86,20 @@ const data = ref([
         audioURL: audioUrl,
         options: [
             '3', '4'
-        ]
+        ],
+        answer: '3'
     },
 ])
 const dataIndex = ref(1);
 
 const toggleComponent = () => {
+    if(isCorrect.value){
+        isAnswerCorrect.value=1;
+    }else{
+        isAnswerCorrect.value=0;
+    }
+}
+const changeComponent=()=>{
     const event = new Event('clear-selection');
     window.dispatchEvent(event);
     if (dataIndex.value < data.value.length) {
@@ -91,19 +111,28 @@ const toggleComponent = () => {
     isButtonDisabled.value = true;
     if (difficulty === 0) {
         percentage.value += 100 / 12;
-    }else if (difficulty === 1) {
+    } else if (difficulty === 1) {
         percentage.value += 100 / 16;
-    }else if (difficulty === 2) {
+    } else if (difficulty === 2) {
         percentage.value += 100 / 20;
-    }else if (difficulty === 3) {
+    } else if (difficulty === 3) {
         percentage.value += 100 / 24;
-    }else {
+    } else {
         percentage.value += 100 / 28;
     }
+    isAnswerCorrect.value=null;
 }
+const isCorrect=ref(false);
 const handleOptionSelected = (option) => {
     console.log('接收到来自 Listen 组件的选项:', option);
     isButtonDisabled.value = false;
+    const currentData = data.value[dataIndex.value - 1];
+    if (option === currentData.answer) {
+        isCorrect.value=true;
+        console.log('正确');
+    } else {
+        console.log('错误');
+    }
 };
 </script>
 <style scoped>
@@ -139,7 +168,7 @@ const handleOptionSelected = (option) => {
 
 ::v-deep .el-slider__bar {
     height: 10px !important;
-    background-color: #09090b !important;
+    background-color: #58cc02 !important;
 }
 
 .col::-webkit-scrollbar {
