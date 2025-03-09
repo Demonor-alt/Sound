@@ -28,14 +28,13 @@
                     @option-selected="handleOptionSelected"></component>
             </div>
         </div>
-        <div class="divide">
-        </div>
+        <div class="divide" :style="{ backgroundColor: isAnswerCorrect === null ? '#e1e1e1' : isAnswerCorrect === 1?'#ccf2af':'red' }"></div>
         <div class="btn" v-if="isAnswerCorrect === null">
             <div class="voice-item" v-if="isButtonDisabled"
                 :style="{ opacity: '0.5', cursor: 'not-allowed', 'border-bottom-width': '2px' }">
                 检查
             </div>
-            <div class="voice-item" v-else @click="toggleComponent">
+            <div class="voice-item" v-else @click="toggleComponent" :style="{ 'border-color': '#57a500', 'background-color': '#52be02', color: 'white' }" >
                 检查
             </div>
         </div>
@@ -44,7 +43,11 @@
                 继续111
             </div>
         </div>
-        <div class="btn" v-if="isAnswerCorrect === 1">
+        <div class="btn" v-if="isAnswerCorrect === 1" style="background-color:#ccf2af">
+            <div style="display: flex;flex-direction: row;align-items: center;gap: 20px;">
+                <el-icon color="#58a700" size="40" class="myicon" ><Select /></el-icon>
+                <div style="color: #58a700;font-weight: 800;font-size: 25px;">你练得一副好听力，厉害呀！</div>
+            </div>
             <div class="voice-item" @click="changeComponent"
                 :style="{ 'border-color': '#57a500', 'background-color': '#52be02', color: 'white' }">
                 继续
@@ -54,7 +57,7 @@
 </template>
 
 <script setup>
-import { CloseBold } from '@element-plus/icons-vue';
+import { CloseBold,Select } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
@@ -65,12 +68,12 @@ const dialogVisible = ref(false);
 const toTeach = () => {
     router.push('/teach');
 };
-import Listen from './practise/Listen.vue'
-import Select from './practise/Select.vue'
-import Compare from './practise/Compare.vue'
-import Speak from './practise/Speak.vue'
+import MyListen from './practise/Listen.vue'
+import MySelect from './practise/Select.vue'
+import MyCompare from './practise/Compare.vue'
+import MySpeak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
-const componentList = [Listen, Compare, Select, Speak]
+const componentList = [MyListen, MyCompare, MySelect, MySpeak]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0)
@@ -197,18 +200,30 @@ const handleOptionSelected = (option) => {
 .divide {
     height: 2px;
     width: 100%;
-    background-color: #e1e1e1;
 }
 
 .btn {
     display: flex;
+    flex-direction: row;
+    gap: 500px;
     align-items: end;
     justify-content: end;
-    margin-right: 10%;
-    flex-grow: 1;
-
+    padding-right: 10%;
+    padding-bottom: 40px;
+    flex-grow: 0;
+    height: 20.3vh;
+    border-radius:6px;
+    margin: -5px -20px -200px -20px; 
 }
-
+.myicon{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 .voice-item {
     margin: 10px;
     padding: 10px;
