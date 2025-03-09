@@ -24,7 +24,7 @@
         </div>
         <div class="demo-container">
             <div class="col" style="overflow-y: auto;">
-                <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]"
+                <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]" :shouldShowWord="shouldShowWord"
                     @option-selected="handleOptionSelected"></component>
             </div>
         </div>
@@ -121,6 +121,7 @@ const { difficulty } = useLanguageStore();
 const percentage = ref(0);
 const router = useRouter();
 const dialogVisible = ref(false);
+const shouldShowWord = ref(false);
 const toTeach = () => {
     router.push('/teach');
 };
@@ -207,6 +208,7 @@ const toggleComponent = () => {
     } else {
         isAnswerCorrect.value = 0;
     }
+    shouldShowWord.value = !shouldShowWord.value;
 }
 const changeComponent = () => {
     const event = new Event('clear-selection');
@@ -230,6 +232,7 @@ const changeComponent = () => {
         percentage.value += 100 / 28;
     }
     isAnswerCorrect.value = null;
+    shouldShowWord.value = !shouldShowWord.value;
 }
 const isCorrect = ref(false);
 const handleOptionSelected = (option) => {

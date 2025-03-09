@@ -3,16 +3,18 @@
     <div class="content">
         <div class="audiodisplay top-audiodisplay"  @click="playAudio">
             <div class="audioplay"></div>
-            <div>{{ dataItem.options[0].practiseWord }}</div>
+            <div v-if="shouldShowWord">{{ dataItem.options[0].practiseWord }}</div>
+            <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
             <audio ref="audioRef" :src="dataItem.options[0].audioURL" preload="auto"></audio>
         </div>
         <div class="audiodisplay bottom-audiodisplay"  @click="playAudio">
             <div class="audioplay"></div>
-            <div>{{ dataItem.options[1].practiseWord }}</div>
+            <div v-if="shouldShowWord">{{ dataItem.options[1].practiseWord }}</div>
+            <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
             <audio ref="audioRef" :src="dataItem.options[1].audioURL" preload="auto"></audio>
         </div>
     </div>
-    <h4>你听到的词是？</h4>
+    <h3>你听到的词是？</h3>
     <div class="items">
         <div class="voice-item" :class="{ selected: selectedOption === 'same' }" @click="selectOption('same')">同一个词
         </div>
@@ -22,12 +24,16 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted } from 'vue';
+import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted, watch } from 'vue';
 
 const props = defineProps({
     dataItem: {
         type: Object,
         default: () => ({})
+    },
+    shouldShowWord: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -67,6 +73,10 @@ onMounted(() => {
         window.removeEventListener('clear-selection', handleClearSelection);
     });
 });
+
+watch(() => props.shouldShowWord, (newValue, oldValue) => {
+    console.log(`shouldShowWord 从 ${oldValue} 变为 ${newValue}`);
+});
 </script>
 
 <style scoped>
@@ -88,6 +98,7 @@ onMounted(() => {
     display: flex;
     flex-direction: row;
     gap: 20px;
+    width: 150px;
     align-items: center;
     cursor: pointer;
     padding: 20px 40px;
