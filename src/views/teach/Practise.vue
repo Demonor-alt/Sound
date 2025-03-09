@@ -28,13 +28,16 @@
                     @option-selected="handleOptionSelected"></component>
             </div>
         </div>
-        <div class="divide" :style="{ backgroundColor: isAnswerCorrect === null ? '#e1e1e1' : isAnswerCorrect === 1?'#ccf2af':'red' }"></div>
+        <div class="divide"
+            :style="{ backgroundColor: isAnswerCorrect === null ? '#e1e1e1' : isAnswerCorrect === 1 ? '#ccf2af' : 'red' }">
+        </div>
         <div class="btn" v-if="isAnswerCorrect === null">
             <div class="voice-item" v-if="isButtonDisabled"
                 :style="{ opacity: '0.5', cursor: 'not-allowed', 'border-bottom-width': '2px' }">
                 检查
             </div>
-            <div class="voice-item" v-else @click="toggleComponent" :style="{ 'border-color': '#57a500', 'background-color': '#52be02', color: 'white' }" >
+            <div class="voice-item" v-else @click="toggleComponent"
+                :style="{ 'border-color': '#57a500', 'background-color': '#52be02', color: 'white' }">
                 检查
             </div>
         </div>
@@ -45,8 +48,15 @@
         </div>
         <div class="btn" v-if="isAnswerCorrect === 1" style="background-color:#ccf2af">
             <div style="display: flex;flex-direction: row;align-items: center;gap: 20px;">
-                <el-icon color="#58a700" size="40" class="myicon" ><Select /></el-icon>
-                <div style="color: #58a700;font-weight: 800;font-size: 25px;">你练得一副好听力，厉害呀！</div>
+                <el-icon color="#58a700" size="40" class="myicon"><Select /></el-icon>
+                <div class="report">
+                    <div style="color: #58a700;font-weight: 800;font-size: 25px;">你练得一副好听力，厉害呀！</div>
+                    <div class="greenbtn">
+                        <div class="flaggreen"></div>
+                        报错
+                    </div>
+
+                </div>
             </div>
             <div class="voice-item" @click="changeComponent"
                 :style="{ 'border-color': '#57a500', 'background-color': '#52be02', color: 'white' }">
@@ -57,7 +67,7 @@
 </template>
 
 <script setup>
-import { CloseBold,Select } from '@element-plus/icons-vue';
+import { CloseBold, Select } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
@@ -212,10 +222,11 @@ const handleOptionSelected = (option) => {
     padding-bottom: 40px;
     flex-grow: 0;
     height: 20.3vh;
-    border-radius:6px;
-    margin: -5px -20px -200px -20px; 
+    border-radius: 6px;
+    margin: -5px -20px -200px -20px;
 }
-.myicon{
+
+.myicon {
     width: 70px;
     height: 70px;
     border-radius: 50%;
@@ -224,6 +235,7 @@ const handleOptionSelected = (option) => {
     align-items: center;
     justify-content: center;
 }
+
 .voice-item {
     margin: 10px;
     padding: 10px;
@@ -247,5 +259,27 @@ const handleOptionSelected = (option) => {
 
 .voice-item:active {
     border-bottom-width: 2px;
+}
+.report{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.greenbtn{
+    display: flex;
+    flex-direction: row;
+    color:#7ec137;
+    font-weight: 600;
+    gap: 5px;
+    cursor: pointer;
+}
+.greenbtn:hover{
+    color:#58a700;
+}
+.flaggreen {
+    width: 25px;
+    height: 25px;
+    background: url('../../assets/icons/flaggreen.svg') no-repeat center / contain;
+    border-radius: 20px;
 }
 </style>
