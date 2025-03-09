@@ -7,9 +7,10 @@
         </div>
         <h4>你听到的词是？</h4>
         <div class="items">
-
-                <div class="voice-item" :class="{ 'selected': selectedOption === dataItem.answer }"
-                    @click="selectOption(selectedOption === dataItem.answer)"></div>
+            <div class="voice-item" :class="{ 'selected': selectedOption === dataItem.answer }"
+                @click="selectOption(selectedOption === dataItem.answer)">同一个词</div>
+            <div class="voice-item" :class="{ 'selected': selectedOption === dataItem.answer }"
+                @click="selectOption(selectedOption === dataItem.answer)">两个不同的词</div>
         </div>
     </div>
 </template>
@@ -61,7 +62,7 @@ onMounted(() => {
 <style scoped>
 .items {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 10px;
     align-items: end;
 }
@@ -79,7 +80,7 @@ onMounted(() => {
     padding: 10px;
     border: 2px solid #e5e5e5;
     border-radius: 15px;
-    width: 200px;
+    width: 250px;
     display: flex;
     flex-direction: column;
     gap: 5px;

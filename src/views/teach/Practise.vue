@@ -43,7 +43,9 @@
         </div>
         <div class="btn" v-if="isAnswerCorrect === 0" style="background-color:#ffdfe0">
             <div style="display: flex;flex-direction: row;align-items: center;gap: 20px;">
-                <el-icon color="#ea2b2b" size="40" class="myicon"><CloseBold /></el-icon>
+                <el-icon color="#ea2b2b" size="40" class="myicon">
+                    <CloseBold />
+                </el-icon>
                 <div class="report">
                     <div style="color: #ea2b2b;font-weight: 800;font-size: 25px;">还不太准确，再多听几次吧！</div>
                     <div class="redbtn" @click="dialogErrorVisible = true">
@@ -111,8 +113,8 @@
 </template>
 
 <script setup>
-import { CloseBold, Select} from '@element-plus/icons-vue';
-import { ref,reactive } from 'vue';
+import { CloseBold, Select } from '@element-plus/icons-vue';
+import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
 const { difficulty } = useLanguageStore();
@@ -148,24 +150,52 @@ const errorOptions = reactive([
 
 const checkedCorrectOptions = ref([]);
 const checkedErroeOptions = ref([]);
+// const data = ref([
+//     {
+//         title: 'listen',
+//         type: 'listen',
+//         audioURL: audioUrl,
+//         options: [
+//             '1', '2'
+//         ],
+//         answer: '1'
+//     },
+//     {
+//         title: 'select',
+//         type: 'select',
+//         audioURL: audioUrl,
+//         options: [
+//             '3', '4'
+//         ],
+//         answer: '3'
+//     },
+// ])
 const data = ref([
     {
-        title: 'listen',
-        type: 'listen',
-        audioURL: audioUrl,
         options: [
-            '1', '2'
+            {
+                word: '1',
+                audioURL: audioUrl,
+            },
+            {
+                word: '2',
+                audioURL: audioUrl,
+            },
         ],
-        answer: '1'
+        answer: true,//是否是同一个词
     },
     {
-        title: 'select',
-        type: 'select',
-        audioURL: audioUrl,
         options: [
-            '3', '4'
+            {
+                word: '1',
+                audioURL: audioUrl,
+            },
+            {
+                word: '2',
+                audioURL: audioUrl,
+            },
         ],
-        answer: '3'
+        answer: true,
     },
 ])
 const dataIndex = ref(1);
@@ -333,6 +363,7 @@ const handleOptionSelected = (option) => {
 .greenbtn:hover {
     color: #58a700;
 }
+
 .redbtn {
     display: flex;
     flex-direction: row;
@@ -352,28 +383,34 @@ const handleOptionSelected = (option) => {
     background: url('../../assets/icons/flaggreen.svg') no-repeat center / contain;
     border-radius: 20px;
 }
+
 .flagred {
     width: 25px;
     height: 25px;
     background: url('../../assets/icons/flagred.svg') no-repeat center / contain;
     border-radius: 20px;
 }
+
 .checkbox-group {
     display: flex;
     flex-direction: column;
     gap: 5px;
     margin-left: 5%
 }
+
 .checkbox-item.is-checked {
     font-weight: bold;
 }
+
 ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
     background-color: black;
     border-color: black;
 }
-::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+
+::v-deep .el-checkbox__input.is-checked+.el-checkbox__label {
     color: black;
 }
+
 ::v-deep .el-checkbox__label {
     font-size: 17px;
 }
