@@ -1,12 +1,12 @@
 <template>
     <h1>听音辩词</h1>
     <div class="content">
-        <div class="audiodisplay" @click="playAudio">
+        <div class="audiodisplay top-audiodisplay"  @click="playAudio">
             <div class="audioplay"></div>
             <div>{{ dataItem.options[0].practiseWord }}</div>
             <audio ref="audioRef" :src="dataItem.options[0].audioURL" preload="auto"></audio>
         </div>
-        <div class="audiodisplay" @click="playAudio">
+        <div class="audiodisplay bottom-audiodisplay"  @click="playAudio">
             <div class="audioplay"></div>
             <div>{{ dataItem.options[1].practiseWord }}</div>
             <audio ref="audioRef" :src="dataItem.options[1].audioURL" preload="auto"></audio>
@@ -90,9 +90,21 @@ onMounted(() => {
     gap: 20px;
     align-items: center;
     cursor: pointer;
-    padding: 10px 30px;
+    padding: 20px 40px;
     border: 2px solid #e5e5e5;
-    border-radius: 10px;
+}
+.top-audiodisplay {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.bottom-audiodisplay {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
 .audiodisplay:hover {
@@ -113,6 +125,7 @@ onMounted(() => {
     cursor: pointer;
     justify-content: center;
     align-items: center;
+    margin-top: 20px;
 }
 
 .voice-item:hover {
