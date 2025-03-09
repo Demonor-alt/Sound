@@ -1,21 +1,23 @@
 <template>
-    <!-- 这里可以使用接收到的 data-item -->
-    <div>
-        <p>444444{{ dataItem.title }}</p>
+    <h1>说出你听到的内容</h1>
+    <div class="content">
+        
     </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 
-const props = defineProps({
-    dataItem: {
-        type: Object,
-        default: () => ({})
-    }
-});
+
+
 </script>
 
 <style scoped>
-/* 子组件样式 */
+
+.content{
+    margin-top: 12%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
 </style>

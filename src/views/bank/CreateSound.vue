@@ -446,9 +446,6 @@ const sendAudiosToBackend = async () => {
     files.value.forEach((file) => {
         formData.append('files', file.file);
     });
-    for (const [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-    }
     try {
         let result = await bankInsertService(formData);
         samples.value = result.data.sample;
@@ -482,7 +479,11 @@ const toMyBankAndInsert = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
     const newSamples = samples.value.slice(1);
-    let result = await bankInsertSamplesService(newSamples);
+    const addData = {
+        voiceId: currentVoiceId.value,
+        samples:newSamples
+    }
+    let result = await bankInsertSamplesService(addData);
 }
 const toMyBankAndUpdate = async () => {
     router.push('/mybank');
@@ -501,13 +502,18 @@ const generateSample = async (index) => {
 onMounted(async () => {
     if (queryVoiceId !== undefined) {
         let result = await bankQueryDetailService(queryVoiceId);
-        insertData.value = result.data.insertData;
-        samples.value = result.data.samples;
+        insertData.value = result.data;
+        samples.value = result.data.voiceSamples;
     }
 })
 const toStep2AndUpdate = async () => {
+    const updateData = {
+        ...insertData,
+        voiceId: currentVoiceId.value,
+    }
     let result = await bankUpdateService(insertData.value);
     stepStore.incrementStep();
+    console.log(result)
 }
 </script>
 

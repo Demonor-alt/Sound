@@ -6,7 +6,7 @@ export const bankQueryService = (userId) => {
 }
 //删除
 export const bankDeleteService = (voiceId) => {
-    return request.delete("mybank?voiceId=" + voiceId);
+    return request.delete("/mybank/delete?voiceId=" + voiceId);
 }
 //新增
 export const bankInsertService = (data) => {
