@@ -1,50 +1,54 @@
 <template>
-    <div class="header">
-        <el-icon size="30" style="cursor: pointer;" @click="dialogVisible = true">
-            <CloseBold />
-        </el-icon>
-        <el-slider v-model="percentage" min="0" max="100" :step="1" :show-tooltip="false" :show-button="false"
-            size="large" />
-        <el-dialog v-model="dialogVisible" width="30%" align-center :show-close="false">
-            <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">退出练习</div>
-            <div class="dialog">
-                退出后不会保留进度
+    <div class="main-container">
+        <div class="header">
+            <el-icon size="30" style="cursor: pointer;" @click="dialogVisible = true">
+                <CloseBold />
+            </el-icon>
+            <el-slider v-model="percentage" min="0" max="100" :step="1" :show-tooltip="false" :show-button="false"
+                size="large" />
+            <el-dialog v-model="dialogVisible" width="30%" align-center :show-close="false">
+                <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">退出练习</div>
+                <div class="dialog">
+                    退出后不会保留进度
+                </div>
+                <template #footer>
+                    <span class="dialog-footer">
+                        <el-button color="#f4f4f5" plain style="color: black; border: #e4e4e7 1px solid; "
+                            @click="dialogVisible = false">取消</el-button>
+                        <el-button color="black" @click="dialogVisible = false; toTeach();">
+                            确认
+                        </el-button>
+                    </span>
+                </template>
+            </el-dialog>
+        </div>
+        <div class="demo-container">
+            <div class="col" style="overflow-y: auto;">
+                <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]"
+                    @option-selected="handleOptionSelected"></component>
             </div>
-            <template #footer>
-                <span class="dialog-footer">
-                    <el-button color="#f4f4f5" plain style="color: black; border: #e4e4e7 1px solid; "
-                        @click="dialogVisible = false">取消</el-button>
-                    <el-button color="black" @click="dialogVisible = false; toTeach();">
-                        确认
-                    </el-button>
-                </span>
-            </template>
-        </el-dialog>
-    </div>
-    <div class="demo-container">
-        <div class="col" style="overflow-y: auto;">
-            <component :is="componentList[currentIndex]" :dataItem="data[dataIndex - 1]"
-                @option-selected="handleOptionSelected"></component>
         </div>
-    </div>
-    <el-divider />
-    <div class="btn" v-if="isAnswerCorrect === null">
-        <div class="voice-item" v-if="isButtonDisabled"
-            :style="{ opacity: '0.5', cursor: 'not-allowed', 'border-bottom-width': '2px' }">
-            检查
+        <div class="divide">
         </div>
-        <div class="voice-item" v-else @click="toggleComponent" :style="{ opacity: '1', cursor: 'pointer' }">
-            检查
+        <div class="btn" v-if="isAnswerCorrect === null">
+            <div class="voice-item" v-if="isButtonDisabled"
+                :style="{ opacity: '0.5', cursor: 'not-allowed', 'border-bottom-width': '2px' }">
+                检查
+            </div>
+            <div class="voice-item" v-else @click="toggleComponent">
+                检查
+            </div>
         </div>
-    </div>
-    <div class="btn" v-if="isAnswerCorrect === 0">
-        <div class="voice-item" @click="changeComponent" :style="{ opacity: '1', cursor: 'pointer' }">
-            继续
+        <div class="btn" v-if="isAnswerCorrect === 0">
+            <div class="voice-item" @click="changeComponent" :style="{ 'border-color': '#57a500', color: '#52be02' }">
+                继续111
+            </div>
         </div>
-    </div>
-    <div class="btn" v-if="isAnswerCorrect === 1">
-        <div class="voice-item"  @click="changeComponent" :style="{ opacity: '1', cursor: 'pointer' }">
-            继续
+        <div class="btn" v-if="isAnswerCorrect === 1">
+            <div class="voice-item" @click="changeComponent"
+                :style="{ 'border-color': '#57a500', 'background-color': '#52be02', color: 'white' }">
+                继续
+            </div>
         </div>
     </div>
 </template>
@@ -93,13 +97,13 @@ const data = ref([
 const dataIndex = ref(1);
 
 const toggleComponent = () => {
-    if(isCorrect.value){
-        isAnswerCorrect.value=1;
-    }else{
-        isAnswerCorrect.value=0;
+    if (isCorrect.value) {
+        isAnswerCorrect.value = 1;
+    } else {
+        isAnswerCorrect.value = 0;
     }
 }
-const changeComponent=()=>{
+const changeComponent = () => {
     const event = new Event('clear-selection');
     window.dispatchEvent(event);
     if (dataIndex.value < data.value.length) {
@@ -120,15 +124,15 @@ const changeComponent=()=>{
     } else {
         percentage.value += 100 / 28;
     }
-    isAnswerCorrect.value=null;
+    isAnswerCorrect.value = null;
 }
-const isCorrect=ref(false);
+const isCorrect = ref(false);
 const handleOptionSelected = (option) => {
     console.log('接收到来自 Listen 组件的选项:', option);
     isButtonDisabled.value = false;
     const currentData = data.value[dataIndex.value - 1];
     if (option === currentData.answer) {
-        isCorrect.value=true;
+        isCorrect.value = true;
         console.log('正确');
     } else {
         console.log('错误');
@@ -136,6 +140,12 @@ const handleOptionSelected = (option) => {
 };
 </script>
 <style scoped>
+.main-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+}
+
 .header {
     display: flex;
     flex-direction: row;
@@ -184,12 +194,19 @@ const handleOptionSelected = (option) => {
     background-color: #f1f1f1;
 }
 
+.divide {
+    height: 2px;
+    width: 100%;
+    background-color: #e1e1e1;
+}
+
 .btn {
     display: flex;
     align-items: end;
     justify-content: end;
     margin-right: 10%;
-    height: 10vh;
+    flex-grow: 1;
+
 }
 
 .voice-item {
@@ -206,6 +223,7 @@ const handleOptionSelected = (option) => {
     cursor: pointer;
     justify-content: center;
     align-items: center;
+    font-weight: 600;
 }
 
 .voice-item:hover {
