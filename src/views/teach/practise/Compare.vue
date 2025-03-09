@@ -1,13 +1,15 @@
 <template>
     <h1>听音辩词</h1>
     <div class="content">
-        <div class="blueplay" @click="playAudio"></div>
-        <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
+        <div>
+            <div class="audioplay" @click="playAudio"></div>
+            <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
+        </div>
+        <h4>你听到的词是？</h4>
         <div class="items">
-            <div v-for="option in dataItem.options" :key="option">
-                <div class="voice-item" :class="{ 'selected': selectedOption === option }"
-                    @click="selectOption(option)">{{ option }}</div>
-            </div>
+
+                <div class="voice-item" :class="{ 'selected': selectedOption === dataItem.answer }"
+                    @click="selectOption(selectedOption === dataItem.answer)"></div>
         </div>
     </div>
 </template>
@@ -63,13 +65,15 @@ onMounted(() => {
     gap: 10px;
     align-items: end;
 }
-.blueplay {
-    width: 130px;
-    height: 130px;
+
+.audioplay {
+    width: 30px;
+    height: 30px;
     border-radius: 20px;
-    background: url('../../../assets/icons/blueplay.svg') no-repeat center / contain;
+    background: url('../../../assets/icons/audioplay.svg') no-repeat center / contain;
     cursor: pointer;
 }
+
 .voice-item {
     margin: 10px;
     padding: 10px;
@@ -98,7 +102,8 @@ onMounted(() => {
     border-color: #84d8ff;
     background-color: #ddf4ff !important;
 }
-.content{
+
+.content {
     margin-top: 12%;
     display: flex;
     flex-direction: column;

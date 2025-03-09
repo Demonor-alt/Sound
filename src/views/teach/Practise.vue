@@ -203,12 +203,7 @@ const changeComponent = () => {
 const isCorrect = ref(false);
 const handleOptionSelected = (option) => {
     isButtonDisabled.value = false;
-    const currentData = data.value[dataIndex.value - 1];
-    if (option === currentData.answer) {
-        isCorrect.value = true;
-    } else {
-        isCorrect.value = false;
-    }
+    isCorrect.value = option;
 };
 </script>
 <style scoped>

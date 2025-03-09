@@ -6,7 +6,7 @@
         <div class="items">
             <div v-for="option in dataItem.options" :key="option">
                 <div class="voice-item" :class="{ 'selected': selectedOption === option }"
-                    @click="selectOption(option)">{{ option }}</div>
+                    @click="selectOption(option,dataItem.answer)">{{ option }}</div>
             </div>
         </div>
     </div>
@@ -34,9 +34,9 @@ const playAudio = () => {
     }
 };
 
-const selectOption = (option) => {
+const selectOption = (option,answer) => {
     selectedOption.value = option;
-    emits('option-selected', option);
+    emits('option-selected', option===answer);
 };
 // 新增：清空选择状态的方法
 const clearSelection = () => {
