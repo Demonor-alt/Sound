@@ -51,11 +51,27 @@
                 <el-icon color="#58a700" size="40" class="myicon"><Select /></el-icon>
                 <div class="report">
                     <div style="color: #58a700;font-weight: 800;font-size: 25px;">你练得一副好听力，厉害呀！</div>
-                    <div class="greenbtn">
+                    <div class="greenbtn" @click="dialogCorrectVisible = true">
                         <div class="flaggreen"></div>
                         报错
                     </div>
-
+                    <el-dialog v-model="dialogCorrectVisible" width="20%" align-center :show-close="false">
+                        <div class="feedback-dialog">
+                            <el-checkbox-group v-model="checkedOptions" class="checkbox-group">
+                                <el-checkbox v-for="option in correctOptions" :key="option.value" :label="option.label"
+                                    class="checkbox-item" />
+                            </el-checkbox-group>
+                        </div>
+                        <template #footer>
+                            <span class="dialog-footer">
+                                <el-button color="#f4f4f5" plain style="color: black; border: #e4e4e7 1px solid; "
+                                    @click="dialogCorrectVisible = false">取消</el-button>
+                                <el-button color="black" @click="dialogCorrectVisible = false; visiblePopover = false">
+                                    确认
+                                </el-button>
+                            </span>
+                        </template>
+                    </el-dialog>
                 </div>
             </div>
             <div class="voice-item" @click="changeComponent"
@@ -68,7 +84,7 @@
 
 <script setup>
 import { CloseBold, Select } from '@element-plus/icons-vue';
-import { ref } from 'vue';
+import { ref,reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
 const { difficulty } = useLanguageStore();
@@ -86,7 +102,17 @@ import audioUrl from '@/assets/sound.m4a';
 const componentList = [MyListen, MyCompare, MySelect, MySpeak]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
-const currentIndex = ref(0)
+const currentIndex = ref(0);
+const dialogCorrectVisible = ref(false);
+const dialogErrorVisible = ref(false);
+const correctOptions = reactive([
+    { value: 1, label: '我的答案不应被接受' },
+    { value: 2, label: '音频听起来不正确' },
+    { value: 3, label: '缺少音频' },
+    { value: 4, label: '其他问题' }
+]);
+
+const checkedOptions = ref([]);
 const data = ref([
     {
         title: 'listen',
@@ -260,26 +286,49 @@ const handleOptionSelected = (option) => {
 .voice-item:active {
     border-bottom-width: 2px;
 }
-.report{
+
+.report {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
-.greenbtn{
+
+.greenbtn {
     display: flex;
     flex-direction: row;
-    color:#7ec137;
+    color: #7ec137;
     font-weight: 600;
     gap: 5px;
     cursor: pointer;
 }
-.greenbtn:hover{
-    color:#58a700;
+
+.greenbtn:hover {
+    color: #58a700;
 }
+
 .flaggreen {
     width: 25px;
     height: 25px;
     background: url('../../assets/icons/flaggreen.svg') no-repeat center / contain;
     border-radius: 20px;
+}
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: 5%
+}
+.checkbox-item.is-checked {
+    font-weight: bold;
+}
+::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+    background-color: black;
+    border-color: black;
+}
+::v-deep .el-checkbox__input.is-checked + .el-checkbox__label {
+    color: black;
+}
+::v-deep .el-checkbox__label {
+    font-size: 17px;
 }
 </style>
