@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="divide"
-            :style="{ backgroundColor: isAnswerCorrect === null ? '#e1e1e1' : isAnswerCorrect === 1 ? '#ccf2af' : 'red' }">
+            :style="{ backgroundColor: isAnswerCorrect === null ? '#e1e1e1' : isAnswerCorrect === 1 ? '#ccf2af' : '#ffdfe0' }">
         </div>
         <div class="btn" v-if="isAnswerCorrect === null">
             <div class="voice-item" v-if="isButtonDisabled"
@@ -41,9 +41,37 @@
                 检查
             </div>
         </div>
-        <div class="btn" v-if="isAnswerCorrect === 0">
-            <div class="voice-item" @click="changeComponent" :style="{ 'border-color': '#57a500', color: '#52be02' }">
-                继续111
+        <div class="btn" v-if="isAnswerCorrect === 0" style="background-color:#ffdfe0">
+            <div style="display: flex;flex-direction: row;align-items: center;gap: 20px;">
+                <el-icon color="#ea2b2b" size="40" class="myicon"><CloseBold /></el-icon>
+                <div class="report">
+                    <div style="color: #ea2b2b;font-weight: 800;font-size: 25px;">还不太准确，再多听几次吧！</div>
+                    <div class="redbtn" @click="dialogErrorVisible = true">
+                        <div class="flagred"></div>
+                        报错
+                    </div>
+                    <el-dialog v-model="dialogErrorVisible" width="20%" align-center :show-close="false">
+                        <div class="feedback-dialog">
+                            <el-checkbox-group v-model="checkedErroeOptions" class="checkbox-group">
+                                <el-checkbox v-for="option in errorOptions" :key="option.value" :label="option.label"
+                                    class="checkbox-item" />
+                            </el-checkbox-group>
+                        </div>
+                        <template #footer>
+                            <span class="dialog-footer">
+                                <el-button color="#f4f4f5" plain style="color: black; border: #e4e4e7 1px solid; "
+                                    @click="dialogErrorVisible = false">取消</el-button>
+                                <el-button color="black" @click="dialogErrorVisible = false; visiblePopover = false">
+                                    确认
+                                </el-button>
+                            </span>
+                        </template>
+                    </el-dialog>
+                </div>
+            </div>
+            <div class="voice-item" @click="changeComponent"
+                :style="{ 'border-color': '#ea2b2b', 'background-color': '#ff4b4b', color: 'white' }">
+                继续
             </div>
         </div>
         <div class="btn" v-if="isAnswerCorrect === 1" style="background-color:#ccf2af">
@@ -57,7 +85,7 @@
                     </div>
                     <el-dialog v-model="dialogCorrectVisible" width="20%" align-center :show-close="false">
                         <div class="feedback-dialog">
-                            <el-checkbox-group v-model="checkedOptions" class="checkbox-group">
+                            <el-checkbox-group v-model="checkedCorrectOptions" class="checkbox-group">
                                 <el-checkbox v-for="option in correctOptions" :key="option.value" :label="option.label"
                                     class="checkbox-item" />
                             </el-checkbox-group>
@@ -83,7 +111,7 @@
 </template>
 
 <script setup>
-import { CloseBold, Select } from '@element-plus/icons-vue';
+import { CloseBold, Select} from '@element-plus/icons-vue';
 import { ref,reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
@@ -111,8 +139,15 @@ const correctOptions = reactive([
     { value: 3, label: '缺少音频' },
     { value: 4, label: '其他问题' }
 ]);
+const errorOptions = reactive([
+    { value: 1, label: '应该接受我的答案' },
+    { value: 2, label: '音频听起来不正确' },
+    { value: 3, label: '缺少音频' },
+    { value: 4, label: '其他问题' }
+]);
 
-const checkedOptions = ref([]);
+const checkedCorrectOptions = ref([]);
+const checkedErroeOptions = ref([]);
 const data = ref([
     {
         title: 'listen',
@@ -167,14 +202,12 @@ const changeComponent = () => {
 }
 const isCorrect = ref(false);
 const handleOptionSelected = (option) => {
-    console.log('接收到来自 Listen 组件的选项:', option);
     isButtonDisabled.value = false;
     const currentData = data.value[dataIndex.value - 1];
     if (option === currentData.answer) {
         isCorrect.value = true;
-        console.log('正确');
     } else {
-        console.log('错误');
+        isCorrect.value = false;
     }
 };
 </script>
@@ -305,11 +338,29 @@ const handleOptionSelected = (option) => {
 .greenbtn:hover {
     color: #58a700;
 }
+.redbtn {
+    display: flex;
+    flex-direction: row;
+    color: #f06161;
+    font-weight: 600;
+    gap: 5px;
+    cursor: pointer;
+}
+
+.redbtn:hover {
+    color: #ea2b2b;
+}
 
 .flaggreen {
     width: 25px;
     height: 25px;
     background: url('../../assets/icons/flaggreen.svg') no-repeat center / contain;
+    border-radius: 20px;
+}
+.flagred {
+    width: 25px;
+    height: 25px;
+    background: url('../../assets/icons/flagred.svg') no-repeat center / contain;
     border-radius: 20px;
 }
 .checkbox-group {
