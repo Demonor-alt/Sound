@@ -3,7 +3,7 @@
         <el-icon size="30" style="cursor: pointer;" @click="dialogVisible = true">
             <CloseBold />
         </el-icon>
-        <el-slider v-model="value3" min="0" max="100" :step="1" :show-tooltip="false" :show-button="false"
+        <el-slider v-model="percentage" min="0" max="100" :step="1" :show-tooltip="false" :show-button="false"
             size="large" />
         <el-dialog v-model="dialogVisible" width="30%" align-center :show-close="false">
             <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">退出练习</div>
@@ -43,7 +43,9 @@
 import { CloseBold } from '@element-plus/icons-vue';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-const value3 = ref(20);
+import { useLanguageStore } from '@/stores/language';
+const { difficulty } = useLanguageStore();
+const percentage = ref(0);
 const router = useRouter();
 const dialogVisible = ref(false);
 const toTeach = () => {
@@ -54,7 +56,7 @@ import Select from './practise/Select.vue'
 import Compare from './practise/Compare.vue'
 import Speak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
-const componentList = [Listen, Select, Compare, Speak]
+const componentList = [Listen,Compare, Select, Speak]
 const isButtonDisabled = ref(true);
 const currentIndex = ref(0)
 const data = ref([
@@ -87,6 +89,17 @@ const toggleComponent = () => {
         currentIndex.value = (currentIndex.value + 1) % componentList.length
     }
     isButtonDisabled.value = true;
+    if (difficulty === 0) {
+        percentage.value += 100 / 12;
+    }else if (difficulty === 1) {
+        percentage.value += 100 / 16;
+    }else if (difficulty === 2) {
+        percentage.value += 100 / 20;
+    }else if (difficulty === 3) {
+        percentage.value += 100 / 24;
+    }else {
+        percentage.value += 100 / 28;
+    }
 }
 const handleOptionSelected = (option) => {
     console.log('接收到来自 Listen 组件的选项:', option);
