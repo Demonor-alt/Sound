@@ -28,8 +28,14 @@
         </div>
     </div>
     <el-divider />
-    <div>
-        <el-button @click="toggleComponent" :disabled="isButtonDisabled">检查</el-button>
+    <div class="btn">
+        <div class="voice-item" v-if="isButtonDisabled"
+            :style="{ opacity: '0.5', cursor: 'not-allowed', 'border-bottom-width': '2px' }">
+            检查
+        </div>
+        <div class="voice-item" v-else @click="toggleComponent" :style="{ opacity: '1', cursor: 'pointer' }">
+            检查
+        </div>
     </div>
 </template>
 
@@ -76,11 +82,11 @@ const toggleComponent = () => {
     window.dispatchEvent(event);
     if (dataIndex.value < data.value.length) {
         dataIndex.value++;
-        isButtonDisabled.value = true;
     } else {
         dataIndex.value = 1;
         currentIndex.value = (currentIndex.value + 1) % componentList.length
     }
+    isButtonDisabled.value = true;
 }
 const handleOptionSelected = (option) => {
     console.log('接收到来自 Listen 组件的选项:', option);
@@ -95,10 +101,12 @@ const handleOptionSelected = (option) => {
     margin: 1% 15%;
     gap: 20px;
 }
-.demo-container{
+
+.demo-container {
     margin: 0 30%;
     height: 55vh;
 }
+
 ::v-deep .el-slider__button {
     display: none !important;
 }
@@ -120,6 +128,7 @@ const handleOptionSelected = (option) => {
     height: 10px !important;
     background-color: #09090b !important;
 }
+
 .col::-webkit-scrollbar {
     width: 8px;
 }
@@ -131,5 +140,37 @@ const handleOptionSelected = (option) => {
 
 .col::-webkit-scrollbar-track {
     background-color: #f1f1f1;
+}
+
+.btn {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    margin-right: 10%;
+    height: 10vh;
+}
+
+.voice-item {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid #e5e5e5;
+    border-radius: 15px;
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    border-bottom-width: 4px;
+    transition: border-bottom-width 0.1s;
+    cursor: pointer;
+    justify-content: center;
+    align-items: center;
+}
+
+.voice-item:hover {
+    background-color: #f0f0f0;
+}
+
+.voice-item:active {
+    border-bottom-width: 2px;
 }
 </style>
