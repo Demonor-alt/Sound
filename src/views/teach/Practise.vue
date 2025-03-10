@@ -116,10 +116,10 @@
 import { CloseBold, Select } from '@element-plus/icons-vue';
 import { ref, reactive, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+const router = useRouter();
 import { useLanguageStore } from '@/stores/language';
 const { difficulty } = useLanguageStore();
 const percentage = ref(0);
-const router = useRouter();
 const dialogVisible = ref(false);
 const shouldShowWord = ref(false);
 const toTeach = () => {
@@ -222,17 +222,18 @@ const changeComponent = () => {
         queryType();
     }
     isButtonDisabled.value = true;
-    if (difficulty === 0) {
-        percentage.value += 100 / 9;
-    } else if (difficulty === 1) {
-        percentage.value += 100 / 12;
-    } else if (difficulty === 2) {
-        percentage.value += 100 / 15;
-    } else if (difficulty === 3) {
-        percentage.value += 100 / 18;
-    } else {
-        percentage.value += 100 / 21;
-    }
+    // if (difficulty === 0) {
+    //     percentage.value += 100 / 9;
+    // } else if (difficulty === 1) {
+    //     percentage.value += 100 / 12;
+    // } else if (difficulty === 2) {
+    //     percentage.value += 100 / 15;
+    // } else if (difficulty === 3) {
+    //     percentage.value += 100 / 18;
+    // } else {
+    //     percentage.value += 100 / 21;
+    // }
+    percentage.value += 100;
     isAnswerCorrect.value = null;
     shouldShowWord.value = !shouldShowWord.value;
 }
