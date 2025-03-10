@@ -6,13 +6,13 @@
             <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
             <div>{{ dataItem.practiseWord }}</div>
         </div>
-        <div v-if="!recording" class="voice-item" @click="startRecording">
+        <div v-if="!recording" class="voice-item" style="cursor: pointer;" @click="startRecording">
             <div class="record"></div>
             点击并开始录音
         </div>
         <div v-else @click="stopRecording" class="voice-item">
-            <div class="record"></div>
-            停止录制
+            <div class="recordgray"></div>
+            <div style="color: #b5b5b5;">点击并开始录音</div>
         </div>
     </div>
 </template>
@@ -25,7 +25,9 @@ const props = defineProps({
         type: Object,
         default: () => ({})
     }
-}); const audioRef = ref(null);
+});
+const emits = defineEmits(['option-selected']); // 定义事件
+const audioRef = ref(null);
 const playAudio = () => {
     if (audioRef.value) {
         audioRef.value.play();
@@ -68,7 +70,7 @@ const stopRecording = () => {
         recording.value = false;
     }
 };
-import {createAudioloadService} from '@/api/teach'
+import { createAudioloadService } from '@/api/teach';
 const createRecording = async (blob) => {
     end.value = new Date();
     const newRecording = {
@@ -85,6 +87,7 @@ const createRecording = async (blob) => {
         formData.append('audio', newRecording.file);
         let result = await createAudioloadService(formData);
         console.log('请求成功:', result);
+        emits('option-selected', true);
     } catch (error) {
         console.error('请求失败:', error);
     }
@@ -126,6 +129,13 @@ const createRecording = async (blob) => {
     background: url('../../../assets/icons/record.svg') no-repeat center / contain;
 }
 
+.recordgray {
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    background: url('../../../assets/icons/recordgray.svg') no-repeat center / contain;
+}
+
 .voice-item {
     margin: 10px;
     padding: 20px;
@@ -137,7 +147,6 @@ const createRecording = async (blob) => {
     gap: 5px;
     border-bottom-width: 4px;
     transition: border-bottom-width 0.1s;
-    cursor: pointer;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
