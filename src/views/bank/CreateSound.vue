@@ -436,18 +436,16 @@ const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data;
 }
-import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService,bankUpdateSamplesService } from '@/api/bank/mybank'
+import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService,bankUpdateSamplesService,bankInsertMySampleService } from '@/api/bank/mybank'
 import { createAudioloadService } from '@/api/common'
 const sendAudiosToBackend = async () => {
     const formData = new FormData();
-    for (const key in insertData.value) {
-        formData.append(key, insertData.value[key]);
-    }
     files.value.forEach((file) => {
         formData.append('files', file.file);
     });
     try {
-        let result = await bankInsertService(formData);
+        let result = await bankInsertMySampleService(formData);
+        let result2 = await bankInsertService(insertData.value);
         samples.value = result.data.sample;
         currentVoiceId.value = result.data.voiceId;
         console.log('音频上传成功:', samples.value, currentVoiceId.value);
@@ -497,7 +495,7 @@ const generateSample = async (index) => {
         sampleText: samples.value[index].sampleText,
     }
     let result = await createAudioloadService(createAudioData);
-    samples.value[index].sampleUrl = result.data;
+    samples.value[index].sampleUrl = result.data.sampleUrl;
 };
 onMounted(async () => {
     if (queryVoiceId !== undefined) {

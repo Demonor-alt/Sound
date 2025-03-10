@@ -8,9 +8,13 @@ export const bankQueryService = (userId) => {
 export const bankDeleteService = (voiceId) => {
     return request.delete("/mybank/delete?voiceId=" + voiceId);
 }
-//新增
+//新增(基本信息)
 export const bankInsertService = (data) => {
     return request.post('/mybank',data);
+}
+//新增（音频）
+export const bankInsertMySampleService = (data) => {
+    return request.post('/mybank/mysample',data);
 }
 //新增示例音频
 export const bankInsertSamplesService = (data) => {
