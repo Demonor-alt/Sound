@@ -434,7 +434,7 @@ const insertData = ref({
 
 const uploadSuccess = (result) => {
     // console.log(result);
-    insertData.value.voiceImage = result.data;
+    insertData.value.voiceImage = result.data.voiceImage;
 }
 import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService,bankUpdateSamplesService,bankInsertMySampleService } from '@/api/bank/mybank'
 import { createAudioloadService } from '@/api/common'
