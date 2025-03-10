@@ -1,11 +1,13 @@
 <template>
     <h1>朗读下面的内容</h1>
-    <div class="content">
+    <div class="header">
         <div class="toaudio" @click="playAudio">
-            <div class="audioplay"></div>
-            <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
-            <div>{{ dataItem.practiseWord }}</div>
-        </div>
+        <div class="audioplay"></div>
+        <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
+        <div>{{ dataItem.practiseWord }}</div>
+    </div>
+    </div>
+    <div class="content">
         <div v-if="!recording" class="voice-item" style="cursor: pointer;" @click="startRecording">
             <div class="record"></div>
             点击并开始录音
@@ -95,12 +97,19 @@ const createRecording = async (blob) => {
 </script>
 
 <style scoped>
+.header{
+    display: flex;
+    justify-content: center;
+    margin: 40px;
+}
 .content {
     margin-top: 12%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    justify-content: end;
+    gap: 60px;
+    height: 150px;
 }
 
 .toaudio {
