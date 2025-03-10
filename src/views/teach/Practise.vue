@@ -114,7 +114,7 @@
 
 <script setup>
 import { CloseBold, Select } from '@element-plus/icons-vue';
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
 const { difficulty } = useLanguageStore();
@@ -151,19 +151,19 @@ const errorOptions = reactive([
 
 const checkedCorrectOptions = ref([]);
 const checkedErroeOptions = ref([]);
-// const data = ref([
-//     {
-//         audioURL: audioUrl,
-//         options: ['1', '2'],
-//         answer: '1'
-//     },
-//     {
-//         audioURL: audioUrl,
-//         options: ['3', '4'],
-//         answer: '3'
-//     }
-// ])
-//
+const data = ref([
+    {
+        audioURL: audioUrl,
+        options: ['1', '2'],
+        answer: '1'
+    },
+    {
+        audioURL: audioUrl,
+        options: ['3', '4'],
+        answer: '3'
+    }
+])
+
 //第二种题型
 // const data = ref([
 //     {
@@ -195,12 +195,12 @@ const checkedErroeOptions = ref([]);
 // ]);
 // 
 // 第三种习题
-const data = ref([
-    {
-        audioURL: audioUrl,
-        practiseWord:'1',
-    },
-])
+// const data = ref([
+//     {
+//         audioURL: audioUrl,
+//         practiseWord:'1',
+//     },
+// ])
 const dataIndex = ref(1);
 
 const toggleComponent = () => {
@@ -218,19 +218,20 @@ const changeComponent = () => {
         dataIndex.value++;
     } else {
         dataIndex.value = 1;
-        currentIndex.value = (currentIndex.value + 1) % componentList.length
+        currentIndex.value = (currentIndex.value + 1) % componentList.length;
+        queryType();
     }
     isButtonDisabled.value = true;
     if (difficulty === 0) {
-        percentage.value += 100 / 12;
+        percentage.value += 100 / 9;
     } else if (difficulty === 1) {
-        percentage.value += 100 / 16;
+        percentage.value += 100 / 12;
     } else if (difficulty === 2) {
-        percentage.value += 100 / 20;
+        percentage.value += 100 / 15;
     } else if (difficulty === 3) {
-        percentage.value += 100 / 24;
+        percentage.value += 100 / 18;
     } else {
-        percentage.value += 100 / 28;
+        percentage.value += 100 / 21;
     }
     isAnswerCorrect.value = null;
     shouldShowWord.value = !shouldShowWord.value;
@@ -240,15 +241,25 @@ const handleOptionSelected = (option) => {
     isButtonDisabled.value = false;
     isCorrect.value = option;
 };
-import {teachExerciseQueryService} from '@/api/teach'
-onMounted(async() => {
+import { teachExerciseQueryService } from '@/api/teach'
+const queryType = async () => {
     const queryData = {
         difficulty: difficulty,
         questionType:currentIndex.value
     }
     let result = await teachExerciseQueryService(queryData);
     console.log(result.data);
+    data.value=result.data
+}
+onMounted(() => {
+    queryType();
 })
+
+watch(percentage, (newValue) => {
+    if (newValue >= 100) {
+        router.push('/teach/success');
+    }
+});
 </script>
 <style scoped>
 .main-container {
