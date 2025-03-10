@@ -114,7 +114,7 @@
 
 <script setup>
 import { CloseBold, Select } from '@element-plus/icons-vue';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useLanguageStore } from '@/stores/language';
 const { difficulty } = useLanguageStore();
@@ -129,8 +129,8 @@ import MyListen from './practise/Listen.vue'
 import MyCompare from './practise/Compare.vue'
 import MySpeak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
-// const componentList = [MyListen, MyCompare, MySpeak]
-const componentList = [MySpeak]
+const componentList = [MyListen, MyCompare, MySpeak]
+// const componentList = [MySpeak]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0);
@@ -153,24 +153,18 @@ const checkedCorrectOptions = ref([]);
 const checkedErroeOptions = ref([]);
 // const data = ref([
 //     {
-//         title: 'listen',
-//         type: 'listen',
 //         audioURL: audioUrl,
-//         options: [
-//             '1', '2'
-//         ],
+//         options: ['1', '2'],
 //         answer: '1'
 //     },
 //     {
-//         title: 'select',
-//         type: 'select',
 //         audioURL: audioUrl,
-//         options: [
-//             '3', '4'
-//         ],
+//         options: ['3', '4'],
 //         answer: '3'
-//     },
+//     }
 // ])
+//
+//第二种题型
 // const data = ref([
 //     {
 //         options: [
@@ -199,6 +193,7 @@ const checkedErroeOptions = ref([]);
 //         answer: true,
 //     },
 // ]);
+// 
 // 第三种习题
 const data = ref([
     {
@@ -245,6 +240,15 @@ const handleOptionSelected = (option) => {
     isButtonDisabled.value = false;
     isCorrect.value = option;
 };
+import {teachExerciseQueryService} from '@/api/teach'
+onMounted(async() => {
+    const queryData = {
+        difficulty: difficulty,
+        questionType:currentIndex.value
+    }
+    let result = await teachExerciseQueryService(queryData);
+    console.log(result.data);
+})
 </script>
 <style scoped>
 .main-container {

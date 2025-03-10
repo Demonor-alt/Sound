@@ -8,3 +8,7 @@ export const teachQueryService = (languageType) => {
 export const createAudioloadService = (data) => {
     return request.post('/teach/record',data);
 }
+//
+export const teachExerciseQueryService = (params) => {
+    return request.get('/teach/exercise',{params:params});
+}
