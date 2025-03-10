@@ -4,3 +4,7 @@ import request from '@/utils/request.js'
 export const teachQueryService = (languageType) => {
     return request.get(`/teach/pronounce/${languageType}`);
 }
+//发送练习录音
+export const createAudioloadService = (data) => {
+    return request.post('/teach/record',data);
+}
