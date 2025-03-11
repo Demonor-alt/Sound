@@ -60,7 +60,7 @@ const { gemCount } = storeToRefs(languageStore);
 const items = ref([
     { name: '连胜激冻', descripe: '即使一整天不练习，你的连胜天数也能保持不变。', price: 200, imageClass: 'freeze' },
     { name: '翻倍或全赔', descripe: '保持 7 天连胜，你投入的 50 颗宝石筹码就能赢回双倍！', price: 50, imageClass: 'wager' },
-    { name: '记忆面包', descripe: '24小时内自动收集你的错题，为你智能生成专属错题集，助力高效复习！', price: 60, imageClass: 'memory-bread' }
+    { name: '记忆面包', descripe: '24小时内自动收集你的错题，为你智能生成专属错题集，助力高效复习！', price: 80, imageClass: 'memory-bread' }
 ])
 const dialogVisible = ref(false);
 const reduceGemCount = (price) => {
