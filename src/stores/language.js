@@ -7,6 +7,7 @@ export const useLanguageStore = defineStore('language', () => {
     const gemCount = ref(50);
     const isSparked = ref(false);
     const currentExperience = ref(0);
+    const isRewarded=ref(false);
     function changeLanguage(newValue) {
         language.value = newValue;
     }
@@ -31,6 +32,7 @@ export const useLanguageStore = defineStore('language', () => {
         sparkCount,
         gemCount,
         isSparked,
-        currentExperience
+        currentExperience,
+        isRewarded
     };
 })

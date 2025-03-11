@@ -51,11 +51,27 @@
             <div class="task-content">
                 <div class="power"></div>
                 <div class="experience">
-                    <div style="margin-bottom: 10px;display: flex;justify-content: center;">获取{{((isSparked ? 0 : 1)+sparkCount) *10 }}经验</div>
+                    <div style="margin-bottom: 10px;display: flex;justify-content: center;">获取{{ ((isSparked ? 0 :
+        1) + sparkCount)
+        * 10 }}经验</div>
                     <el-progress :text-inside="true" :stroke-width="24" :percentage="percentage" color="black" />
                 </div>
-                <div class="boxopen" v-if="percentage === 100"></div>
+                <div class="boxplus" v-if="percentage === 100 && !isBoxOpen && !isRewarded"
+                    :class="{ 'boxplus-jump': percentage === 100 }" @click="dialogVisible = true"></div>
+                <div class="boxopen" v-else-if="percentage === 100 && isRewarded"></div>
                 <div class="boxplus" v-else></div>
+                <el-dialog v-model="dialogVisible" width="30%" align-center :show-close="false">
+                    <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;display: flex;flex-direction: row;gap: 5px;align-items: center">
+                        恭喜获得10 <div class="gem"></div>
+                    </div>
+                    <template #footer>
+                        <span class="dialog-footer">
+                            <el-button color="black" @click="openBox();dialogVisible = false;">
+                                确认
+                            </el-button>
+                        </span>
+                    </template>
+                </el-dialog>
             </div>
         </div>
         <div class="actions">
@@ -70,7 +86,7 @@ import { ref } from 'vue';
 import { useLanguageStore } from '@/stores/language';
 import { storeToRefs } from 'pinia';
 const languageStore = useLanguageStore()
-const { language, sparkCount, gemCount, isSparked, currentExperience } = storeToRefs(languageStore);
+const { language, sparkCount, gemCount, isSparked, currentExperience,isRewarded } = storeToRefs(languageStore);
 const { showLanguage } = useLanguageStore();
 const currentLanguage = ref(showLanguage());
 const percentage = ref(currentExperience);
@@ -84,7 +100,17 @@ const toShop = () => {
 }
 const toTeach = () => {
     router.push('/teach');
-}
+};
+const dialogVisible = ref(false);
+const isBoxOpen = ref(false);
+const openBox = () => {
+    if (percentage.value === 100) {
+        isBoxOpen.value = true;
+    }
+    isRewarded.value = true;
+    gemCount.value += 10;
+    console.log(gemCount.value);
+};
 </script>
 <style scoped>
 .top {
@@ -245,5 +271,30 @@ const toTeach = () => {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+}
+</style>
+
+<style scoped>
+/* 定义动画关键帧 */
+@keyframes boxplus-jump {
+    0% {
+        transform: rotate(10deg);
+    }
+
+    50% {
+        transform: rotate(-10deg);
+
+    }
+
+    100% {
+        transform: rotate(10deg);
+
+    }
+}
+
+/* 应用动画到 boxplus 元素 */
+.boxplus-jump {
+    animation: boxplus-jump 1s infinite;
+    cursor: pointer;
 }
 </style>
