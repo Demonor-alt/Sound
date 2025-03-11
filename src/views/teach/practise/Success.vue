@@ -52,7 +52,7 @@ const toTeach = () => {
 .restart-button {
   width: 200px;
   font-size: large;
-  margin-top: 20px;
+  margin-top: 60px;
   padding: 20px
 }
 
