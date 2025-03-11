@@ -6,7 +6,7 @@
       <div class="sparkfill"></div>
       <div>{{ sparkCount + 1 }}</div>
     </div>
-    <button class="restart-button" @click="toTeach">返回</button>
+    <el-button color="black" class="restart-button" @click="toTeach">返回</el-button>
   </div>
 </template>
 
@@ -50,18 +50,10 @@ const toTeach = () => {
 }
 
 .restart-button {
-  padding: 15px 30px;
-  font-size: 18px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.restart-button:hover {
-  background-color: #0056b3;
+  width: 200px;
+  font-size: large;
+  margin-top: 20px;
+  padding: 20px
 }
 
 .sparkfill {
