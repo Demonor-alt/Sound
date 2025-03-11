@@ -14,10 +14,28 @@
                                 <p>{{ item.descripe }}</p>
                             </el-col>
                             <el-col :span="6" class="price">
-                                <div :class="{ 'price-item': true, 'unaffordable': gemCount < item.price }">
+                                <div @click="gemCount < item.price?null:dialogVisible=true"
+                                    :class="{ 'price-item': true, 'unaffordable': gemCount < item.price }">
                                     价格：<div :class="{ 'gem': true, 'graygem': gemCount < item.price }"></div>
                                     {{ item.price }}
                                 </div>
+                                <el-dialog v-model="dialogVisible" width="30%" align-center :show-close="false">
+                                    <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;">
+                                        购买道具</div>
+                                    <div class="dialog">
+                                        是否要购买{{ item.name }}
+                                    </div>
+                                    <template #footer>
+                                        <span class="dialog-footer">
+                                            <el-button color="#f4f4f5" plain
+                                                style="color: black; border: #e4e4e7 1px solid; "
+                                                @click="dialogVisible = false">取消</el-button>
+                                            <el-button color="black" @click="dialogVisible = false; reduceGemCount(item.price);">
+                                                确认
+                                            </el-button>
+                                        </span>
+                                    </template>
+                                </el-dialog>
                             </el-col>
                         </el-row>
                     </div>
@@ -44,6 +62,10 @@ const items = ref([
     { name: '翻倍或全赔', descripe: '保持 7 天连胜，你投入的 50 颗宝石筹码就能赢回双倍！', price: 50, imageClass: 'wager' },
     { name: '记忆面包', descripe: '24小时内自动收集你的错题，为你智能生成专属错题集，助力高效复习！', price: 60, imageClass: 'memory-bread' }
 ])
+const dialogVisible = ref(false);
+const reduceGemCount = (price) => {
+    gemCount.value -= price;
+}
 </script>
 
 <style scoped>
@@ -115,11 +137,13 @@ h3 {
     background: url('../../assets/icons/correction.svg') no-repeat center / contain;
     border-radius: 10px;
 }
+
 .gem {
     width: 20px;
     height: 20px;
     background: url('../../assets/icons/gem.svg') no-repeat center / contain;
 }
+
 .graygem {
     width: 20px;
     height: 20px;
@@ -158,5 +182,4 @@ h3 {
     border-bottom-width: 2px;
     color: #c5c5c5;
 }
-
 </style>
