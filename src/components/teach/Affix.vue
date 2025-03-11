@@ -21,7 +21,7 @@
                     </div>
                 </div>
             </el-popover>
-            <div v-if="languageData.isSparked === false" class="topitems">
+            <div v-if="isSparked === false" class="topitems">
                 <div class="spark"></div>
                 <div style="color: #afafaf;">{{ sparkCount }}</div>
             </div>
@@ -51,9 +51,7 @@
             <div class="task-content">
                 <div class="power"></div>
                 <div class="experience">
-                    <div style="margin-bottom: 10px;display: flex;justify-content: center;">获取{{
-                        (sparkCount + 1) *
-                        10 }}经验</div>
+                    <div style="margin-bottom: 10px;display: flex;justify-content: center;">获取{{((isSparked ? 0 : 1)+sparkCount) *10 }}经验</div>
                     <el-progress :text-inside="true" :stroke-width="24" :percentage="percentage" color="black" />
                 </div>
                 <div class="boxopen" v-if="percentage === 100"></div>
@@ -72,15 +70,10 @@ import { ref } from 'vue';
 import { useLanguageStore } from '@/stores/language';
 import { storeToRefs } from 'pinia';
 const languageStore = useLanguageStore()
-const { language, sparkCount, gemCount } = storeToRefs(languageStore);
+const { language, sparkCount, gemCount, isSparked, currentExperience } = storeToRefs(languageStore);
 const { showLanguage } = useLanguageStore();
 const currentLanguage = ref(showLanguage());
-const percentage = ref(100);
-
-const languageData = ref({
-    isSparked: false,
-    currentExperience: 0,
-});
+const percentage = ref(currentExperience);
 import { useRouter } from 'vue-router';
 const router = useRouter()
 const toStep1 = () => {

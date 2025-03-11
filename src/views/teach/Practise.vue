@@ -249,8 +249,7 @@ const queryType = async () => {
         questionType:currentIndex.value
     }
     let result = await teachExerciseQueryService(queryData);
-    console.log(result.data);
-    data.value=result.data
+    data.value=result.data;
 }
 onMounted(() => {
     queryType();

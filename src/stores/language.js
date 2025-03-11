@@ -3,8 +3,10 @@ import { ref } from 'vue';
 export const useLanguageStore = defineStore('language', () => {
     const language = ref('');
     const difficulty = ref('');
-    const sparkCount=ref(0);
-    const gemCount=ref(50);
+    const sparkCount = ref(0);
+    const gemCount = ref(50);
+    const isSparked = ref(false);
+    const currentExperience = ref(0);
     function changeLanguage(newValue) {
         language.value = newValue;
     }
@@ -13,12 +15,12 @@ export const useLanguageStore = defineStore('language', () => {
             return '普通话';
         } else if (language.value === 'english') {
             return '英语';
-        } else if(language.value === 'cantonese') {
+        } else if (language.value === 'cantonese') {
             return '粤语';
         }
     }
     function changeDifficulty(newValue) {
-        difficulty.value=newValue
+        difficulty.value = newValue
     }
     return {
         language,
@@ -27,6 +29,8 @@ export const useLanguageStore = defineStore('language', () => {
         difficulty,
         changeDifficulty,
         sparkCount,
-        gemCount
+        gemCount,
+        isSparked,
+        currentExperience
     };
 })
