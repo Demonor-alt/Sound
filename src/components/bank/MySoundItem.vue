@@ -231,7 +231,7 @@ import {bankQueryAllService} from '@/api/bank/mybank'
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
 onMounted(async () => {
-    let result = await bankQueryAllService(token.token.userId);
+    let result = await bankQueryAllService();
     voices.value = result.data;
 })
 import { ElNotification } from 'element-plus'

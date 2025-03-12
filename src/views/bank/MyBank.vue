@@ -231,7 +231,7 @@ const token = useTokenStore();
 import { bankQueryService, bankDeleteService } from '@/api/bank/mybank';
 const bankList = async () => {
     try {
-        const result = await bankQueryService(token.token.userId);
+        const result = await bankQueryService();
         voiceList.value = result.data;
     } catch (error) {
         console.error('Failed to ', error);

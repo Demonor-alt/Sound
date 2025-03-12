@@ -396,14 +396,12 @@ const toggleCollect = async (voice) => {
     }
     let result = await discoverUpdateCollectService(editData);
 };
-import { useTokenStore } from '@/stores/token';
-const token = useTokenStore();
 const cloneVoice = async () => {
     const clone = ref({
         ...voice.value,
         voiceType: '0'
     })
-    let result = await bankCloneSamplesService(token.token.userId,clone);
+    let result = await bankCloneSamplesService(clone);
 }
 </script>
 <style scoped>

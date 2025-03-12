@@ -45,11 +45,9 @@ const voiceList = ref([
         ]
     }
 ]);
-import { useTokenStore } from '@/stores/token';
-const token = useTokenStore();
 import { bankQueryService } from "@/api/bank/mybank";
 onMounted(async () => {
-    let result = await bankQueryService(token.token.userId);
+    let result = await bankQueryService();
     voiceList.value = result.data;
 })
 </script>

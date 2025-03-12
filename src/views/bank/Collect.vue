@@ -194,11 +194,9 @@ const togglePlay = (voiceId, sampleIndex) => {
 const useVoice = (id) => {
     router.push({ path: '/explanation', query: { id: id } });
 }
-import { useTokenStore } from '@/stores/token';
-const token = useTokenStore();
 import { collectQueryService, collectBatchDeleteService } from '@/api/bank/collect'
 onMounted(async () => {
-    let result = await collectQueryService(token.token.userId);
+    let result = await collectQueryService();
     voices.value = result.data;
 })
 const toggleCollect = (voice) => {
@@ -214,7 +212,7 @@ onBeforeUnmount(async () => {
         });
         if (deleteIds.length > 0) {
             const ids = deleteIds.join(',');
-            let result = await collectBatchDeleteService({ userId: token.token.userId, ids: ids })
+            let result = await collectBatchDeleteService({ ids: ids })
         }
     }
 });
