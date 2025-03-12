@@ -226,7 +226,7 @@ const togglePlay = (voiceId, sampleIndex) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-import { discoverQueryService, discoverUpdateShareService, discoverUpdateLikeService,discoverUpdateCollectService } from '@/api/bank/discover'
+import { discoverQueryService,discoverUpdateCollectService } from '@/api/bank/discover'
 import {bankQueryAllService} from '@/api/bank/mybank'
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
@@ -249,16 +249,6 @@ const open = (voiceId) => {
                 message: "已复制到剪贴板",
                 position: 'bottom-right',
             });
-            try {
-                let result = await discoverUpdateShareService(voiceId);
-            } catch (error) {
-                console.error('分享服务调用失败:', error);
-                ElNotification({
-                    message: `分享服务调用失败: ${error.message}`,
-                    position: 'bottom-right',
-                    type: 'error'
-                });
-            }
         })
         .catch((error) => {
             ElNotification({
@@ -284,7 +274,6 @@ const toggleLike = async (voice) => {
         voiceId: voice.voiceId,
         voiceLikeCount: voice.voiceLikeCount,
     }
-    let result = await discoverUpdateLikeService(editData);
 };
 const toggleDislike = async (voice) => {
     if (voice.voiceIsLiked === 2) {
@@ -304,7 +293,6 @@ const toggleDislike = async (voice) => {
         voiceId: voice.voiceId,
         voiceLikeCount: voice.voiceLikeCount,
     }
-    let result = await discoverUpdateLikeService(editData);
 };
 const toggleCollect = async (voice) => {
     voice.voiceIsCollected = !voice.voiceIsCollected;

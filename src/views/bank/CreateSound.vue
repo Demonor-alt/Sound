@@ -511,7 +511,6 @@ const toStep2AndUpdate = async () => {
     }
     let result = await bankUpdateService(insertData.value);
     stepStore.incrementStep();
-    console.log(result)
 }
 </script>
 

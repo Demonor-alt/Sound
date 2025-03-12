@@ -244,7 +244,6 @@ onMounted(() => {
 });
 const deleteService = async(id) => {
     let result = await bankDeleteService(id);
-    console.log(result);
     bankList();
 };
 </script>
