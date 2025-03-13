@@ -42,6 +42,11 @@
             <Tickets />
           </el-icon>有声课件
         </div>
+        <div class="menu-item" :class="{ active: activeMenu === 'assistant' }" @click="setActive('assistant')">
+          <el-icon size="20">
+            <Connection />
+          </el-icon>辅助阅读
+        </div>
         <div class="menu-item" :class="{ active: activeMenu === 'teacher' }" @click="setActive('teacher')">
           <el-icon size="20">
             <User />
@@ -70,6 +75,7 @@ import {
   Service,
   DataBoard,
   Tickets,
+  Connection,
   User,
   UserFilled,
   VideoCamera,
