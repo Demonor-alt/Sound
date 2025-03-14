@@ -533,7 +533,6 @@ const addNewAudio = () => {
         let result = await audioInsertService(addData);
         addNewAudios.value = result.data;
         loadingDialogVisible.value = false;
-        let resultplus = await audioUpdateUseService(token.token.userId, voice.value.voiceId);
     }, 2000);
 }
 import { ElNotification } from 'element-plus'
@@ -623,7 +622,7 @@ const toggleCollect = async (voice) => {
     }
     let result = await discoverUpdateCollectService(editData);
 };
-import { audioQueryService, audioInsertService,audioUpdateUseService } from '@/api/explanation'
+import { audioQueryService, audioInsertService } from '@/api/explanation'
 import { useTokenStore } from '@/stores/token';
 const token = useTokenStore();
 onMounted(async () => {
