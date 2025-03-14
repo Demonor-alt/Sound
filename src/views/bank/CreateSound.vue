@@ -25,8 +25,7 @@
                         <div class="avatar">
                             <div class="upload-box">
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
-                                    action="/api/common/upload" name="file"
-                                    :headers="{ 'Authorization': tokenStore.token.token }" :on-success="uploadSuccess">
+                                    action="/api/common/upload" name="file" :on-success="uploadSuccess">
                                     <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
@@ -192,8 +191,6 @@
 import Recent from "@/components/bank/Recent.vue";
 import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
-import { useTokenStore } from "@/stores/token";
-const tokenStore = useTokenStore();
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
