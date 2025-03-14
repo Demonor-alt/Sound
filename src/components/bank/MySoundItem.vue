@@ -130,6 +130,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    path: {
+        type: String,
+        default:'explanation'
+    }
 });
 import audioUrl from '@/assets/sound.m4a';
 const voices = ref([
@@ -181,7 +185,7 @@ const MoreDetail = (voiceId) => {
     router.push({ path: '/detail', query: { id: voiceId } });
 }
 const useVoice = (voiceId) => {
-    router.push({ path: '/explanation', query: { id: voiceId } });
+    router.push({ path: `/${props.path}`, query: { id: voiceId } });
 }
 function formatNumberWithK(num) {
     if (typeof num !== 'number' || isNaN(num)) {

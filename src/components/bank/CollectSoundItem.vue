@@ -126,6 +126,12 @@ import {
 import { ref, defineProps, computed, reactive, onMounted } from 'vue';
 import { timeDistance } from '@/hooks/time';
 import audioUrl from '@/assets/sound.m4a';
+const props = defineProps({
+    path: {
+        type: String,
+        default:'explanation'
+    }
+});
 const voices = ref([
     {
         voiceId: 2,
