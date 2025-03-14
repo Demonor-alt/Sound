@@ -623,10 +623,8 @@ const toggleCollect = async (voice) => {
     let result = await discoverUpdateCollectService(editData);
 };
 import { audioQueryService, audioInsertService } from '@/api/explanation'
-import { useTokenStore } from '@/stores/token';
-const token = useTokenStore();
 onMounted(async () => {
-    let result = await audioQueryService(token.token.userId);
+    let result = await audioQueryService();
     audios.value = result.data;
 })
 </script>
