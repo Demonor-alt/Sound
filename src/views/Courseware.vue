@@ -3,7 +3,7 @@
     <div class="col1">
       <h1>课件转视频</h1>
       <div class="upload-section">
-        <el-upload :auto-upload="true" :show-file-list="false" action="/api/common/upload" name="file"
+        <el-upload ref="upload" :auto-upload="true" :show-file-list="false" action="/api/common/ppt" name="file"
           :on-success="uploadSuccess" :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择课件</el-button>
@@ -130,20 +130,20 @@
               </div>
             </div>
             <div style="max-height: 53vh;overflow-y: auto;">
-              <SoundItem :nameValue="nameValue" :sortValue="sortValue" :languageValue="languageValue"
+              <SoundItem :path="path" :nameValue="nameValue" :sortValue="sortValue" :languageValue="languageValue"
                 :tagValue="tagValue" />
             </div>
           </el-tab-pane>
           <el-tab-pane label="收藏" name="second">
             <div style="max-height: 53vh;overflow-y: auto;">
-              <CollectSoundItem />
+              <CollectSoundItem :path="path"/>
             </div>
           </el-tab-pane>
           <el-tab-pane label="我的语音" name="third">
             <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage"
               style="width: 20%;" />
             <div style="max-height: 53vh;overflow-y: auto;">
-              <MySoundItem :nameValue="nameValue"></MySoundItem>
+              <MySoundItem :nameValue="nameValue" :path="path"></MySoundItem>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -222,12 +222,12 @@
       <div v-if="addNewVedios">
         <h3>生成的视频</h3>
         <div class="audio-item">
-          <video :src="addNewVedios.audioURL" controls width="100%" height="250" style=" border-radius: 10px;"></video>
+          <video :src="addNewVedios.vedioURL" controls width="100%" height="250" style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
         </div>
       </div>
       <h3>最新活动</h3>
-      <div v-if="audios" v-for="audio in audios" :key="audio.audioId" class="audio-item">
-        <video :src="audio.audioURL" controls width="100%" height="250" style=" border-radius: 10px;"></video>
+      <div v-if="vedios" v-for="vedio in vedios" :key="vedio.vedioId" class="audio-item">
+        <video :src="vedio.vedioURL" controls width="100%" height="250" style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
       </div>
       <div v-else><el-empty description="暂无数据" />
       </div>
@@ -247,10 +247,12 @@ const router = useRouter();
 const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
-const uploadVedioUrl = ref();
+const uploadPPTUrl = ref();
 const uploadSuccess = (result) => {
-  uploadVedioUrl.value = result.data.voiceImage;
+  uploadPPTUrl.value = result.data.uploadPPTUrl;
+  console.log( uploadPPTUrl.value);
 }
+const upload = ref();
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
   const idMatch = newPath.match(/\?id=(\d+)/);
   if (idMatch) {
@@ -263,8 +265,8 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
 });
 import { bankQueryDetailService } from '@/api/bank/mybank'
 const queryById = async (id) => {
-  let result = await bankQueryDetailService(id);
-  voice.value = result.data;
+    let result = await bankQueryDetailService(id);
+    voice.value = result.data;
 }
 onMounted(async () => {
   if (currentVoiceId) {
@@ -286,7 +288,7 @@ import {
   Close,
   Memo,
   RefreshRight,
-  ArrowDown, ArrowUp, Minus, Plus, User
+  ArrowDown, ArrowUp, Minus, Plus
 } from '@element-plus/icons-vue';
 import MySelect from '@/components/newComponent/Select.vue'
 const color = ref('#ffffff');
@@ -310,6 +312,7 @@ const languageValue = ref('1');
 const tagValue = ref('');
 const tagTemp = ref('');
 const nameValue = ref('');
+const path = ref('courseware');
 const handleTabClick = () => {
   sortValue.value = '';
   languageValue.value = '1';
@@ -343,15 +346,15 @@ const visiblePopover = ref(false);
 //     voiceShareCount: 11,
 // });
 const voice = ref();
-const audios = ref([{
-  audioId: 1,
-  audioURL: video
+const vedios = ref([{
+  vedioId: 1,
+  vedioURL: video
 }]);
-// const audios = ref();
+// const vedios = ref();
 import video from '@/assets/video.mp4'
 const addNewVedios = ref({
-  audioId: 1,
-  audioURL: video
+  vedioId: 1,
+  vedioURL: video
 });
 // const addNewVedios = ref();
 function formatNumberWithK(num) {
@@ -412,16 +415,15 @@ const addNewAudio = () => {
   loadingDialogVisible.value = true;
   const addData = {
     voiceId: voice.value.voiceId,
-    uploadVedioUrl: uploadVedioUrl.value,
-    audioMode: mode.value,
-    audioSpeed: speedPercentage.value,
-    audioVolume: volumePercentage.value,
+    uploadPPTUrl: uploadPPTUrl.value,
+    vedioMode: mode.value,
+    vedioSpeed: speedPercentage.value,
+    vedioVolume: volumePercentage.value,
   }
   setTimeout(async () => {
-    let result = await audioInsertService(addData);
+    let result = await pptInsertService(addData);
     addNewVedios.value = result.data;
     loadingDialogVisible.value = false;
-    let resultplus = await audioUpdateUseService(token.token.userId, voice.value.voiceId);
   }, 2000);
 }
 const toggleLike = async (voice) => {
@@ -474,12 +476,10 @@ const toggleCollect = async (voice) => {
   }
   let result = await discoverUpdateCollectService(editData);
 };
-import { audioQueryService, audioInsertService, audioUpdateUseService } from '@/api/explanation'
-import { useTokenStore } from '@/stores/token';
-const token = useTokenStore();
+import { pptQueryService, pptInsertService } from '@/api/courseware';
 onMounted(async () => {
-  let result = await audioQueryService(token.token.userId);
-  audios.value = result.data;
+  let result = await pptQueryService();
+  vedios.value = result.data;
 })
 </script>
 
@@ -869,9 +869,7 @@ input[type="range"] {
 }
 
 .audio-item {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #FFFFFF;
+  border-radius: 10px;
   transition: all 0.3s ease;
   margin-bottom: 20px;
 }
