@@ -206,14 +206,14 @@
       <div class="build">
         <el-button color="black" @click="addNewAudio">创建</el-button>
       </div>
-      <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在创建语言" align-center>
+      <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在创建视频" align-center>
         <div style="margin: 20px;">
           <div class="loading-dots">
             <span class="dot dot1"></span>
             <span class="dot dot2"></span>
             <span class="dot dot3"></span>
           </div>
-          <div style="display: flex;justify-content: center;margin: 10px;">正在分析文本</div>
+          <div style="display: flex;justify-content: center;margin: 10px;">正在分析课件</div>
         </div>
       </el-dialog>
     </div>
