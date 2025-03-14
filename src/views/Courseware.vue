@@ -3,7 +3,7 @@
     <div class="col1">
       <h1>课件转视频</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" :show-file-list="false" action="/api/common/ppt" name="file"
+        <el-upload ref="upload" :auto-upload="true" action="/api/common/ppt" name="file"
           :on-success="uploadSuccess" :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择课件</el-button>
@@ -41,7 +41,7 @@
               <div class="mydot"></div>
               <div class="tag1"> {{ voice.voiceLanguage }}</div>
               <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
-              }}
+                }}
               </div>
             </div>
             <div class="select-btns">
@@ -136,7 +136,7 @@
           </el-tab-pane>
           <el-tab-pane label="收藏" name="second">
             <div style="max-height: 53vh;overflow-y: auto;">
-              <CollectSoundItem :path="path"/>
+              <CollectSoundItem :path="path" />
             </div>
           </el-tab-pane>
           <el-tab-pane label="我的语音" name="third">
@@ -222,12 +222,14 @@
       <div v-if="addNewVedios">
         <h3>生成的视频</h3>
         <div class="audio-item">
-          <video :src="addNewVedios.vedioURL" controls width="100%" height="250" style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
+          <video :src="addNewVedios.vedioURL" controls width="100%" height="250"
+            style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
         </div>
       </div>
       <h3>最新活动</h3>
       <div v-if="vedios" v-for="vedio in vedios" :key="vedio.vedioId" class="audio-item">
-        <video :src="vedio.vedioURL" controls width="100%" height="250" style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
+        <video :src="vedio.vedioURL" controls width="100%" height="250"
+          style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
       </div>
       <div v-else><el-empty description="暂无数据" />
       </div>
@@ -248,10 +250,9 @@ const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
 const uploadPPTUrl = ref();
-const uploadSuccess = (result) => {
+const uploadSuccess = (result,file) => {
   uploadPPTUrl.value = result.data.uploadPPTUrl;
-  console.log( uploadPPTUrl.value);
-}
+};
 const upload = ref();
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
   const idMatch = newPath.match(/\?id=(\d+)/);
@@ -265,8 +266,8 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
 });
 import { bankQueryDetailService } from '@/api/bank/mybank'
 const queryById = async (id) => {
-    let result = await bankQueryDetailService(id);
-    voice.value = result.data;
+  let result = await bankQueryDetailService(id);
+  voice.value = result.data;
 }
 onMounted(async () => {
   if (currentVoiceId) {
