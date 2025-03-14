@@ -57,7 +57,7 @@
                     <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="上传音频" name="second">
                             <div class="audio-upload">
-                                <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
+                                <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload" :show-file-list="false"
                                     :file-list="files" :on-remove="handleRemove" :limit="0">
                                     <template #default>
                                         <div class="upload-button">
@@ -368,7 +368,7 @@ const handleRemove = (file, files) => {
         deleteFile(index);
     }
 };
-const activeName = ref('first');
+const activeName = ref('second');
 const toStep2 = () => {
     stepStore.incrementStep();
 }
