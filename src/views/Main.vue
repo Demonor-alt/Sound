@@ -27,36 +27,21 @@
             </el-icon>模型收藏
           </div>
         </el-popover>
+        <div class="menu-item" :class="{ active: activeMenu === 'explanation' }" @click="setActive('explanation')">
+          <el-icon size="20">
+            <Service />
+          </el-icon>语音合成
+        </div>
         <div class="menu-item" :class="{ active: activeMenu === 'teach' }" @click="setActive('teach')">
           <el-icon size="20">
             <DataBoard />
           </el-icon>语言教学
         </div>
-
-        <el-popover placement="bottom" :width="170" trigger="hover">
-          <template #reference>
-            <div class="menu-item" :class="{ active: activeMenu === 'explanation' || activeMenu === 'courseware' || activeMenu === 'voice'}" @click="setActive('explanation')">
-              <el-icon size="20">
-                <Mic />
-              </el-icon>声创中心
-            </div>
-          </template>
-          <div class="submenu-item" @click="setActive('explanation')">
-            <el-icon size="20">
-            <Service />
-          </el-icon>语音讲解
-          </div>
-          <div class="submenu-item" @click="setActive('courseware')">
-            <el-icon size="20">
+        <div class="menu-item" :class="{ active: activeMenu === 'courseware' }" @click="setActive('courseware')">
+          <el-icon size="20">
             <Tickets />
           </el-icon>有声课件
-          </div>
-          <div class="submenu-item" @click="setActive('voice')">
-            <el-icon size="20">
-            <VideoCamera />
-          </el-icon>视频变声
-          </div>
-        </el-popover>
+        </div>
         <div class="menu-item" :class="{ active: activeMenu === 'assistant' }" @click="setActive('assistant')">
           <el-icon size="20">
             <Connection />
@@ -66,6 +51,11 @@
           <el-icon size="20">
             <User />
           </el-icon>虚拟教师
+        </div>
+        <div class="menu-item" :class="{ active: activeMenu === 'voice' }" @click="setActive('voice')">
+          <el-icon size="20">
+            <VideoCamera />
+          </el-icon>视频变声
         </div>
       </div>
       <el-avatar v-if="token.userImage !== ''" :src="token.userImage"  style="margin-right: 20px;"/>
@@ -82,7 +72,6 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   Bell,
-  Mic,
   Service,
   DataBoard,
   Tickets,
