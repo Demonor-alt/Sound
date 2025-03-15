@@ -25,7 +25,7 @@
 <script setup>
 import { Clock } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue';
-import { timeDistance } from '@/hooks/time';
+import { timeDistance } from '@/hooks/display';
 const voiceList = ref([
     {
         "voiceId": 70,

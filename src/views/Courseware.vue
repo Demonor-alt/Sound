@@ -277,7 +277,8 @@ onMounted(async () => {
 const createNewSound = () => {
   router.push('/createbank')
 }
-import { timeDistance } from '@/hooks/time';
+import { timeDistance, formatNumberWithK } from '@/hooks/display';
+import { toggleLike, toggleDislike, toggleCollect } from '@/hooks/actions';
 import { ElButton, ElDialog } from 'element-plus'
 const activeName = ref('first');
 const visible = ref(false)
@@ -358,16 +359,6 @@ const addNewVedios = ref({
   vedioURL: video
 });
 // const addNewVedios = ref();
-function formatNumberWithK(num) {
-  if (typeof num !== 'number' || isNaN(num)) {
-    return num;
-  }
-  const thousand = 1000;
-  if (num >= thousand * 10) {
-    return (num / thousand).toFixed(2) + 'K';
-  }
-  return num;
-}
 const isExpanded = ref(false);
 const mode = ref(false)
 
@@ -427,56 +418,6 @@ const addNewAudio = () => {
     loadingDialogVisible.value = false;
   }, 2000);
 }
-const toggleLike = async (voice) => {
-  if (voice.voiceIsLiked === 1) {
-    voice.voiceIsLiked = 0;
-    voice.voiceLikeCount--;
-  } else {
-    if (voice.voiceIsLiked === 2) {
-      voice.voiceIsUnliked = false;
-    }
-    voice.voiceIsLiked = 1;
-    voice.voiceLikeCount++;
-  }
-  const editData = {
-    voiceId: voice.voiceId,
-    voiceLikeCount: voice.voiceLikeCount,
-  }
-  let result = await discoverUpdateLikeService(editData);
-};
-const toggleDislike = async (voice) => {
-  if (voice.voiceIsLiked === 2) {
-    // 当前是不喜欢状态，切换为中立
-    voice.voiceIsLiked = 0;
-    voice.voiceIsUnliked = false;
-  } else {
-    // 当前不是不喜欢状态
-    if (voice.voiceIsLiked === 1) {
-      voice.voiceLikeCount--;
-      voice.voiceIsLiked = 0;
-    }
-    voice.voiceIsLiked = 2;
-    voice.voiceIsUnliked = true;
-  }
-  const editData = {
-    voiceId: voice.voiceId,
-    voiceLikeCount: voice.voiceLikeCount,
-  }
-  let result = await discoverUpdateLikeService(editData);
-};
-const toggleCollect = async (voice) => {
-  voice.voiceIsCollected = !voice.voiceIsCollected;
-  if (voice.voiceIsCollected) {
-    voice.voiceCollectCount++;
-  } else {
-    voice.voiceCollectCount--;
-  }
-  const editData = {
-    voiceId: voice.voiceId,
-    voiceCollectCount: voice.voiceCollectCount,
-  }
-  let result = await discoverUpdateCollectService(editData);
-};
 import { pptQueryService, pptInsertService } from '@/api/courseware';
 onMounted(async () => {
   let result = await pptQueryService();

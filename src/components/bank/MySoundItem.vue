@@ -124,7 +124,8 @@ import {
     StarFilled
 } from '@element-plus/icons-vue';
 import { ref, defineProps, computed, reactive, onMounted } from 'vue';
-import { timeDistance } from '@/hooks/time';
+import { timeDistance, formatNumberWithK } from '@/hooks/display';
+import { toggleLike, toggleDislike, toggleCollect } from '@/hooks/actions';
 const props = defineProps({
     nameValue: {
         type: String,
@@ -187,16 +188,6 @@ const MoreDetail = (voiceId) => {
 const useVoice = (voiceId) => {
     router.push({ path: `/${props.path}`, query: { id: voiceId } });
 }
-function formatNumberWithK(num) {
-    if (typeof num !== 'number' || isNaN(num)) {
-        return num;
-    }
-    const thousand = 1000;
-    if (num >= thousand * 10) {
-        return (num / thousand).toFixed(2) + 'K';
-    }
-    return num;
-}
 const audioPlayers = reactive({})
 
 const togglePlay = (voiceId, sampleIndex) => {
@@ -230,10 +221,7 @@ const togglePlay = (voiceId, sampleIndex) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-import { discoverQueryService,discoverUpdateCollectService } from '@/api/bank/discover'
 import {bankQueryAllService} from '@/api/bank/mybank'
-import { useTokenStore } from '@/stores/token';
-const token = useTokenStore();
 onMounted(async () => {
     let result = await bankQueryAllService();
     voices.value = result.data;
@@ -261,55 +249,6 @@ const open = (voiceId) => {
                 type: 'error'
             });
         });
-};
-
-const toggleLike = async (voice) => {
-    if (voice.voiceIsLiked === 1) {
-        voice.voiceIsLiked = 0;
-        voice.voiceLikeCount--;
-    } else {
-        if (voice.voiceIsLiked === 2) {
-            voice.voiceIsUnliked = false;
-        }
-        voice.voiceIsLiked = 1;
-        voice.voiceLikeCount++;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-};
-const toggleDislike = async (voice) => {
-    if (voice.voiceIsLiked === 2) {
-        // 当前是不喜欢状态，切换为中立
-        voice.voiceIsLiked = 0;
-        voice.voiceIsUnliked = false;
-    } else {
-        // 当前不是不喜欢状态
-        if (voice.voiceIsLiked === 1) {
-            voice.voiceLikeCount--;
-            voice.voiceIsLiked = 0;
-        }
-        voice.voiceIsLiked = 2;
-        voice.voiceIsUnliked = true;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-};
-const toggleCollect = async (voice) => {
-    voice.voiceIsCollected = !voice.voiceIsCollected;
-    if (voice.voiceIsCollected) {
-        voice.voiceCollectCount++;
-    } else {
-        voice.voiceCollectCount--;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceCollectCount: voice.voiceCollectCount,
-    }
-    let result = await discoverUpdateCollectService(editData);
 };
 </script>
 

@@ -30,3 +30,13 @@ export const timeDistance = (timeStr) => {
         return Math.floor(diff / msPerYear) + "年前";
     }
 };
+export const formatNumberWithK = (num) => {
+    if (typeof num !== 'number' || isNaN(num)) {
+        return num;
+    }
+    const thousand = 1000;
+    if (num >= thousand * 10) {
+        return (num / thousand).toFixed(2) + 'K';
+    }
+    return num;
+}

@@ -124,7 +124,8 @@ import {
     StarFilled
 } from '@element-plus/icons-vue';
 import { ref, defineProps, computed, reactive, onMounted } from 'vue';
-import { timeDistance } from '@/hooks/time';
+import { timeDistance, formatNumberWithK } from '@/hooks/display';
+import { toggleLike, toggleDislike, toggleCollect } from '@/hooks/actions';
 const props = defineProps({
     nameValue: {
         type: String,
@@ -215,16 +216,6 @@ const MoreDetail = (voiceId) => {
 const useVoice = (voiceId) => {
     router.push({ path: `/${props.path}`, query: { id: voiceId } });
 }
-function formatNumberWithK(num) {
-    if (typeof num !== 'number' || isNaN(num)) {
-        return num;
-    }
-    const thousand = 1000;
-    if (num >= thousand * 10) {
-        return (num / thousand).toFixed(2) + 'K';
-    }
-    return num;
-}
 const audioPlayers = reactive({})
 
 const togglePlay = (voiceId, sampleIndex) => {
@@ -237,28 +228,23 @@ const togglePlay = (voiceId, sampleIndex) => {
         if (sample.sampleIsPlaying) {
             audio.pause()
         } else {
-            // 暂停所有正在播放的音频
             Object.values(audioPlayers).forEach(a => a.pause())
             audio.play()
         }
     } else {
-        // 创建新播放器实例
         const audio = new Audio(sample.sampleUrl)
         audioPlayers[playerKey] = audio
-        // 添加播放结束监听
         audio.addEventListener('ended', () => {
             sample.sampleIsPlaying = false
         })
         audio.play()
     }
-    // 切换播放状态
     sample.sampleIsPlaying = !sample.sampleIsPlaying
-    // 更新其他音频状态
     voice.voiceSamples.forEach((s, idx) => {
         if (idx !== sampleIndex) s.sampleIsPlaying = false
     })
 }
-import { discoverQueryService,discoverUpdateCollectService } from '@/api/bank/discover'
+import { discoverQueryService } from '@/api/bank/discover'
 onMounted(async () => {
     let result = await discoverQueryService();
     voices.value = result.data;
@@ -286,55 +272,6 @@ const open = (voiceId) => {
                 type: 'error'
             });
         });
-};
-
-const toggleLike = async (voice) => {
-    if (voice.voiceIsLiked === 1) {
-        voice.voiceIsLiked = 0;
-        voice.voiceLikeCount--;
-    } else {
-        if (voice.voiceIsLiked === 2) {
-            voice.voiceIsUnliked = false;
-        }
-        voice.voiceIsLiked = 1;
-        voice.voiceLikeCount++;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-};
-const toggleDislike = async (voice) => {
-    if (voice.voiceIsLiked === 2) {
-        // 当前是不喜欢状态，切换为中立
-        voice.voiceIsLiked = 0;
-        voice.voiceIsUnliked = false;
-    } else {
-        // 当前不是不喜欢状态
-        if (voice.voiceIsLiked === 1) {
-            voice.voiceLikeCount--;
-            voice.voiceIsLiked = 0;
-        }
-        voice.voiceIsLiked = 2;
-        voice.voiceIsUnliked = true;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-};
-const toggleCollect = async (voice) => {
-    voice.voiceIsCollected = !voice.voiceIsCollected;
-    if (voice.voiceIsCollected) {
-        voice.voiceCollectCount++;
-    } else {
-        voice.voiceCollectCount--;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceCollectCount: voice.voiceCollectCount,
-    }
-    let result = await discoverUpdateCollectService(editData);
 };
 </script>
 

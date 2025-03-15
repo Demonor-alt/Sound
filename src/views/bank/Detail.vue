@@ -159,7 +159,7 @@
     </div>
 </template>
 <script setup>
-import { timeDistance } from '@/hooks/time';
+import { timeDistance } from '@/hooks/display';
 import MySelect from '@/components/newComponent/Select.vue'
 const color = ref('#ffffff');
 import MyInputW from "@/components/newComponent/Input.vue";
