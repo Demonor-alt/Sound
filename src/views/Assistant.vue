@@ -219,6 +219,102 @@
     </div>
     <el-divider direction="vertical" style="height: auto;" />
     <div class="col2">
+      <div v-if="addNewAudios">
+        <h3>生成的音频</h3>
+        <div class="audio-item">
+          <div class="audio-top">
+            <el-image :src="addNewAudios.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;"
+              fit="cover" />
+            <div class="audio-content">
+              <div class="audio-info">
+                <div class="audio-text">{{ addNewAudios.audioText }}</div>
+                <div class="audio-name">
+                  <el-icon size="20">
+                    <User />
+                  </el-icon>
+                  {{ addNewAudios.voiceName }}
+                </div>
+              </div>
+              <div class="audio-actions">
+                <div class="dontagree" @click="showDontAgreeDialog = true"></div>
+                <el-dialog v-model="showDontAgreeDialog" width="30%" align-center :show-close="false">
+                  <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 20px;">
+                    音频质量反馈</div>
+                  <div class="dialog">
+                    反馈类型
+                    <MySelect :options="reportOptions" :input-width="'432px'" :color="colorSelect"
+                      @update:value="handleReportValue" style="margin-bottom: 10px;" />
+                  </div>
+                  <template #footer>
+                    <span class="dialog-footer">
+                      <el-button color="black" plain @click="showDontAgreeDialog = false;">
+                        取消
+                      </el-button>
+                      <el-button color="black" @click="showDontAgreeDialog = false;">
+                        确认
+                      </el-button>
+                    </span>
+                  </template>
+                </el-dialog>
+                <div class="share" @click="open(addNewAudios.audioId)"></div>
+                <div class="download" @click="downloadAudio(addNewAudios.audioURL)"></div>
+                <div v-if="!addNewAudios.isPlaying" class="close"
+                  @click="togglePlay(addNewAudios.audioId, index); addNewAudios.isPlaying = true">
+                </div>
+                <div v-else class="on" @click="togglePlay(addNewAudios.audioId, index);addNewAudios.isPlaying = false">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="divide"></div>
+          <AudioPlayer :audioUrl="addNewAudios.audioURL" :buttonSize="20" :sliderLength="300"></AudioPlayer>
+        </div>
+      </div>
+      <h3>最新活动</h3>
+      <div v-if="audios" v-for="audio in audios" :key="audio.audioId" class="audio-item">
+        <div class="audio-top">
+          <el-image :src="audio.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;" fit="cover" />
+          <div class="audio-content">
+            <div class="audio-info">
+              <div class="audio-text">{{ audio.audioText }}</div>
+              <div class="audio-name">
+                <el-icon size="20">
+                  <User />
+                </el-icon>
+                {{ audio.voiceName }}
+              </div>
+            </div>
+            <div class="audio-actions">
+              <div class="dontagree" @click="showDontAgreeDialog = true"></div>
+              <el-dialog v-model="showDontAgreeDialog" width="30%" align-center :show-close="false">
+                <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 20px;">
+                  音频质量反馈</div>
+                <div class="dialog">
+                  反馈类型
+                  <MySelect :options="reportOptions" :input-width="'432px'" :color="colorSelect"
+                    @update:value="handleReportValue" style="margin-bottom: 10px;" />
+                </div>
+                <template #footer>
+                  <span class="dialog-footer">
+                    <el-button color="black" plain @click="showDontAgreeDialog = false;">
+                      取消
+                    </el-button>
+                    <el-button color="black" @click="showDontAgreeDialog = false;">
+                      确认
+                    </el-button>
+                  </span>
+                </template>
+              </el-dialog>
+              <div class="share" @click="open(audio.audioId)"></div>
+              <div class="download" @click="downloadAudio(audio.audioURL)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="divide"></div>
+        <AudioPlayer :audioUrl="audio.audioURL" :buttonSize="20" :sliderLength="300"></AudioPlayer>
+      </div>
+      <div v-else><el-empty description="暂无数据" />
+      </div>
     </div>
   </div>
 
@@ -228,7 +324,7 @@
 import SoundItem from '@/components/bank/SoundItem.vue';
 import CollectSoundItem from '@/components/bank/CollectSoundItem.vue';
 import MySoundItem from '@/components/bank/MySoundItem.vue';
-import { ref, watch, onMounted } from 'vue';
+import { ref, watch, onMounted,reactive } from 'vue';
 import MyInput from "@/components/newComponent/Input.vue";
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter();
@@ -276,7 +372,7 @@ import {
   Close,
   Memo,
   RefreshRight,
-  ArrowDown, ArrowUp, Minus, Plus
+  ArrowDown, ArrowUp, Minus, Plus, User
 } from '@element-plus/icons-vue';
 import MySelect from '@/components/newComponent/Select.vue'
 const color = ref('#ffffff');
@@ -290,11 +386,13 @@ const languageOptions = ref([
   { value: 'en', label: 'English' },
 ]);
 const tagOptions = ref();
+const colorSelect = ref('#ffffff');
 import { discoverTagService } from '@/api/bank/discover'
 onMounted(async () => {
   let result = await discoverTagService();
   tagOptions.value = result.data;
 })
+const showDontAgreeDialog = ref(false);
 const sortValue = ref('');
 const languageValue = ref('1');
 const tagValue = ref('');
@@ -322,6 +420,7 @@ function handleMessage(newMessage) {
   nameValue.value = newMessage;
 }
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
+import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 const visiblePopover = ref(false);
 // const voice = ref({
 //     voiceId: 1,
@@ -334,7 +433,46 @@ const visiblePopover = ref(false);
 //     voiceShareCount: 11,
 // });
 const voice = ref();
-// const vedios = ref();
+import audioUrl from '@/assets/sound.m4a';
+const audios = ref([{
+  audioId: 1,
+  voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+  voiceName: '55',
+  audioText: '1232ssssssssss',
+  audioURL: audioUrl,
+  isPlaying: false,
+  sentences: [
+    { text: 'Hello', start: 0.0, end: 1.2 },
+    { text: 'world!', start: 1.2, end: 2.5 },
+    { text: 'This is a demo', start: 2.5, end: 4.0 }
+  ]
+}]);
+const addNewAudios = ref({
+  audioId: 1,
+  voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+  voiceName: '66',
+  audioText: '11111111111111111',
+  audioURL: audioUrl,
+  isPlaying: false,
+  sentences: [
+    { text: 'Hello', start: 0.0, end: 1.2 },
+    { text: 'world!', start: 1.2, end: 2.5 },
+    { text: 'This is a demo', start: 2.5, end: 4.0 }
+  ]
+});
+const reportOptions = ref([
+  { value: '1', label: '暂无问题' },
+  { value: '2', label: '音频存在截断' },
+  { value: '3', label: '有多个人说话（音色跳变）' },
+  { value: '4', label: '噪音' },
+  { value: '5', label: '超长空白' },
+  { value: '6', label: '声音太小/声音模糊' },
+  { value: '7', label: '混响很大' },
+  { value: '8', label: '吞字漏字错字' },
+]);
+const handleReportValue = (newValue) => {
+  reportType.value = newValue;
+};
 const isExpanded = ref(false);
 const mode = ref(false)
 
@@ -379,6 +517,43 @@ const decrease2 = () => {
   volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
 };
 const loadingDialogVisible = ref(false);
+import { ElNotification } from 'element-plus'
+const open = (audioId) => {
+  const currentUrl = window.location.href;
+  const textToCopy = `${currentUrl}?id=${audioId}`;
+  navigator.clipboard.writeText(textToCopy)
+    .then(async () => {
+      ElNotification({
+        message: "已复制到剪贴板",
+        position: 'bottom-right',
+      });
+    })
+    .catch((error) => {
+      ElNotification({
+        message: `复制失败: ${error.message}`,
+        position: 'bottom-right',
+        type: 'error'
+      });
+    });
+};
+
+const downloadAudio = (audioUrl) => {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', audioUrl, true);
+  xhr.responseType = 'blob';
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      const blob = new Blob([xhr.response], { type: 'audio/mpeg' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'audio.mp3';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+  xhr.send();
+};
 const addNewAudio = () => {
   loadingDialogVisible.value = true;
   const addData = {
@@ -390,14 +565,14 @@ const addNewAudio = () => {
   }
   setTimeout(async () => {
     let result = await pptInsertService(addData);
-    addNewVedios.value = result.data;
+    addNewAudios.value = result.data;
     loadingDialogVisible.value = false;
   }, 2000);
 }
 import { pptQueryService, pptInsertService } from '@/api/courseware';
 onMounted(async () => {
   let result = await pptQueryService();
-  vedios.value = result.data;
+  audios.value = result.data;
 })
 </script>
 
@@ -833,5 +1008,62 @@ input[type="range"] {
   40% {
     transform: scale(1.0);
   }
+}
+
+.audio-top {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.audio-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 85%;
+  align-items: baseline
+}
+
+.audio-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.audio-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.audio-name {
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.audio-text {
+  font-size: 18px;
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-item {
+  padding: 10px 10px 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #FFFFFF;
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.audio-item:hover {
+  border-color: #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 </style>

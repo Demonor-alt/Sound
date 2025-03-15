@@ -42,7 +42,8 @@
                                         @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = true">
                                     </div>
                                     <div v-else class="on"
-                                        @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = false"></div>
+                                        @click="togglePlay(voice.voiceId, index); sample.sampleIsPlaying = false">
+                                    </div>
                                 </div>
                             </div>
                             <div style="font-size: small;color: #71717a; padding-top: 10px;">
