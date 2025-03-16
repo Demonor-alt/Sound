@@ -1,6 +1,6 @@
 <template>
     <el-row>
-        <el-col :span="17">
+        <el-col :span="24">
             <el-container class="sound-manager">
                 <el-header class="display">
                     <div class="title">发现</div>
@@ -38,7 +38,6 @@
                 </el-main>
             </el-container>
         </el-col>
-        <el-col :span="5">111</el-col>
     </el-row>
 </template>
 

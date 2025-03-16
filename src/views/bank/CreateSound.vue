@@ -78,7 +78,7 @@
                                     <div class="noRecord"></div>
                                     停止录制
                                 </div>
-                                <div style="font-size: small;color: #6b7280;">*您可以使用自己的文本或下面的建议文本录制您的声音。</div>
+                                <div style="font-size: small;color: #6b7280;margin-left: 20px;">*您可以使用自己的文本或下面的建议文本录制您的声音。</div>
                                 <Store />
                             </div>
                         </el-tab-pane>
@@ -109,11 +109,17 @@
                                 </el-icon>
                                 不错
                             </div>
-                            <div v-if="selectedTime > 90 || selectedTime < 10 && selectedTime > 0" class="icon">
+                            <div v-if="selectedTime > 90" class="icon">
                                 <el-icon size="20" color="#ef4343">
                                     <CircleClose />
                                 </el-icon>
-                                过长/过短
+                                过长
+                            </div>
+                            <div v-if="selectedTime < 10 && selectedTime > 0" class="icon">
+                                <el-icon size="20" color="#ef4343">
+                                    <CircleClose />
+                                </el-icon>
+                                过短
                             </div>
                             <div v-if="selectedTime === 0" class="icon">
                                 推荐 30 秒左右
@@ -194,7 +200,7 @@ import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
-const grayColor = ref('#f5f5f5');
+const grayColor = ref('#fafafa');
 const placeholderDescription = ref('填写音频描述');
 const rows = ref("3");
 import audioUrl from '@/assets/sound.m4a';
@@ -588,7 +594,7 @@ const toStep2AndUpdate = async () => {
     width: 150px;
     height: 150px;
     text-align: center;
-    background-color: #f5f5f5;
+    background-color: #fafafa;
 }
 .avatar {
     width: 100%;

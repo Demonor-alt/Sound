@@ -27,6 +27,11 @@
             </el-icon>模型收藏
           </div>
         </el-popover>
+        <div class="menu-item" :class="{ active: activeMenu === 'createbank' }" @click="setActive('createbank')">
+          <el-icon size="20">
+            <MagicStick />
+          </el-icon>克隆声音
+        </div>
         <div class="menu-item" :class="{ active: activeMenu === 'explanation' }" @click="setActive('explanation')">
           <el-icon size="20">
             <Service />
@@ -73,6 +78,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import {
   Bell,
+  MagicStick,
   Service,
   DataBoard,
   Tickets,
