@@ -1,6 +1,6 @@
 <template>
     <div class="input" :class="{ focused: isFocused }">
-        <el-input size="large" v-model="input" :rows="props.rows" :placeholder="props.placeholder"
+        <el-input :size="size" v-model="input" :rows="props.rows" :placeholder="props.placeholder"
             :maxlength="props.maxlength" @focus="isFocused = true" @blur="isFocused = false" :type="props.type" />
     </div>
 </template>
@@ -18,10 +18,14 @@ const props = defineProps({
         type: String,
         default: '#ffffff'
     },
-    background :{
+    background: {
         type: String,
         default: '#fafafa'
     },
+    size: {
+        type: String,
+        default: 'large'
+    }
 });
 const emit = defineEmits(['update:message']);
 
@@ -47,9 +51,10 @@ watch(() => props.message, (newValue) => {
     border-radius: 8px;
 }
 
-::v-deep .el-input__wrapper{
-  background-color: v-bind(background) !important;
+::v-deep .el-input__wrapper {
+    background-color: v-bind(background) !important;
 }
+
 ::v-deep .el-textarea__inner {
     background-color: v-bind(background) !important;
 }

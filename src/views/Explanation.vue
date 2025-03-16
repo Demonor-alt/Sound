@@ -16,7 +16,7 @@
             </div>
             <div class="voice-selection">
                 <div class="text">语音声音</div>
-                <div>没有模型? <el-button link @click="createNewSound">一分钟创建</el-button></div>
+                <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn" @click="createNewSound">一分钟创建</div></div>
             </div>
             <div class="output-section" @click="visible = true" v-if="!voice">
                 <div class="add"></div>
@@ -100,15 +100,15 @@
                     <el-tab-pane label="探索" name="first">
                         <div class="action-sum">
                             <div style="width: 155px;">
-                                <MyInput :message="nameValue" :placeholder="placeholder"
+                                <MyInput :message="nameValue" :placeholder="placeholder" :size="'medium'" :background="'#FFF'"
                                     @update:message="handleMessage" />
                             </div>
                             <div class="action-bar">
                                 <span class="header-tip">排序</span>
-                                <MySelect :options="sortOptions" :input-width="'155px'" :color="color"
+                                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
                                     @update:value="handleSortValue" />
                                 <span class="header-tip">语言</span>
-                                <MySelect :options="languageOptions" :input-width="'155px'" :color="color"
+                                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
                                     @update:value="handlelanguageValue" />
                                 <el-popover placement="bottom" :width="250" :visible="visiblePopover">
                                     <template #reference>
@@ -144,7 +144,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="我的语音" name="third">
                         <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar"
-                            @update:message="handleMessage" style="width: 20%;" />
+                            @update:message="handleMessage" style="width: 20%;" :background="'#FFF'" :size="'medium'"/>
                         <div style="max-height: 53vh;overflow-y: auto;">
                             <MySoundItem :nameValue="nameValue"></MySoundItem>
                         </div>
@@ -331,7 +331,7 @@ const placeholderTextArea = ref("输入您想生成的语音文本")
 const type = ref('textarea');
 const rows = ref("5");
 const maxlength = ref("500");
-const color1 = ref("#f5f5f5");
+const color1 = ref("#fafafa");
 const inputText = ref('');
 function handleMessageTextArea(newValue) {
     inputText.value = newValue;
@@ -605,6 +605,12 @@ onMounted(async () => {
     justify-content: space-between;
     align-items: center;
 }
+.voice-selection-btn{
+    cursor: pointer;
+}
+.voice-selection-btn:hover{
+    color:#71717a;
+}
 
 .output-section {
     margin-bottom: 40px;
@@ -625,7 +631,10 @@ onMounted(async () => {
         background: url('../assets/icons/add.svg') no-repeat center / contain;
     }
 }
-
+.output-section:hover {
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
 .select-output-section {
     min-height: 50px;
     border: 1px solid #ddd;
@@ -780,6 +789,10 @@ input[type="range"] {
     }
 }
 
+.btn{
+    height: 32px;
+    width: 40px;
+}
 .btn:hover {
     background-color: #f4f4f5 !important;
     border: #606266 1px solid !important;
