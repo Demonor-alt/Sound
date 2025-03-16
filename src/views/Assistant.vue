@@ -258,11 +258,6 @@
                 </el-dialog>
                 <div class="share" @click="open(addNewAudios.audioId)"></div>
                 <div class="download" @click="downloadAudio(addNewAudios.audioURL)"></div>
-                <div v-if="!addNewAudios.isPlaying" class="close"
-                  @click="togglePlay(addNewAudios.audioId, index); addNewAudios.isPlaying = true">
-                </div>
-                <div v-else class="on" @click="togglePlay(addNewAudios.audioId, index);addNewAudios.isPlaying = false">
-                </div>
               </div>
             </div>
           </div>
@@ -517,43 +512,7 @@ const decrease2 = () => {
   volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
 };
 const loadingDialogVisible = ref(false);
-import { ElNotification } from 'element-plus'
-const open = (audioId) => {
-  const currentUrl = window.location.href;
-  const textToCopy = `${currentUrl}?id=${audioId}`;
-  navigator.clipboard.writeText(textToCopy)
-    .then(async () => {
-      ElNotification({
-        message: "已复制到剪贴板",
-        position: 'bottom-right',
-      });
-    })
-    .catch((error) => {
-      ElNotification({
-        message: `复制失败: ${error.message}`,
-        position: 'bottom-right',
-        type: 'error'
-      });
-    });
-};
-
-const downloadAudio = (audioUrl) => {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', audioUrl, true);
-  xhr.responseType = 'blob';
-  xhr.onload = () => {
-    if (xhr.status === 200) {
-      const blob = new Blob([xhr.response], { type: 'audio/mpeg' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'audio.mp3';
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-  };
-  xhr.send();
-};
+import { open,downloadAudio } from '@/hooks/actions';
 const addNewAudio = () => {
   loadingDialogVisible.value = true;
   const addData = {

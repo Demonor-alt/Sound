@@ -2,7 +2,7 @@ import { createRouter, createWebHistory, createWebHashHistory } from "vue-router
 const routes = [
     {
         path: '/',
-        component: () => import("@/views/bank/Discover.vue"),
+        component: () => import("@/views/Main.vue"),
     },
     {
         path: '/login',

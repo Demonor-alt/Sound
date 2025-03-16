@@ -526,43 +526,7 @@ const addNewAudio = () => {
         loadingDialogVisible.value = false;
     }, 2000);
 }
-import { ElNotification } from 'element-plus'
-const open = (audioId) => {
-    const currentUrl = window.location.href;
-    const textToCopy = `${currentUrl}?id=${audioId}`;
-    navigator.clipboard.writeText(textToCopy)
-        .then(async () => {
-            ElNotification({
-                message: "已复制到剪贴板",
-                position: 'bottom-right',
-            });
-        })
-        .catch((error) => {
-            ElNotification({
-                message: `复制失败: ${error.message}`,
-                position: 'bottom-right',
-                type: 'error'
-            });
-        });
-};
-
-const downloadAudio = (audioUrl) => {
-    const xhr = new XMLHttpRequest();
-    xhr.open('GET', audioUrl, true);
-    xhr.responseType = 'blob';
-    xhr.onload = () => {
-        if (xhr.status === 200) {
-            const blob = new Blob([xhr.response], { type: 'audio/mpeg' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'audio.mp3';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-    };
-    xhr.send();
-};
+import { open,downloadAudio } from '@/hooks/actions';
 import { audioQueryService, audioInsertService } from '@/api/explanation'
 onMounted(async () => {
     let result = await audioQueryService();
