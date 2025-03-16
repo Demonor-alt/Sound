@@ -12,7 +12,7 @@
         </div>
       </div>
       <template #reference>
-        <el-input size="large" :value="displayValue" readonly :style="{ width: inputWidth }"
+        <el-input :size="size" :value="displayValue" readonly :style="{ width: inputWidth }"
           @click="visiblePopover = !visiblePopover" :class="{ focused: visiblePopover }">
           <template #suffix>
             <el-icon :class="{ 'reverse-icon': !visiblePopover }">
@@ -46,11 +46,15 @@ const props = defineProps({
   },
   color: {
     type: String,
-    default: '#f5f5f5'
+    default: '#fafafa'
   },
   background: {
     type: String,
-    default: '#f5f5f5'
+    default: '#fafafa'
+  },
+  size: {
+    type: String,
+    default: 'large'
   }
 })
 

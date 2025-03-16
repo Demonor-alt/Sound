@@ -61,6 +61,7 @@
       <el-avatar v-if="token.userImage !== ''" :src="token.userImage"  style="margin-right: 20px;"/>
       <el-avatar v-else :icon="UserFilled" />
     </el-header>
+    <div style="background-color: #e4e4e7;height: 1px;width: 100%;"></div>
     <el-main>
       <router-view />
     </el-main>
@@ -104,6 +105,9 @@ const { token } = useTokenStore();
   align-items: center;
   height: 60px;
   justify-content: space-between;
+}
+.el-main{
+  background-color: #fafafa;
 }
 
 .logo {

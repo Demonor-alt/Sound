@@ -308,7 +308,6 @@ onBeforeUnmount(() => {
     })
 })
 import { bankQuerySingleDetailService,bankCloneSamplesService } from '@/api/bank/mybank'
-import { discoverUpdateShareService, discoverUpdateLikeService, discoverUpdateCollectService } from '@/api/bank/discover'
 onMounted(async () => {
     let result = await bankQuerySingleDetailService(currentVoiceId);
     voice.value = result.data

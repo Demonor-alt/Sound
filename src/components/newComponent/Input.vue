@@ -20,7 +20,7 @@ const props = defineProps({
     },
     background :{
         type: String,
-        default: '#f5f5f5'
+        default: '#fafafa'
     },
 });
 const emit = defineEmits(['update:message']);

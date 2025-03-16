@@ -63,11 +63,11 @@ const changeCantonese = () => {
     padding: 20px 40px;
     border-radius: 6px;
     border: #e4e4e7 1px solid;
-    background-color: white;
+    background-color: #f5f5f5;
     cursor: pointer;
 }
 .lang:hover{
-    background-color: #f5f5f5;
+    background-color: white;
 }
 .image1{
     width: 75px;

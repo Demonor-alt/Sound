@@ -124,7 +124,7 @@ import {
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus';
 import MyInput from '@/components/newComponent/Input.vue';
-const myBorderColor = ref('#f5f5f5');
+const myBorderColor = ref('#fafafa');
 const dialogVisible = ref(false);
 import { useRouter } from 'vue-router'
 const router = useRouter()

@@ -88,6 +88,6 @@ const handleSelect = (item) => {
     border-radius: 8px;
 }
 ::v-deep .el-input__wrapper{
-  background-color: #f5f5f5 !important;
+  background-color: #fafafa !important;
 }
 </style>

@@ -3,7 +3,7 @@
         <el-col :span="17">
             <el-container class="sound-manager">
                 <el-header class="display">
-                    <div class="title">列表</div>
+                    <div class="title">发现</div>
                     <div class="action-bar">
                         <span class="header-tip">排序</span>
                         <MySelect :options="sortOptions" :input-width="'230px'" :color="color"
@@ -50,7 +50,7 @@ import {
 } from '@element-plus/icons-vue';
 import { ElButton } from 'element-plus'
 import MySelect from '@/components/newComponent/Select.vue'
-const color = ref('#f5f5f5');
+const color = ref('#fafafa');
 const sortOptions = ref([
     { value: '1', label: '推荐' },
     { value: '2', label: '最新' },
@@ -133,7 +133,7 @@ const visiblePopover = ref(false);
     }
 }
 .btn{
-    background-color: #f5f5f5;
+    background-color: #fafafa;
 }
 .btn:hover {
     background-color: #f4f4f5 !important;

@@ -107,7 +107,7 @@ import {
 import { ElButton } from 'element-plus'
 import { useRouter } from 'vue-router'
 import MyInput from '@/components/newComponent/Input.vue'
-const myBorderColor = ref('#f5f5f5');
+const myBorderColor = ref('#fafafa');
 const router = useRouter()
 const MoreDetail = (id) => {
     router.push({ path: '/detail', query: { id: id } });
