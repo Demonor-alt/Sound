@@ -34,6 +34,7 @@ const currentIndex = ref(-1);
 
 // 播放/暂停控制
 const togglePlay = () => {
+  console.log(audioRef.value);
   if (!audioRef.value) return;
 
   if (audioRef.value.paused) {
