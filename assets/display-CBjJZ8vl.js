@@ -1,1 +1,0 @@
-const l=t=>{const o=new Date(t),e=new Date-o,s=60*1e3*60,r=s*24,n=r*7,f=r*30,i=r*365;return e<s?"刚刚":e<r?Math.floor(e/s)+"小时前":e<n?Math.floor(e/r)+"天前":e<f?Math.floor(e/n)+"周前":e<i?Math.floor(e/f)+"月前":Math.floor(e/i)+"年前"},u=t=>{if(typeof t!="number"||isNaN(t))return t;const o=1e3;return t>=o*10?(t/o).toFixed(2)+"K":t};export{u as f,l as t};
