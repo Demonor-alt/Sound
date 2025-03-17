@@ -51,14 +51,19 @@
                         <MyInput :message="insertData.voiceTag" :placeholder="placeholderTag" class="search-input"
                             :color="grayColor" @update:message="handleMessageTag" />
                     </div>
+                    <div class="form-section">
+                        语言
+                        <MySelect :options="languageOptions" :input-width="'655px'" :color="'#fafafa'"
+                            @update:value="handlelanguageValue" />
+                    </div>
                 </div>
                 <div v-if="queryVoiceId === undefined">
                     <h3>输入音频</h3>
                     <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="上传音频" name="second">
                             <div class="audio-upload">
-                                <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload" :show-file-list="false"
-                                    :file-list="files" :on-remove="handleRemove" :limit="0">
+                                <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
+                                    :show-file-list="false" :file-list="files" :on-remove="handleRemove" :limit="0">
                                     <template #default>
                                         <div class="upload-button">
                                             <div class="insert"></div>
@@ -78,7 +83,8 @@
                                     <div class="noRecord"></div>
                                     停止录制
                                 </div>
-                                <div style="font-size: small;color: #6b7280;margin-left: 20px;">*您可以使用自己的文本或下面的建议文本录制您的声音。</div>
+                                <div style="font-size: small;color: #6b7280;margin-left: 20px;">
+                                    *您可以使用自己的文本或下面的建议文本录制您的声音。</div>
                                 <Store />
                             </div>
                         </el-tab-pane>
@@ -149,7 +155,7 @@
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
                                     sample.sampleTitle
-                                    }}</span>
+                                }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
                                     <Close />
@@ -179,7 +185,8 @@
                         </button>
                     </div>
                     <div class="btnssecond">
-                        <button class="next-btn" v-if="queryVoiceId === undefined" @click="toMyBankAndInsert">保存</button>
+                        <button class="next-btn" v-if="queryVoiceId === undefined"
+                            @click="toMyBankAndInsert">保存</button>
                         <button class="next-btn" v-else @click="toMyBankAndUpdate">保存</button>
                         <button class="skip" @click="toMyBank">跳过</button>
                     </div>
@@ -197,6 +204,7 @@
 import Recent from "@/components/bank/Recent.vue";
 import MyInput from "@/components/newComponent/Input.vue";
 import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
+import MySelect from '@/components/newComponent/Select.vue'
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
 const type = ref('textarea');
@@ -219,7 +227,13 @@ const addSample = () => {
         sampleIsPlaying: false,
     });
 };
-
+const languageOptions = ref([
+    { value: '1', label: '中文' },
+    { value: '2', label: 'English' },
+]);
+const handlelanguageValue = (newValue) => {
+    insertData.value.voiceLanguage = newValue;
+};
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute();
@@ -433,13 +447,14 @@ const insertData = ref({
     voiceName: '',
     voiceDescription: '',
     voiceTag: '',
+    voiceLanguage: '',
 });
 
 const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data.voiceImage;
 }
-import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService,bankUpdateSamplesService,bankInsertMySampleService } from '@/api/bank/mybank'
+import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService, bankInsertMySampleService } from '@/api/bank/mybank'
 import { createAudioloadService } from '@/api/common'
 const sendAudiosToBackend = async () => {
     const formData = new FormData();
@@ -482,7 +497,7 @@ const toMyBankAndInsert = async () => {
     const newSamples = samples.value.slice(1);
     const addData = {
         voiceId: currentVoiceId.value,
-        samples:newSamples
+        samples: newSamples
     }
     let result = await bankInsertSamplesService(addData);
 }
@@ -596,11 +611,13 @@ const toStep2AndUpdate = async () => {
     text-align: center;
     background-color: #fafafa;
 }
+
 .avatar {
     width: 100%;
     height: auto;
     object-fit: contain;
 }
+
 :deep(.el-tabs__active-bar) {
     background-color: #09090b !important;
     height: 2px;

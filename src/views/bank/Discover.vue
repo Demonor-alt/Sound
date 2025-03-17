@@ -56,7 +56,7 @@ const sortOptions = ref([
 ]);
 const languageOptions = ref([
     { value: '1', label: '所有' },
-    { value: 'ch', label: '汉语' },
+    { value: 'ch', label: '中文' },
     { value: 'en', label: 'English' },
 ]);
 const tagOptions = ref();
