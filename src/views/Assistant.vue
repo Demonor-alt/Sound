@@ -798,6 +798,10 @@ onMounted(async () => {
     background: url('../assets/icons/add.svg') no-repeat center / contain;
   }
 }
+.output-section:hover {
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
 
 .select-output-section {
   min-height: 50px;

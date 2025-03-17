@@ -359,12 +359,14 @@ const deleteService = async(id) => {
     }
 
     .close {
+        cursor: pointer;
         width: 25px;
         height: 25px;
         background: url('../../assets/icons/close.svg') no-repeat center / contain;
     }
 
     .on {
+        cursor: pointer;
         width: 25px;
         height: 25px;
         background: url('../../assets/icons/on.svg') no-repeat center / contain;

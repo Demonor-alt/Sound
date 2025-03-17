@@ -3,10 +3,10 @@
         <el-empty description="暂无数据" />
     </div>
     <el-row v-for="voice in filteredVoices" :key="voice.voiceId" class="voice-item">
-        <el-col :span="col1==='4'?4:3">
+        <el-col :span="col1 === '4' ? 4 : 3">
             <el-image style="width: 100px; height: 100px;border-radius: 15px;" :src="voice.voiceImage" fit="cover" />
         </el-col>
-        <el-col :span="col2==='20'?20:21">
+        <el-col :span="col2 === '20' ? 20 : 21">
             <div class="voice-name" @click="MoreDetail(voice.voiceId)">{{ voice.voiceName }}</div>
             <div class="voice-detail">
                 <span class="display-detail"> {{ voice.userName }}</span>
@@ -151,7 +151,7 @@ const props = defineProps({
     },
     path: {
         type: String,
-        default:'explanation'
+        default: 'explanation'
     }
 });
 import audioUrl from '@/assets/sound.m4a';
@@ -264,7 +264,7 @@ const open = (voiceId) => {
             ElNotification({
                 message: "已复制到剪贴板",
                 position: 'bottom-right',
-            });         
+            });
         })
         .catch((error) => {
             ElNotification({
@@ -433,12 +433,14 @@ const open = (voiceId) => {
     }
 
     .close {
+        cursor: pointer;
         width: 25px;
         height: 25px;
         background: url('../../assets/icons/close.svg') no-repeat center / contain;
     }
 
     .on {
+        cursor: pointer;
         width: 25px;
         height: 25px;
         background: url('../../assets/icons/on.svg') no-repeat center / contain;
@@ -447,12 +449,14 @@ const open = (voiceId) => {
 }
 
 .close-plus {
+cursor: pointer;
     width: 15px;
     height: 15px;
     background: url('../../assets/icons/close2.svg') no-repeat center / contain;
 }
 
 .on-plus {
+    cursor: pointer;
     width: 15px;
     height: 15px;
     background: url('../../assets/icons/on.svg') no-repeat center / contain;

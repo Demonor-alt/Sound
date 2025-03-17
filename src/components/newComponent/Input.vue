@@ -1,6 +1,6 @@
 <template>
     <div class="input" :class="{ focused: isFocused }">
-        <el-input :size="size" v-model="input" :rows="props.rows" :placeholder="props.placeholder"
+        <el-input :size="size" v-model="input" :rows="props.rows" :placeholder="props.placeholder" resize="none"
             :maxlength="props.maxlength" @focus="isFocused = true" @blur="isFocused = false" :type="props.type" />
     </div>
 </template>

@@ -8,7 +8,7 @@
             <el-image style=" width: 75px; height: 75px;border-radius: 10px;" :src="voice.voiceImage" fit="cover" />
         </el-col>
         <el-col :span="19">
-            <div style="font-size: 18px; font-weight: 800;padding-bottom: 10px;">{{ voice.voiceName }}</div>
+            <div style="font-size: 18px; font-weight: 800;padding-bottom: 10px;cursor: pointer;" @click="MoreDetail(voice.voiceId)">{{ voice.voiceName }}</div>
             <div class="tag">
                 <el-tag type="success" round effect="dark" style="width: 50px;font-weight: 1000;">成功</el-tag>
                 <div class="dot"></div>
@@ -26,6 +26,11 @@
 import { Clock } from '@element-plus/icons-vue';
 import { ref, onMounted } from 'vue';
 import { timeDistance } from '@/hooks/display';
+import { useRouter } from 'vue-router';
+const router = useRouter();
+const MoreDetail = (voiceId) => {
+    router.push({ path: '/detail', query: { id: voiceId } });
+}
 const voiceList = ref([
     {
         "voiceId": 70,
