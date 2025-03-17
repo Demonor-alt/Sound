@@ -99,14 +99,14 @@
           <el-tab-pane label="探索" name="first">
             <div class="action-sum">
               <div style="width: 155px;">
-                <MyInput :message="nameValue" :placeholder="placeholder" @update:message="handleMessage" />
+                <MyInput :message="nameValue" :placeholder="placeholder" @update:message="handleMessage" :size="'medium'" :background="'#FFF'" />
               </div>
               <div class="action-bar">
                 <span class="header-tip">排序</span>
-                <MySelect :options="sortOptions" :input-width="'155px'" :color="color"
+                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
                   @update:value="handleSortValue" />
                 <span class="header-tip">语言</span>
-                <MySelect :options="languageOptions" :input-width="'155px'" :color="color"
+                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
                   @update:value="handlelanguageValue" />
                 <el-popover placement="bottom" :width="250" :visible="visiblePopover">
                   <template #reference>
@@ -140,7 +140,7 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="我的语音" name="third">
-            <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage"
+            <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage" :size="'medium'" :background="'#FFF'"
               style="width: 20%;" />
             <div style="max-height: 53vh;overflow-y: auto;">
               <MySoundItem :nameValue="nameValue" :path="path"></MySoundItem>
@@ -471,6 +471,12 @@ onMounted(async () => {
   font-size: large;
   padding-bottom: 15px;
   margin-top: 10px;
+}
+.voice-selection-btn{
+    cursor: pointer;
+}
+.voice-selection-btn:hover{
+    color:#71717a;
 }
 
 .counter {
