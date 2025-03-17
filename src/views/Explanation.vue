@@ -863,6 +863,11 @@ input[type="range"] {
     padding: 2px 10px;
     border-radius: 20px;
     font-size: small;
+    display: inline-block;      /* 确保宽度生效 */
+    max-width: 50px;           /* 根据需求调整最大宽度 */
+    white-space: nowrap;        /* 禁止文本换行 */
+    overflow: hidden;           /* 隐藏溢出内容 */
+    text-overflow: ellipsis;    /* 显示省略号 */
 }
 
 .advanced-settings {

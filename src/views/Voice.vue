@@ -748,6 +748,11 @@ input[type="range"] {
   padding: 2px 10px;
   border-radius: 20px;
   font-size: small;
+  display: inline-block;
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .advanced-settings {

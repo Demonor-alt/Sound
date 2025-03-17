@@ -18,7 +18,9 @@
       </div>
       <div class="voice-selection">
         <div class="text">语音声音</div>
-        <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn" @click="createNewSound">一分钟创建</div></div>
+        <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn"
+            @click="createNewSound">一分钟创建</div>
+        </div>
       </div>
       <div class="output-section" @click="visible = true" v-if="!voice">
         <div class="add"></div>
@@ -99,15 +101,16 @@
           <el-tab-pane label="探索" name="first">
             <div class="action-sum">
               <div style="width: 155px;">
-                <MyInput :message="nameValue" :placeholder="placeholder" @update:message="handleMessage" :size="'medium'" :background="'#FFF'" />
+                <MyInput :message="nameValue" :placeholder="placeholder" @update:message="handleMessage"
+                  :size="'medium'" :background="'#FFF'" />
               </div>
               <div class="action-bar">
                 <span class="header-tip">排序</span>
-                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
-                  @update:value="handleSortValue" />
+                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'"
+                  :background="'#FFF'" @update:value="handleSortValue" />
                 <span class="header-tip">语言</span>
-                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
-                  @update:value="handlelanguageValue" />
+                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'"
+                  :background="'#FFF'" @update:value="handlelanguageValue" />
                 <el-popover placement="bottom" :width="250" :visible="visiblePopover">
                   <template #reference>
                     <el-button size="large" class="btn" @click="visiblePopover = !visiblePopover">
@@ -140,8 +143,8 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="我的语音" name="third">
-            <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage" :size="'medium'" :background="'#FFF'"
-              style="width: 20%;" />
+            <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage"
+              :size="'medium'" :background="'#FFF'" style="width: 20%;" />
             <div style="max-height: 53vh;overflow-y: auto;">
               <MySoundItem :nameValue="nameValue" :path="path"></MySoundItem>
             </div>
@@ -682,7 +685,7 @@ import { audioQueryService, audioInsertService } from '@/api/assistant';
 onMounted(async () => {
   let result = await audioQueryService();
   audios.value = result.data.map(audio => ({
-    ...audio, 
+    ...audio,
     isPlaying: false,
     currentIndex: -1
   }));
@@ -751,11 +754,13 @@ onMounted(async () => {
   padding-bottom: 15px;
   margin-top: 10px;
 }
-.voice-selection-btn{
-    cursor: pointer;
+
+.voice-selection-btn {
+  cursor: pointer;
 }
-.voice-selection-btn:hover{
-    color:#71717a;
+
+.voice-selection-btn:hover {
+  color: #71717a;
 }
 
 .counter {
@@ -806,9 +811,10 @@ onMounted(async () => {
     background: url('../assets/icons/add.svg') no-repeat center / contain;
   }
 }
+
 .output-section:hover {
-    border-color: #ccc;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-color: #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .select-output-section {
@@ -1036,6 +1042,11 @@ input[type="range"] {
   padding: 2px 10px;
   border-radius: 20px;
   font-size: small;
+  display: inline-block;
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .advanced-settings {

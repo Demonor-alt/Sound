@@ -3,8 +3,8 @@
     <div class="col1">
       <h1>课件转视频</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" action="/api/common/ppt" name="file"
-          :on-success="uploadSuccess" :limit="1">
+        <el-upload ref="upload" :auto-upload="true" action="/api/common/ppt" name="file" :on-success="uploadSuccess"
+          :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择课件</el-button>
           </template>
@@ -18,7 +18,9 @@
       </div>
       <div class="voice-selection">
         <div class="text">语音声音</div>
-        <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn" @click="createNewSound">一分钟创建</div></div>
+        <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn"
+            @click="createNewSound">一分钟创建</div>
+        </div>
       </div>
       <div class="output-section" @click="visible = true" v-if="!voice">
         <div class="add"></div>
@@ -41,7 +43,7 @@
               <div class="mydot"></div>
               <div class="tag1"> {{ voice.voiceLanguage }}</div>
               <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
-                }}
+              }}
               </div>
             </div>
             <div class="select-btns">
@@ -99,15 +101,16 @@
           <el-tab-pane label="探索" name="first">
             <div class="action-sum">
               <div style="width: 155px;">
-                <MyInput :message="nameValue" :placeholder="placeholder" @update:message="handleMessage" :size="'medium'" :background="'#FFF'" />
+                <MyInput :message="nameValue" :placeholder="placeholder" @update:message="handleMessage"
+                  :size="'medium'" :background="'#FFF'" />
               </div>
               <div class="action-bar">
                 <span class="header-tip">排序</span>
-                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
-                  @update:value="handleSortValue" />
+                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'"
+                  :background="'#FFF'" @update:value="handleSortValue" />
                 <span class="header-tip">语言</span>
-                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
-                  @update:value="handlelanguageValue" />
+                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'"
+                  :background="'#FFF'" @update:value="handlelanguageValue" />
                 <el-popover placement="bottom" :width="250" :visible="visiblePopover">
                   <template #reference>
                     <el-button size="large" class="btn" @click="visiblePopover = !visiblePopover">
@@ -140,8 +143,8 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="我的语音" name="third">
-            <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage" :size="'medium'" :background="'#FFF'"
-              style="width: 20%;" />
+            <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar" @update:message="handleMessage"
+              :size="'medium'" :background="'#FFF'" style="width: 20%;" />
             <div style="max-height: 53vh;overflow-y: auto;">
               <MySoundItem :nameValue="nameValue" :path="path"></MySoundItem>
             </div>
@@ -250,7 +253,7 @@ const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
 const uploadPPTUrl = ref();
-const uploadSuccess = (result,file) => {
+const uploadSuccess = (result, file) => {
   uploadPPTUrl.value = result.data.uploadPPTUrl;
 };
 const upload = ref();
@@ -472,11 +475,13 @@ onMounted(async () => {
   padding-bottom: 15px;
   margin-top: 10px;
 }
-.voice-selection-btn{
-    cursor: pointer;
+
+.voice-selection-btn {
+  cursor: pointer;
 }
-.voice-selection-btn:hover{
-    color:#71717a;
+
+.voice-selection-btn:hover {
+  color: #71717a;
 }
 
 .counter {
@@ -527,9 +532,10 @@ onMounted(async () => {
     background: url('../assets/icons/add.svg') no-repeat center / contain;
   }
 }
+
 .output-section:hover {
-    border-color: #ccc;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  border-color: #ccc;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .select-output-section {
@@ -757,6 +763,11 @@ input[type="range"] {
   padding: 2px 10px;
   border-radius: 20px;
   font-size: small;
+  display: inline-block;
+  max-width: 50px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .advanced-settings {
