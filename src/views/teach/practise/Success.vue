@@ -34,7 +34,7 @@ const toTeach = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f4f4f4;
+  background-color: #fafafa;
 }
 
 .title {

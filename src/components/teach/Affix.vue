@@ -58,7 +58,7 @@
                 </div>
                 <div class="boxplus" v-if="percentage === 100 && !isBoxOpen && !isRewarded"
                     :class="{ 'boxplus-jump': percentage === 100 }" @click="dialogVisible = true"></div>
-                <div class="boxopen" v-else-if="percentage === 100 && isRewarded"></div>
+                <div class="boxopen" v-else-if="percentage === 100 || isRewarded"></div>
                 <div class="boxplus" v-else></div>
                 <el-dialog v-model="dialogVisible" width="30%" align-center :show-close="false">
                     <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 10px;display: flex;flex-direction: row;gap: 5px;align-items: center">
@@ -75,9 +75,9 @@
             </div>
         </div>
         <div class="actions">
-            <el-button link style="color: #afafaf;" @click="toTeach">发音练习</el-button>
-            <el-divider direction="vertical" />
-            <el-button link style="color: #afafaf;" @click="toShop">宝石小店</el-button>
+            <div class="btn-practice" @click="toTeach">发音练习</div>
+            <el-divider direction="vertical" style="height: 25px;" />
+            <div class="btn-practice" @click="toShop">宝石小店</div>
         </div>
     </el-affix>
 </template>
@@ -130,6 +130,7 @@ const openBox = () => {
 }
 
 .america {
+    cursor: pointer;
     width: 30px;
     height: 30px;
     background: url('../../assets/pictures/america.png') no-repeat center / contain;
@@ -137,6 +138,7 @@ const openBox = () => {
 }
 
 .china {
+    cursor: pointer;
     width: 30px;
     height: 30px;
     background: url('../../assets/pictures/chinese.png') no-repeat center / contain;
@@ -156,6 +158,7 @@ const openBox = () => {
 }
 
 .gem {
+    cursor: pointer;
     width: 30px;
     height: 30px;
     background: url('../../assets/icons/gem.svg') no-repeat center / contain;
@@ -271,6 +274,13 @@ const openBox = () => {
     display: flex;
     justify-content: center;
     margin-top: 20px;
+}
+.btn-practice{
+    color: black;
+    cursor: pointer;
+}
+.btn-practice:hover{
+    color: #afafaf;
 }
 </style>
 

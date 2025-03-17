@@ -18,7 +18,7 @@
       </div>
       <div class="voice-selection">
         <div class="text">语音声音</div>
-        <div>没有模型? <el-button link @click="createNewSound">一分钟创建</el-button></div>
+        <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn" @click="createNewSound">一分钟创建</div></div>
       </div>
       <div class="output-section" @click="visible = true" v-if="!voice">
         <div class="add"></div>
@@ -712,12 +712,14 @@ onMounted(async () => {
 }
 
 .close {
+  cursor: pointer;
   width: 30px;
   height: 30px;
   background: url('../assets/icons/close.svg') no-repeat center / contain;
 }
 
 .on {
+  cursor: pointer;
   width: 30px;
   height: 30px;
   background: url('../assets/icons/on.svg') no-repeat center / contain;
