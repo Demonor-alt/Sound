@@ -232,7 +232,7 @@ const languageOptions = ref([
     { value: '2', label: 'English' },
 ]);
 const handlelanguageValue = (newValue) => {
-    insertData.value.voiceLanguage = newValue;
+    insertData.value.voiceLanguage = parseInt(newValue, 10);
 };
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
@@ -447,7 +447,7 @@ const insertData = ref({
     voiceName: '',
     voiceDescription: '',
     voiceTag: '',
-    voiceLanguage: '',
+    voiceLanguage: 1,
 });
 
 const uploadSuccess = (result) => {
