@@ -5,8 +5,8 @@ export const collectQueryService = () => {
     return request.get(`/collect/all`);
 }
 //批量删除
-export const collectBatchDeleteService = (params) => {
-    return request.delete('/collect',{ params: params })
+export const collectBatchDeleteService = (data) => {
+    return request.put('/collect',data)
 }
 //查询收藏音色所有信息
 export const collectQueryAllService = () => {
