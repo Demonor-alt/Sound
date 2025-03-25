@@ -310,7 +310,8 @@ onBeforeUnmount(() => {
 import { bankQuerySingleDetailService,bankCloneSamplesService } from '@/api/bank/mybank'
 onMounted(async () => {
     let result = await bankQuerySingleDetailService(currentVoiceId);
-    voice.value = result.data
+    voice.value = result.data[0];
+    console.log(voice.value);
 })
 import { ElNotification } from 'element-plus'
 const open = () => {

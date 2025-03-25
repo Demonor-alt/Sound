@@ -249,6 +249,7 @@ import { discoverQueryService } from '@/api/bank/discover'
 onMounted(async () => {
     let result = await discoverQueryService();
     voices.value = result.data;
+    voices.value.forEach(item => { item.voiceIsShared = false; });
 })
 import { ElNotification } from 'element-plus'
 const open = (voiceId) => {
@@ -449,7 +450,7 @@ const open = (voiceId) => {
 }
 
 .close-plus {
-cursor: pointer;
+    cursor: pointer;
     width: 15px;
     height: 15px;
     background: url('../../assets/icons/close2.svg') no-repeat center / contain;
