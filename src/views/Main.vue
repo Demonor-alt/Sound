@@ -74,8 +74,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, watchEffect } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import {
   Bell,
   MagicStick,
@@ -91,10 +91,14 @@ import {
   Folder
 } from '@element-plus/icons-vue';
 const router = useRouter();
+const route = useRoute();
 const activeMenu = ref('');
+watchEffect(() => {
+  const pathSegments = route.path.split('/');
+  activeMenu.value = pathSegments[1] || '';
+});
 function setActive(index) {
   router.push(`/${index}`);
-  activeMenu.value = index;
 }
 import { useTokenStore } from '@/stores/token'
 const { token } = useTokenStore();
