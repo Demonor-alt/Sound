@@ -80,7 +80,7 @@
                             <el-icon size="28" style="cursor: pointer;" @click="visible = true;">
                                 <RefreshRight />
                             </el-icon>
-                            <el-icon size="28" style="cursor: pointer;" @click="voice = ''">
+                            <el-icon size="28" style="cursor: pointer;" @click="toExplanation">
                                 <Close />
                             </el-icon>
                         </div>
@@ -510,6 +510,10 @@ const increase2 = () => {
 const decrease2 = () => {
     volumePercentage.value = Number((volumePercentage.value - 0.1).toFixed(1));
 };
+const toExplanation = () => {
+    router.push('/explanation');
+    voice.value = '';
+}
 const loadingDialogVisible = ref(false);
 const addNewAudio = () => {
     loadingDialogVisible.value = true;
