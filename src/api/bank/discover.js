@@ -6,7 +6,7 @@ export const discoverQueryService = () => {
 }
 //更改收藏人数
 export const discoverUpdateCollectService = (data) => {
-    return request.put("/discover/collect",data);
+    return request.put("/collect/add",data);
 }
 export const discoverTagService = () => {
     return request.get("/discover/tag");

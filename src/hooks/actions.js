@@ -35,9 +35,9 @@ export const toggleCollect = async (voice) => {
     }
     const editData = {
         voiceId: voice.voiceId,
-        voiceCollectCount: voice.voiceCollectCount,
     }
-    let result = await discoverUpdateCollectService(editData);
+  let result = await discoverUpdateCollectService(editData);
+  console.log(result);
 };
 import { ElNotification } from 'element-plus'
 export const open = (audioId) => {

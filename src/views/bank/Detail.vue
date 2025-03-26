@@ -346,56 +346,7 @@ const open = () => {
             });
         });
 };
-const toggleLike = async (voice) => {
-    if (voice.voiceIsLiked === 1) {
-        voice.voiceIsLiked = 0;
-        voice.voiceLikeCount--;
-    } else {
-        if (voice.voiceIsLiked === 2) {
-            voice.voiceIsUnliked = false;
-        }
-        voice.voiceIsLiked = 1;
-        voice.voiceLikeCount++;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-    let result = await discoverUpdateLikeService(editData);
-};
-const toggleDislike = async (voice) => {
-    if (voice.voiceIsLiked === 2) {
-        // 当前是不喜欢状态，切换为中立
-        voice.voiceIsLiked = 0;
-        voice.voiceIsUnliked = false;
-    } else {
-        // 当前不是不喜欢状态
-        if (voice.voiceIsLiked === 1) {
-            voice.voiceLikeCount--;
-            voice.voiceIsLiked = 0;
-        }
-        voice.voiceIsLiked = 2;
-        voice.voiceIsUnliked = true;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceLikeCount: voice.voiceLikeCount,
-    }
-    let result = await discoverUpdateLikeService(editData);
-};
-const toggleCollect = async (voice) => {
-    voice.voiceIsCollected = !voice.voiceIsCollected;
-    if (voice.voiceIsCollected) {
-        voice.voiceCollectCount++;
-    } else {
-        voice.voiceCollectCount--;
-    }
-    const editData = {
-        voiceId: voice.voiceId,
-        voiceCollectCount: voice.voiceCollectCount,
-    }
-    let result = await discoverUpdateCollectService(editData);
-};
+import { toggleLike, toggleDislike, toggleCollect } from '@/hooks/actions';
 const cloneVoice = async () => {
     const clone = ref({
         ...voice.value,
