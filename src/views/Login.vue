@@ -49,20 +49,20 @@ const handleLogin = async () => {
         email: email.value,
         password: password.value,
     };
-    let result = await loginService(queryData);
-    if (result.code == 0) {
-        tokenStore.setToken(result.data);
-        localStorage.setItem('user', email.value);
-        setTimeout(() => {
-            router.push('/discover');
-            isLoading.value = false;
-        }, 1000);
-    } else {
-        setTimeout(() => {
-            ElMessage.error(result.msg ? result.msg : '登录失败');
-            isLoading.value = false;
-        }, 1000);
-    }
+    // let result = await loginService(queryData);
+    // if (result.code == 0) {
+    //     tokenStore.setToken(result.data);
+    //     localStorage.setItem('user', email.value);
+    //     setTimeout(() => {
+    //         router.push('/discover');
+    //         isLoading.value = false;
+    //     }, 1000);
+    // } else {
+    //     setTimeout(() => {
+    //         ElMessage.error(result.msg ? result.msg : '登录失败');
+    //         isLoading.value = false;
+    //     }, 1000);
+    // }
 };
 </script>
 <style>
