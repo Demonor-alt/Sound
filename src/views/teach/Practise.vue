@@ -242,18 +242,18 @@ const handleOptionSelected = (option) => {
     isButtonDisabled.value = false;
     isCorrect.value = option;
 };
-import { teachExerciseQueryService } from '@/api/teach'
-const queryType = async () => {
-    const queryData = {
-        difficulty: difficulty,
-        questionType:currentIndex.value
-    }
-    let result = await teachExerciseQueryService(queryData);
-    data.value=result.data;
-}
-onMounted(() => {
-    queryType();
-})
+// import { teachExerciseQueryService } from '@/api/teach'
+// const queryType = async () => {
+//     const queryData = {
+//         difficulty: difficulty,
+//         questionType:currentIndex.value
+//     }
+//     let result = await teachExerciseQueryService(queryData);
+//     data.value=result.data;
+// }
+// onMounted(() => {
+//     queryType();
+// })
 
 watch(percentage, (newValue) => {
     if (newValue >= 100) {

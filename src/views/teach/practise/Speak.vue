@@ -72,7 +72,7 @@ const stopRecording = () => {
         recording.value = false;
     }
 };
-import { createAudioloadService } from '@/api/teach';
+// import { createAudioloadService } from '@/api/teach';
 const createRecording = async (blob) => {
     end.value = new Date();
     const newRecording = {
@@ -87,8 +87,8 @@ const createRecording = async (blob) => {
     try {
         const formData = new FormData();
         formData.append('audio', newRecording.file);
-        let result = await createAudioloadService(formData);
-        console.log('请求成功:', result);
+        // let result = await createAudioloadService(formData);
+        // console.log('请求成功:', result);
         emits('option-selected', true);
     } catch (error) {
         console.error('请求失败:', error);

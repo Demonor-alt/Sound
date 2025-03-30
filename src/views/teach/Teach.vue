@@ -99,7 +99,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const { language, showLanguage } = useLanguageStore();
 const currentLanguage = ref(showLanguage());
-import { teachQueryService } from '@/api/teach';
+// import { teachQueryService } from '@/api/teach';
 onMounted(async() => {
     if (language === '') {
         router.push('/teach/step1');
@@ -113,8 +113,8 @@ onMounted(async() => {
         } else if (language === 'cantonese') {
             languageType = 2;
         }
-        let result=await teachQueryService(languageType);
-        pronounces.value = result.data;
+        // let result=await teachQueryService(languageType);
+        // pronounces.value = result.data;
     }
 })
 const toPractise = () => {
