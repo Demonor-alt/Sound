@@ -1,5 +1,5 @@
 import axios from 'axios';
-const baseURL = '/api';
+const baseURL = '';
 const instance = axios.create({ baseURL })
 import { useTokenStore } from '@/stores/token.js'
 instance.interceptors.request.use(

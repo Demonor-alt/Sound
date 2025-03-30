@@ -155,7 +155,7 @@
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
                                     sample.sampleTitle
-                                }}</span>
+                                    }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
                                     <Close />
@@ -454,16 +454,39 @@ const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data.voiceImage;
 }
-import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService, bankInsertMySampleService } from '@/api/bank/mybank'
-import { createAudioloadService } from '@/api/common'
+import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService,bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
+import axios from 'axios';
+
 const sendAudiosToBackend = async () => {
-    const formData = new FormData();
+    // const formData = new FormData();
+    // files.value.forEach((file) => {
+    //     formData.append('files', file.file);
+    // });
+    // const testData = {
+    //     text: "1111",
+    //     text_lang: 'zh',
+    //     ref_audio_path: 'C:\\Users\\IAA\\Desktop\\11.wav',
+    //     prompt_lang: 'zh',
+    //     prompt_text: '沙漠中的仙人掌通过其特殊的结构和储水能力适应了极端干燥的环境，是适应性和生存能力的一个生动例子。'
+    // }
+    const formData2 = new FormData();
     files.value.forEach((file) => {
-        formData.append('files', file.file);
+        console.log(file);
+        formData2.append('audio_file', file);
+    });
+    // let loadResult = await uploadService(formData2);
+    console.log(formData2);
+    const formData = new FormData();
+    formData.append('text', "1111");
+    formData.append('text_lang', 'zh');
+    formData.append('prompt_lang', 'zh');
+    files.value.forEach((file) => {
+        formData.append('ref_audio', loadResult);
     });
     try {
         let result = await bankInsertMySampleService(formData);
-        let result2 = await bankInsertService(insertData.value);
+        console.log(result);
+        // let result2 = await bankInsertService(insertData.value);
         samples.value = result.data.sample;
         currentVoiceId.value = result.data.voiceId;
         console.log('音频上传成功:', samples.value, currentVoiceId.value);
@@ -512,8 +535,8 @@ const generateSample = async (index) => {
         voiceId: currentVoiceId.value,
         sampleText: samples.value[index].sampleText,
     }
-    let result = await createAudioloadService(createAudioData);
-    samples.value[index].sampleUrl = result.data.sampleUrl;
+    // let result = await createAudioloadService(createAudioData);
+    // samples.value[index].sampleUrl = result.data.sampleUrl;
 };
 onMounted(async () => {
     if (queryVoiceId !== undefined) {

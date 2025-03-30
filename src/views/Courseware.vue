@@ -415,17 +415,17 @@ const addNewAudio = () => {
     vedioSpeed: speedPercentage.value,
     vedioVolume: volumePercentage.value,
   }
-  setTimeout(async () => {
-    let result = await pptInsertService(addData);
-    addNewVedios.value = result.data;
-    loadingDialogVisible.value = false;
-  }, 2000);
+  // setTimeout(async () => {
+  //   let result = await pptInsertService(addData);
+  //   addNewVedios.value = result.data;
+  //   loadingDialogVisible.value = false;
+  // }, 2000);
 }
-import { pptQueryService, pptInsertService } from '@/api/courseware';
-onMounted(async () => {
-  let result = await pptQueryService();
-  vedios.value = result.data;
-})
+// import { pptQueryService, pptInsertService } from '@/api/courseware';
+// onMounted(async () => {
+//   let result = await pptQueryService();
+//   vedios.value = result.data;
+// })
 </script>
 
 <style scoped>

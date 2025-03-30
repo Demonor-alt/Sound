@@ -671,25 +671,25 @@ const addNewAudio = () => {
     vedioSpeed: speedPercentage.value,
     vedioVolume: volumePercentage.value,
   }
-  setTimeout(async () => {
-    let result = await audioInsertService(addData);
-    addNewAudios.value = {
-      ...result.data,
-      isPlaying: false,
-      currentIndex: -1
-    };
-    loadingDialogVisible.value = false;
-  }, 2000);
+  // setTimeout(async () => {
+  //   let result = await audioInsertService(addData);
+  //   addNewAudios.value = {
+  //     ...result.data,
+  //     isPlaying: false,
+  //     currentIndex: -1
+  //   };
+  //   loadingDialogVisible.value = false;
+  // }, 2000);
 }
-import { audioQueryService, audioInsertService } from '@/api/assistant';
-onMounted(async () => {
-  let result = await audioQueryService();
-  audios.value = result.data.map(audio => ({
-    ...audio,
-    isPlaying: false,
-    currentIndex: -1
-  }));
-})
+// import { audioQueryService, audioInsertService } from '@/api/assistant';
+// onMounted(async () => {
+//   let result = await audioQueryService();
+//   audios.value = result.data.map(audio => ({
+//     ...audio,
+//     isPlaying: false,
+//     currentIndex: -1
+//   }));
+// })
 </script>
 
 <style scoped>
