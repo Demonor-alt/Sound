@@ -353,9 +353,19 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
     queryById(currentId.value);
 });
 import { bankQueryDetailService } from '@/api/bank/mybank'
+import { voiceQueryToAudioService } from '@/api/explanation'
 const queryById = async (id) => {
     let result = await bankQueryDetailService(id);
     voice.value = result.data[0];
+    response.value = await voiceQueryToAudioService(id);
+     // 构造 Blob
+     const byteCharacters = atob(data);
+    const byteArrays = new Uint8Array(byteCharacters.length);
+    
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteArrays[i] = byteCharacters.charCodeAt(i);
+    }
+    const blob = new Blob([byteArrays], { type: fileType });
 }
 onMounted(async () => {
     if (currentVoiceId) {
