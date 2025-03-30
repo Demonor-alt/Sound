@@ -486,9 +486,9 @@ const sendAudiosToBackend = async () => {
     try {
         let result = await bankInsertMySampleService(formData);
         console.log(result);
-        // let result2 = await bankInsertService(insertData.value);
+        let result2 = await bankInsertService(insertData.value);
+        currentVoiceId.value = result2.data.voiceId;
         samples.value = result.data.sample;
-        currentVoiceId.value = result.data.voiceId;
         console.log('音频上传成功:', samples.value, currentVoiceId.value);
     } catch (error) {
         console.error('音频上传失败:', error);
@@ -497,9 +497,6 @@ const sendAudiosToBackend = async () => {
 const createAction = async () => {
     // 发送音频数据到后端
     await sendAudiosToBackend();
-
-    // 清除所有录音记录
-    files.value = [];
     // 清除所有音频实例
     Object.keys(audioInstances).forEach(key => {
         audioInstances[key].pause();
@@ -517,10 +514,9 @@ const toMyBank = () => {
 const toMyBankAndInsert = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
-    const newSamples = samples.value.slice(1);
     const addData = {
         voiceId: currentVoiceId.value,
-        samples: newSamples
+        samples: samples.value
     }
     let result = await bankInsertSamplesService(addData);
 }
