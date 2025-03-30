@@ -524,18 +524,18 @@ const addNewAudio = () => {
         audioSpeed: speedPercentage.value,
         audioVolume: volumePercentage.value,
     }
-    setTimeout(async () => {
-        let result = await audioInsertService(addData);
-        addNewAudios.value = result.data;
-        loadingDialogVisible.value = false;
-    }, 2000);
+    // setTimeout(async () => {
+    //     let result = await audioInsertService(addData);
+    //     addNewAudios.value = result.data;
+    //     loadingDialogVisible.value = false;
+    // }, 2000);
 }
 import { open,downloadAudio } from '@/hooks/actions';
-import { audioQueryService, audioInsertService } from '@/api/explanation'
-onMounted(async () => {
-    let result = await audioQueryService();
-    audios.value = result.data;
-})
+// import { audioQueryService, audioInsertService } from '@/api/explanation'
+// onMounted(async () => {
+//     let result = await audioQueryService();
+//     audios.value = result.data;
+// })
 </script>
 
 <style scoped>

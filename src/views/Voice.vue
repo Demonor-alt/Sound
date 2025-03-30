@@ -403,17 +403,17 @@ const addNewAudio = () => {
     vedioSpeed: speedPercentage.value,
     vedioVolume: volumePercentage.value,
   }
-  setTimeout(async () => {
-    let result = await voiceInsertService(addData);
-    addNewVedios.value = result.data;
-    loadingDialogVisible.value = false;
-  }, 2000);
+  // setTimeout(async () => {
+  //   let result = await voiceInsertService(addData);
+  //   addNewVedios.value = result.data;
+  //   loadingDialogVisible.value = false;
+  // }, 2000);
 }
-import { voiceQueryService, voiceInsertService } from '@/api/voice';
-onMounted(async () => {
-  let result = await voiceQueryService();
-  vedios.value = result.data;
-})
+// import { voiceQueryService, voiceInsertService } from '@/api/voice';
+// onMounted(async () => {
+//   let result = await voiceQueryService();
+//   vedios.value = result.data;
+// })
 </script>
 
 <style scoped>
