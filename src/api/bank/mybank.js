@@ -39,8 +39,10 @@ export const bankCloneSamplesService = (data) => {
 
 
 //新增（音频）
-export const bankInsertMySampleService = (params) => {
-    return request.get('/tts',{params:params});
+export const bankInsertMySampleService = (data) => {
+    return request.post('/api2/tts',data,{
+        responseType: 'stream' 
+      });
 }
 
 //上传音频
