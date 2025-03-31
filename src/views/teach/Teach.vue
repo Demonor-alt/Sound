@@ -38,11 +38,14 @@ import Myaffix from '@/components/teach/Affix.vue';
 import { useLanguageStore } from '@/stores/language';
 import { onMounted, ref } from 'vue';
 import audioUrl from '@/assets/sound.m4a';
+import hotUrl from '@/assets/teach/audio/hot.mp3';
+import foodUrl from '@/assets/teach/audio/food.mp3';
+import goUrl from '@/assets/teach/audio/go.mp3';
 const pronounces = ref([
     {
         pronounceType: '元音',
         members: [
-            { memberSymbol: 'ɑ', memberWord: 'hot', memberUrl: '' },
+            { memberSymbol: 'ɑ', memberWord: 'hot', memberUrl: hotUrl },
             { memberSymbol: 'æ', memberWord: 'cat', memberUrl: '' },
             { memberSymbol: 'ʌ', memberWord: 'but', memberUrl: '' },
             { memberSymbol: 'ɛ', memberWord: 'bed', memberUrl: '' },
@@ -53,7 +56,7 @@ const pronounces = ref([
             { memberSymbol: 'ə', memberWord: 'about', memberUrl: '' },
             { memberSymbol: 'oʊ', memberWord: 'boat', memberUrl: '' },
             { memberSymbol: 'ʊ', memberWord: 'foot', memberUrl: '' },
-            { memberSymbol: 'u', memberWord: 'food', memberUrl: '' },
+            { memberSymbol: 'u', memberWord: 'food', memberUrl: foodUrl },
             { memberSymbol: 'aʊ', memberWord: 'cow', memberUrl: '' },
             { memberSymbol: 'aɪ', memberWord: 'time', memberUrl: '' },
             { memberSymbol: 'ɔɪ', memberWord: 'boy', memberUrl: '' }
@@ -66,7 +69,7 @@ const pronounces = ref([
             { memberSymbol: 'tʃ', memberWord: 'chair', memberUrl: '' },
             { memberSymbol: 'd', memberWord: 'day', memberUrl: '' },
             { memberSymbol: 'f', memberWord: 'fish', memberUrl: '' },
-            { memberSymbol: 'g', memberWord: 'go', memberUrl: '' },
+            { memberSymbol: 'g', memberWord: 'go', memberUrl: goUrl },
             { memberSymbol: 'h', memberWord: 'home', memberUrl: '' },
             { memberSymbol: 'dʒ', memberWord: 'job', memberUrl: '' },
             { memberSymbol: 'k', memberWord: 'key', memberUrl: '' },
