@@ -16,9 +16,9 @@
     </div>
     <h3>这两个人说的是…</h3>
     <div class="items">
-        <div class="voice-item" :class="{ selected: selectedOption === 'same' }" @click="selectOption('same')">同一个词
+        <div class="voice-item" :class="{ selected: selectedOption === 'true' }" @click="selectOption('true')">同一个词
         </div>
-        <div class="voice-item" :class="{ selected: selectedOption === 'notsame' }" @click="selectOption('notsame')">
+        <div class="voice-item" :class="{ selected: selectedOption === 'false' }" @click="selectOption('false')">
             两个不同的词</div>
     </div>
 </template>
@@ -51,7 +51,8 @@ const playAudio = () => {
 
 const selectOption = (option) => {
     selectedOption.value = option;
-    if (option === 'same') {
+    console.log(props.dataItem);
+    if (JSON.parse(option) == props.dataItem.answer) {
         emits('option-selected', true);
         return;
     }
@@ -72,10 +73,6 @@ onMounted(() => {
     onBeforeUnmount(() => {
         window.removeEventListener('clear-selection', handleClearSelection);
     });
-});
-
-watch(() => props.shouldShowWord, (newValue, oldValue) => {
-    console.log(`shouldShowWord 从 ${oldValue} 变为 ${newValue}`);
 });
 </script>
 

@@ -142,7 +142,7 @@ import falseUrl from '@/assets/teach/audio/false.mp3';
 const trueAudio = new Audio(trueUrl);
 const falseAudio = new Audio(falseUrl);
 const componentList = [MyListen, MyCompare, MySpeak]
-// const componentList = [MySpeak]
+//  const componentList = [MyCompare]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0);
@@ -214,11 +214,11 @@ const data = ref([
         options: [
             {
                 practiseWord: 'tell',
-                audioURL: tellUrl,
+                audioURL: tellUrlW,
             },
             {
                 practiseWord: 'tall',
-                audioURL: tallUrlW,
+                audioURL: tallUrl,
             },
         ],
         answer: false,
@@ -290,10 +290,11 @@ const toggleComponent = () => {
 const changeComponent = () => {
     const event = new Event('clear-selection');
     window.dispatchEvent(event);
-    if (dataIndex.value < 4) {
+    if (dataIndex.value % 4 !== 0) {
         dataIndex.value++;
     } else {
-        dataIndex.value = 1;
+        // dataIndex.value = 1;
+        dataIndex.value++;
         currentIndex.value = (currentIndex.value + 1) % componentList.length;
     }
     isButtonDisabled.value = true;
@@ -314,6 +315,7 @@ const changeComponent = () => {
 }
 const isCorrect = ref(false);
 const handleOptionSelected = (option) => {
+    console.log("子组件", option);
     isButtonDisabled.value = false;
     isCorrect.value = option;
 };
