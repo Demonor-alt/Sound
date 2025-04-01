@@ -315,7 +315,6 @@ const changeComponent = () => {
 }
 const isCorrect = ref(false);
 const handleOptionSelected = (option) => {
-    console.log("子组件", option);
     isButtonDisabled.value = false;
     isCorrect.value = option;
 };

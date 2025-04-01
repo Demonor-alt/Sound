@@ -1,13 +1,13 @@
 <template>
     <h1>听音辩词</h1>
     <div class="content">
-        <div class="audiodisplay top-audiodisplay"  @click="playAudio(audioRef1)">
+        <div class="audiodisplay top-audiodisplay" @click="playAudio(audioRef1)">
             <div class="audioplay"></div>
             <div v-if="shouldShowWord">{{ dataItem.options[0].practiseWord }}</div>
             <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
             <audio ref="audioRef1" :src="dataItem.options[0].audioURL" preload="auto"></audio>
         </div>
-        <div class="audiodisplay bottom-audiodisplay"  @click="playAudio(audioRef2)">
+        <div class="audiodisplay bottom-audiodisplay" @click="playAudio(audioRef2)">
             <div class="audioplay"></div>
             <div v-if="shouldShowWord">{{ dataItem.options[1].practiseWord }}</div>
             <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
@@ -45,7 +45,7 @@ const selectedOption = ref(null);
 
 // 合并事件定义
 const emits = defineEmits(['option-selected', 'clear-selection']);
-
+console.log(props.dataItem);
 const playAudio = (audio) => {
     if (audio.value) {
         audio.value.play();
@@ -54,7 +54,6 @@ const playAudio = (audio) => {
 
 const selectOption = (option) => {
     selectedOption.value = option;
-    console.log(props.dataItem);
     if (JSON.parse(option) == props.dataItem.answer) {
         emits('option-selected', true);
         return;
@@ -76,7 +75,9 @@ onMounted(() => {
 
     playAudio(audioRef1);
     audioRef1.value.addEventListener('ended', () => {
-        playAudio(audioRef2);
+        setTimeout(() => {
+            playAudio(audioRef2);
+        }, 500);
     });
 
     onBeforeUnmount(() => {
@@ -109,6 +110,7 @@ onMounted(() => {
     padding: 20px 40px;
     border: 2px solid #e5e5e5;
 }
+
 .top-audiodisplay {
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;

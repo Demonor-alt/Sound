@@ -6,48 +6,36 @@
         <div class="items">
             <div v-for="option in dataItem.options" :key="option">
                 <div class="voice-item" :class="{ 'selected': selectedOption === option }"
-                    @click="selectOption(option,dataItem.answer)">{{ option }}</div>
+                    @click="selectOption(option, dataItem.answer)">{{ option }}</div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted } from 'vue';
-
+import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted, watch } from 'vue';
 const props = defineProps({
     dataItem: {
         type: Object,
         default: () => ({})
     }
 });
-
 const audioRef = ref(null);
 const selectedOption = ref(null);
-
-// 合并事件定义
 const emits = defineEmits(['option-selected', 'clear-selection']);
-
 const playAudio = () => {
     if (audioRef.value) {
         audioRef.value.play();
     }
 };
-
-const selectOption = (option,answer) => {
+const selectOption = (option, answer) => {
     selectedOption.value = option;
-    emits('option-selected', option===answer);
+    emits('option-selected', option === answer);
 };
-// 新增：清空选择状态的方法
-const clearSelection = () => {
-    selectedOption.value = null;
-};
-
 // 新增：监听父组件的清空事件
 onMounted(() => {
-    playAudio(); 
     const handleClearSelection = () => {
-        clearSelection();
+        selectedOption.value = null;
     };
     // 监听自定义事件
     window.addEventListener('clear-selection', handleClearSelection);
@@ -55,6 +43,9 @@ onMounted(() => {
         window.removeEventListener('clear-selection', handleClearSelection);
     });
 });
+watch(() => props.dataItem, () => {
+        playAudio();
+}, { deep: true });
 </script>
 
 <style scoped>
@@ -65,6 +56,7 @@ onMounted(() => {
     gap: 10px;
     align-items: end;
 }
+
 .blueplay {
     width: 130px;
     height: 130px;
@@ -72,6 +64,7 @@ onMounted(() => {
     background: url('../../../assets/icons/blueplay.svg') no-repeat center / contain;
     cursor: pointer;
 }
+
 .voice-item {
     margin: 10px;
     padding: 10px;
@@ -100,7 +93,8 @@ onMounted(() => {
     border-color: #84d8ff;
     background-color: #ddf4ff !important;
 }
-.content{
+
+.content {
     margin-top: 12%;
     display: flex;
     flex-direction: column;
