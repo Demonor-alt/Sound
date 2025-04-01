@@ -184,6 +184,58 @@ const data = ref([
         options: ['pet', 'pot'],
         answer: 'pot'
     },
+    {
+        options: [
+            {
+                practiseWord: 'tall',
+                audioURL: tallUrl,
+            },
+            {
+                practiseWord: 'tall',
+                audioURL: tallUrlW,
+            },
+        ],
+        answer: true,
+    },
+    {
+        options: [
+            {
+                practiseWord: 'pet',
+                audioURL: petUrlW,
+            },
+            {
+                practiseWord: 'pot',
+                audioURL: potUrl,
+            },
+        ],
+        answer: false,
+    },
+    {
+        options: [
+            {
+                practiseWord: 'tell',
+                audioURL: tellUrl,
+            },
+            {
+                practiseWord: 'tall',
+                audioURL: tallUrlW,
+            },
+        ],
+        answer: false,
+    },
+    {
+        options: [
+            {
+                practiseWord: 'pot',
+                audioURL: potUrlW,
+            },
+            {
+                practiseWord: 'pot',
+                audioURL: potUrl,
+            },
+        ],
+        answer: true,
+    }
 ])
 
 //第二种题型
@@ -231,14 +283,14 @@ const toggleComponent = () => {
         trueAudio.play();
     } else {
         isAnswerCorrect.value = 0;
-        falseAudio.play(); 
+        falseAudio.play();
     }
     shouldShowWord.value = !shouldShowWord.value;
 }
 const changeComponent = () => {
     const event = new Event('clear-selection');
     window.dispatchEvent(event);
-    if (dataIndex.value < data.value.length) {
+    if (dataIndex.value < 4) {
         dataIndex.value++;
     } else {
         dataIndex.value = 1;
