@@ -129,6 +129,17 @@ import MyListen from './practise/Listen.vue'
 import MyCompare from './practise/Compare.vue'
 import MySpeak from './practise/Speak.vue'
 import audioUrl from '@/assets/sound.m4a';
+import tallUrl from '@/assets/teach/audio/tall.mp3';
+import tallUrlW from '@/assets/teach/audio/tall-w.mp3';
+import tellUrl from '@/assets/teach/audio/tell.mp3';
+import tellUrlW from '@/assets/teach/audio/tell-w.mp3';
+import petUrl from '@/assets/teach/audio/pet.mp3';
+import petUrlW from '@/assets/teach/audio/pet-w.mp3';
+import potUrl from '@/assets/teach/audio/pot.mp3';
+import potUrlW from '@/assets/teach/audio/pot-w.mp3';
+import trueUrl from '@/assets/teach/audio/true.mp3';
+import falseUrl from '@/assets/teach/audio/false.mp3';
+
 const componentList = [MyListen, MyCompare, MySpeak]
 // const componentList = [MySpeak]
 const isButtonDisabled = ref(true);
@@ -153,15 +164,25 @@ const checkedCorrectOptions = ref([]);
 const checkedErroeOptions = ref([]);
 const data = ref([
     {
-        audioURL: audioUrl,
-        options: ['1', '2'],
-        answer: '1'
+        audioURL: tallUrlW,
+        options: ['tall', 'tell'],
+        answer: 'tall'
     },
     {
-        audioURL: audioUrl,
-        options: ['3', '4'],
-        answer: '3'
-    }
+        audioURL: petUrl,
+        options: ['pet', 'pot'],
+        answer: 'pet'
+    },
+    {
+        audioURL: tellUrl,
+        options: ['tall', 'tell'],
+        answer: 'tell'
+    },
+    {
+        audioURL: potUrlW,
+        options: ['pet', 'pot'],
+        answer: 'pot'
+    },
 ])
 
 //第二种题型
@@ -233,7 +254,7 @@ const changeComponent = () => {
     // } else {
     //     percentage.value += 100 / 21;
     // }
-    percentage.value += 100;
+    percentage.value += 10;
     isAnswerCorrect.value = null;
     shouldShowWord.value = !shouldShowWord.value;
 }
