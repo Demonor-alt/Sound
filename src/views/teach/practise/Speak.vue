@@ -94,6 +94,20 @@ const createRecording = async (blob) => {
         console.error('请求失败:', error);
     }
 };
+onMounted(() => {
+    playAudio();
+});
+watch(() => props.dataItem, async () => {
+    if (audioRef.value) {
+        audioRef.value.src = props.dataItem.audioURL;
+        try {
+            await audioRef.value.load();
+            await audioRef.value.play();
+        } catch (error) {
+            console.error('音频播放失败:', error);
+        }
+    }
+}, { deep: true });
 </script>
 
 <style scoped>
