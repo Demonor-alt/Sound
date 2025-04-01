@@ -14,7 +14,7 @@
             <audio ref="audioRef" :src="dataItem.options[1].audioURL" preload="auto"></audio>
         </div>
     </div>
-    <h3>你听到的词是？</h3>
+    <h3>这两个人说的是…</h3>
     <div class="items">
         <div class="voice-item" :class="{ selected: selectedOption === 'same' }" @click="selectOption('same')">同一个词
         </div>

@@ -243,7 +243,6 @@ const changeComponent = () => {
     } else {
         dataIndex.value = 1;
         currentIndex.value = (currentIndex.value + 1) % componentList.length;
-        queryType();
     }
     isButtonDisabled.value = true;
     // if (difficulty === 0) {
