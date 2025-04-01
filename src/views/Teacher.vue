@@ -243,54 +243,34 @@ const sendAudiosToBackend = async () => {
 
   console.log('最终 FormData 内容:', Array.from(formData.entries()));
 
-  try {
-    // 创建MediaSource对象
-    const mediaSource = new MediaSource();
-    audioSrc.value = URL.createObjectURL(mediaSource);
+  const audioElement = ref(null);
+  const audioContext = new AudioContext();
+  const sourceNode = ref(null);
+  // 处理流式接收和播放音频
 
-    mediaSource.addEventListener('sourceopen', async () => {
-      try {
-        // 添加SourceBuffer（根据实际返回的音频格式设置MIME类型）
-        const sourceBuffer = mediaSource.addSourceBuffer('audio/mpeg');
+  const response = await fetch("/api2/tts", { method: 'POST' ,body:formData});
+  const reader = response.body.getReader();
+  const audioBufferArray = [];
 
-        const response = await fetch('/api2/tts', {
-          method: 'POST',
-          body: formData
-          // 如果有需要可以添加headers
-        });
-        console.log(response);
-        const reader = response.body.getReader();
+  // 读取流并拼接数据
+  const processStream = async () => {
+    const { done, value } = await reader.read();
+    if (done) {
+      // 当流结束时处理音频
+      const audioBuffer = await audioContext.decodeAudioData(new Uint8Array(audioBufferArray).buffer);
+      const audioSource = audioContext.createBufferSource();
+      audioSource.buffer = audioBuffer;
+      audioSource.connect(audioContext.destination);
+      audioSource.start();
+      return;
+    }
 
-        // 递归读取数据流
-        const pump = async () => {
-          const { done, value } = await reader.read();
-          if (done) {
-            mediaSource.endOfStream();
-            return;
-          }
+    // 将接收到的音频数据拼接到数组中
+    audioBufferArray.push(...value);
+    processStream();
+  };
+  processStream();
 
-          // 等待sourceBuffer准备好
-          if (sourceBuffer.updating) {
-            await new Promise(resolve =>
-              sourceBuffer.addEventListener('updateend', resolve, { once: true })
-            );
-          }
-
-          // 追加新的数据块
-          sourceBuffer.appendBuffer(value);
-          pump();
-        };
-
-        pump();
-      } catch (e) {
-        console.error('流数据处理失败:', e);
-        mediaSource.endOfStream();
-      }
-    });
-  } catch (error) {
-    console.error('请求失败:', error);
-    ElMessage.error('音频流获取失败');
-  }
 };
 const createAction = async () => {
   // 发送音频数据到后端

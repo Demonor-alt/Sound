@@ -45,6 +45,7 @@ const clearSelection = () => {
 
 // 新增：监听父组件的清空事件
 onMounted(() => {
+    playAudio(); 
     const handleClearSelection = () => {
         clearSelection();
     };

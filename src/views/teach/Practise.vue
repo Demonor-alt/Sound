@@ -353,9 +353,8 @@ watch(percentage, (newValue) => {
     padding-right: 10%;
     padding-bottom: 40px;
     flex-grow: 0;
-    height: 15.3vh;
-    border-radius: 6px;
-    margin: -5px -20px -200px -20px;
+    height: 16.2vh;
+    margin: -5px -20.3px -200px -20.3px;
 }
 
 .myicon {
