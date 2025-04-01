@@ -1,13 +1,13 @@
 <template>
     <h1>听音辩词</h1>
     <div class="content">
-        <div class="audiodisplay top-audiodisplay" @click="playAudio(audioRef1)">
+        <div class="audiodisplay top-audiodisplay" @click="open1">
             <div class="audioplay"></div>
             <div v-if="shouldShowWord">{{ dataItem.options[0].practiseWord }}</div>
             <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
             <audio ref="audioRef1" :src="dataItem.options[0].audioURL" preload="auto"></audio>
         </div>
-        <div class="audiodisplay bottom-audiodisplay" @click="playAudio(audioRef2)">
+        <div class="audiodisplay bottom-audiodisplay" @click="open2">
             <div class="audioplay"></div>
             <div v-if="shouldShowWord">{{ dataItem.options[1].practiseWord }}</div>
             <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted } from 'vue';
+import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted, watch } from 'vue';
 
 const props = defineProps({
     dataItem: {
@@ -45,7 +45,6 @@ const selectedOption = ref(null);
 
 // 合并事件定义
 const emits = defineEmits(['option-selected', 'clear-selection']);
-console.log(props.dataItem);
 const playAudio = (audio) => {
     if (audio.value) {
         audio.value.play();
@@ -75,15 +74,49 @@ onMounted(() => {
 
     playAudio(audioRef1);
     audioRef1.value.addEventListener('ended', () => {
-        setTimeout(() => {
-            playAudio(audioRef2);
-        }, 500);
+        onAudio1Ended();
     });
 
     onBeforeUnmount(() => {
         window.removeEventListener('clear-selection', handleClearSelection);
     });
 });
+const open1=()=>{
+    playAudio(audioRef1);
+}
+const open2=()=>{
+    playAudio(audioRef2);
+}
+watch(() => props.dataItem, async () => {
+    if (audioRef1.value) {
+        audioRef1.value.src = props.dataItem.options[0].audioURL;
+        try {
+            await audioRef1.value.load();
+            // 移除之前的 ended 事件监听器
+            audioRef1.value.removeEventListener('ended', onAudio1Ended);
+            // 播放 audioRef1
+            playAudio(audioRef1);
+            // 添加新的 ended 事件监听器
+            audioRef1.value.addEventListener('ended', onAudio1Ended);
+        } catch (error) {
+            console.error('音频 1 播放失败:', error);
+        }
+    }
+    if (audioRef2.value) {
+        audioRef2.value.src = props.dataItem.options[1].audioURL;
+        try {
+            await audioRef2.value.load();
+        } catch (error) {
+            console.error('音频 2 加载失败:', error);
+        }
+    }
+}, { deep: true });
+
+const onAudio1Ended = () => {
+    setTimeout(() => {
+        playAudio(audioRef2);
+    }, 500);
+};
 </script>
 <style scoped>
 .items {
