@@ -1,17 +1,17 @@
 <template>
     <h1>听音辩词</h1>
     <div class="content">
-        <div class="audiodisplay top-audiodisplay"  @click="playAudio">
+        <div class="audiodisplay top-audiodisplay"  @click="playAudio(audioRef1)">
             <div class="audioplay"></div>
             <div v-if="shouldShowWord">{{ dataItem.options[0].practiseWord }}</div>
             <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
-            <audio ref="audioRef" :src="dataItem.options[0].audioURL" preload="auto"></audio>
+            <audio ref="audioRef1" :src="dataItem.options[0].audioURL" preload="auto"></audio>
         </div>
-        <div class="audiodisplay bottom-audiodisplay"  @click="playAudio">
+        <div class="audiodisplay bottom-audiodisplay"  @click="playAudio(audioRef2)">
             <div class="audioplay"></div>
             <div v-if="shouldShowWord">{{ dataItem.options[1].practiseWord }}</div>
             <div v-else style="border-bottom: 2px solid #e5e5e5; width: 50%; position: relative; top: 20px;"></div>
-            <audio ref="audioRef" :src="dataItem.options[1].audioURL" preload="auto"></audio>
+            <audio ref="audioRef2" :src="dataItem.options[1].audioURL" preload="auto"></audio>
         </div>
     </div>
     <h3>这两个人说的是…</h3>
@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted, watch } from 'vue';
+import { defineProps, ref, defineEmits, onBeforeUnmount, onMounted } from 'vue';
 
 const props = defineProps({
     dataItem: {
@@ -37,15 +37,18 @@ const props = defineProps({
     }
 });
 
-const audioRef = ref(null);
+// 修改为对 <audio> 元素的引用
+const audioRef1 = ref(null);
+const audioRef2 = ref(null);
+
 const selectedOption = ref(null);
 
 // 合并事件定义
 const emits = defineEmits(['option-selected', 'clear-selection']);
 
-const playAudio = () => {
-    if (audioRef.value) {
-        audioRef.value.play();
+const playAudio = (audio) => {
+    if (audio.value) {
+        audio.value.play();
     }
 };
 
@@ -70,12 +73,17 @@ onMounted(() => {
     };
     // 监听自定义事件
     window.addEventListener('clear-selection', handleClearSelection);
+
+    playAudio(audioRef1);
+    audioRef1.value.addEventListener('ended', () => {
+        playAudio(audioRef2);
+    });
+
     onBeforeUnmount(() => {
         window.removeEventListener('clear-selection', handleClearSelection);
     });
 });
 </script>
-
 <style scoped>
 .items {
     display: flex;
