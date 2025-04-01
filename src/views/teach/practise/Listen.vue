@@ -34,6 +34,7 @@ const selectOption = (option, answer) => {
 };
 // 新增：监听父组件的清空事件
 onMounted(() => {
+    playAudio();
     const handleClearSelection = () => {
         selectedOption.value = null;
     };
@@ -43,8 +44,16 @@ onMounted(() => {
         window.removeEventListener('clear-selection', handleClearSelection);
     });
 });
-watch(() => props.dataItem, () => {
-        playAudio();
+watch(() => props.dataItem, async () => {
+    if (audioRef.value) {
+        audioRef.value.src = props.dataItem.audioURL;
+        try {
+            await audioRef.value.load();
+            await audioRef.value.play();
+        } catch (error) {
+            console.error('音频播放失败:', error);
+        }
+    }
 }, { deep: true });
 </script>
 
