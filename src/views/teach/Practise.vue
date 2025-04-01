@@ -139,7 +139,8 @@ import potUrl from '@/assets/teach/audio/pot.mp3';
 import potUrlW from '@/assets/teach/audio/pot-w.mp3';
 import trueUrl from '@/assets/teach/audio/true.mp3';
 import falseUrl from '@/assets/teach/audio/false.mp3';
-
+const trueAudio = new Audio(trueUrl);
+const falseAudio = new Audio(falseUrl);
 const componentList = [MyListen, MyCompare, MySpeak]
 // const componentList = [MySpeak]
 const isButtonDisabled = ref(true);
@@ -227,8 +228,10 @@ const dataIndex = ref(1);
 const toggleComponent = () => {
     if (isCorrect.value) {
         isAnswerCorrect.value = 1;
+        trueAudio.play();
     } else {
         isAnswerCorrect.value = 0;
+        falseAudio.play(); 
     }
     shouldShowWord.value = !shouldShowWord.value;
 }
@@ -299,7 +302,7 @@ watch(percentage, (newValue) => {
 
 .demo-container {
     margin: 0 30%;
-    height: 60vh;
+    height: 59vh;
 }
 
 ::v-deep .el-slider__button {
