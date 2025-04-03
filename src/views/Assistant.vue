@@ -278,7 +278,7 @@
           <div class="text-container">
             <span v-for="(sentence, sIndex) in addNewAudios.sentences" :key="sIndex"
               :class="{ 'highlight': addNewAudios.currentIndex === sIndex }" @click="seekTo2(sIndex)">
-              {{ sentence.text }}&nbsp;
+              <span v-html="sentence.text.replace(/\n/g, '<br>')"></span>&nbsp;
             </span>
           </div>
         </div>
