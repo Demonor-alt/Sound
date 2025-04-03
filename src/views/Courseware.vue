@@ -347,7 +347,7 @@ const visiblePopover = ref(false);
 //     voiceShareCount: 11,
 // });
 const voice = ref();
-import video from '@/assets/video.mp4'
+import video from '@/assets/courseware/course.mp4'
 // const addNewVedios = ref({
 //   vedioId: 1,
 //   vedioURL: video
@@ -406,6 +406,13 @@ const addNewAudio = () => {
     vedioSpeed: speedPercentage.value,
     vedioVolume: volumePercentage.value,
   }
+  setTimeout(async () => {
+    addNewVedios.value = {
+      vedioId: 1,
+      vedioURL: video
+    }
+    loadingDialogVisible.value = false;
+  }, 2000);
   // setTimeout(async () => {
   //   let result = await pptInsertService(addData);
   //   addNewVedios.value = result.data;
