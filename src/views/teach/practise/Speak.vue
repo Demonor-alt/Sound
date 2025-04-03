@@ -2,13 +2,15 @@
     <h1>朗读下面的内容</h1>
     <div class="header">
         <div class="toaudio" @click="playAudio">
-        <div class="audioplay"></div>
-        <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
-        <div>{{ dataItem.practiseWord }}</div>
+            <div class="audioplay"></div>
+            <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
+            <div>{{ dataItem.practiseWord }}</div>
+        </div>
     </div>
-    </div>
+    <div ref="waveformRef"></div>
     <div class="content">
-        <div v-if="!recording" class="voice-item" style="cursor: pointer;" @click="startRecording">
+        <div v-if="!isRecording" class="voice-item" style="cursor: pointer;"
+            @click="startRecording">
             <div class="record"></div>
             点击并开始录音
         </div>
@@ -35,65 +37,8 @@ const playAudio = () => {
         audioRef.value.play();
     }
 };
-const mediaRecorder = ref(null);
-const audioChunks = ref([]);
-const start = ref();
-const end = ref();
-const recording = ref(false);
-const files = ref([]);
+const isRecording = ref(false);
 
-const startRecording = async () => {
-    start.value = new Date();
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder.value = new MediaRecorder(stream);
-        audioChunks.value = [];
-        mediaRecorder.value.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                audioChunks.value.push(event.data);
-            }
-        };
-        mediaRecorder.value.start();
-        recording.value = true;
-        mediaRecorder.value.onstop = () => {
-            const audioBlob = new Blob(audioChunks.value, { type: "audio/mp3" });
-            recording.value = false;
-            stream.getTracks().forEach(track => track.stop());
-            createRecording(audioBlob);
-        };
-    } catch (error) {
-        console.error("获取音频流失败：", error);
-    }
-};
-
-const stopRecording = () => {
-    if (mediaRecorder.value) {
-        mediaRecorder.value.stop();
-        recording.value = false;
-    }
-};
-// import { createAudioloadService } from '@/api/teach';
-const createRecording = async (blob) => {
-    end.value = new Date();
-    const newRecording = {
-        name: `record-${files.value.length + 1}.mp3`,
-        url: URL.createObjectURL(blob),
-        blob: blob,
-        file: new File([blob], `record-${files.value.length + 1}.mp3`, { type: 'audio/mp3' })
-    };
-    files.value.unshift(newRecording);
-
-    // 发送请求
-    try {
-        const formData = new FormData();
-        formData.append('audio', newRecording.file);
-        // let result = await createAudioloadService(formData);
-        // console.log('请求成功:', result);
-        emits('option-selected', true);
-    } catch (error) {
-        console.error('请求失败:', error);
-    }
-};
 onMounted(() => {
     playAudio();
 });
@@ -108,22 +53,75 @@ watch(() => props.dataItem, async () => {
         }
     }
 }, { deep: true });
+import WaveSurfer from 'wavesurfer.js'
+import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm'
+
+// 响应式引用
+const waveformRef = ref(null)
+const wavesurfer = ref(null)
+const record = ref(null)
+const recordedUrl = ref('')
+const recordedBlobType = ref('')
+
+// 初始化波形图
+onMounted(() => {
+    wavesurfer.value = WaveSurfer.create({
+        container: waveformRef.value,
+        waveColor: '#1cb0f6',
+        progressColor: '#1cb0f6',
+        height: 130,
+        barWidth: 10,
+        barRadius: 2,
+        cursorWidth: 0,
+    })
+
+    record.value = wavesurfer.value.registerPlugin(
+        RecordPlugin.create({
+            scrollingWaveform: false,
+        })
+    )
+
+    // 录音结束事件
+    record.value.on('record-end', (blob) => {
+        recordedUrl.value = URL.createObjectURL(blob)
+        recordedBlobType.value = blob.type.split(';')[0].split('/')[1] || 'webm'
+    })
+})
+
+// 组件卸载前清理
+onBeforeUnmount(() => {
+    if (wavesurfer.value) {
+        wavesurfer.value.destroy()
+    }
+})
+
+// 开始录音
+const startRecording = async () => {
+    await record.value.startRecording();
+    isRecording.value = true
+}
+
+// 停止录音
+const stopRecording = () => {
+    record.value.stopRecording();
+    isRecording.value = false;
+}
 </script>
 
 <style scoped>
-.header{
+.header {
     display: flex;
     justify-content: center;
     margin: 40px;
 }
+
 .content {
-    margin-top: 12%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: end;
     gap: 60px;
-    height: 150px;
+    height: 100px;
 }
 
 .toaudio {
@@ -181,5 +179,9 @@ watch(() => props.dataItem, async () => {
 
 .voice-item:active {
     border-bottom-width: 2px;
+}
+
+.waveform {
+    height: 58px;
 }
 </style>

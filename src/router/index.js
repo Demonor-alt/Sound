@@ -81,6 +81,10 @@ const routes = [
                 path: '/voice',
                 component: () => import("@/views/Voice.vue"),
             },
+            {
+                path: '/test1',
+                component: () => import("@/views/Test1.vue"),
+            },
         ]
 
     },
