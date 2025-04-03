@@ -6,7 +6,7 @@
             <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
             <div>{{ dataItem.practiseWord }}</div>
         </div>
-        <div class="myfont">{{ dataItem.score }}</div>
+        <div class="myfont" v-if="isScore">{{ dataItem.score }}</div>
     </div>
     <div ref="waveformRef"></div>
     <div class="content">
@@ -19,7 +19,7 @@
             <div class="recordgray"></div>
             <div style="color: #b5b5b5;">点击并开始录音</div>
         </div>
-        <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在创建视频" align-center>
+        <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在进行评分" align-center>
         <div style="margin: 20px;">
           <div class="loading-dots">
             <span class="dot dot1"></span>
@@ -66,7 +66,7 @@ watch(() => props.dataItem, async () => {
 }, { deep: true });
 import WaveSurfer from 'wavesurfer.js'
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm'
-
+const isScore = ref(false);
 // 响应式引用
 const waveformRef = ref(null)
 const wavesurfer = ref(null)
@@ -118,7 +118,8 @@ const stopRecording = () => {
     isRecording.value = false;
     loadingDialogVisible.value = true;
     setTimeout(() => {
-        
+        loadingDialogVisible.value = false;
+        isScore.value = true;
     },2000)
 }
 </script>
@@ -129,15 +130,12 @@ const stopRecording = () => {
     justify-content: center;
     margin: 40px;
 }
-/* @font-face {
-  font-family: "阿里妈妈灵动体 VF Thin";
-  src: url("//at.alicdn.com/wf/webfont/Rqwg39VPkGQ2/eK34JIdDijyq.woff2") format("woff2"),
-  url("//at.alicdn.com/wf/webfont/Rqwg39VPkGQ2/igkaaxnPNKPM.woff") format("woff");
-  font-display: swap;
-} */
 .myfont{
-    font-family: "阿里妈妈灵动体 VF Thin", sans-serif;
-    font-family: "阿里妈妈灵动体 VF Thin" !important;
+    color: red;
+    transform: skewX(-10deg); /* X轴倾斜角度（单位：deg）*/
+    display: inline-block; /* 避免破坏父容器布局 */
+    font-size: 35px;
+    margin-left: 30px;
 }
 
 .content {
@@ -208,5 +206,47 @@ const stopRecording = () => {
 
 .waveform {
     height: 58px;
+}
+
+.loading-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #000;
+  border-radius: 50%;
+  margin: 0 4px;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* 为每个点设置不同的动画延迟 */
+.dot1 {
+  animation-delay: -0.32s;
+}
+
+.dot2 {
+  animation-delay: -0.16s;
+}
+
+.dot3 {
+  animation-delay: 0s;
+}
+
+/* 定义跳动动画 */
+@keyframes bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1.0);
+  }
 }
 </style>
