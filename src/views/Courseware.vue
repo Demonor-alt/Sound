@@ -3,7 +3,7 @@
     <div class="col1">
       <h1>课件转视频</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" action="/api/common/ppt" name="file" :on-success="uploadSuccess"
+        <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess"
           :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择课件</el-button>
@@ -229,12 +229,8 @@
             style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
         </div>
       </div>
-      <h3>最新活动</h3>
-      <div v-if="vedios" v-for="vedio in vedios" :key="vedio.vedioId" class="audio-item">
-        <video :src="vedio.vedioURL" controls width="100%" height="250"
-          style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
-      </div>
-      <div v-else><el-empty description="暂无数据" />
+      <div v-else class="empty">
+        <div class="emptyimage"></div>
       </div>
     </div>
   </div>
@@ -351,17 +347,12 @@ const visiblePopover = ref(false);
 //     voiceShareCount: 11,
 // });
 const voice = ref();
-const vedios = ref([{
-  vedioId: 1,
-  vedioURL: video
-}]);
-// const vedios = ref();
 import video from '@/assets/video.mp4'
-const addNewVedios = ref({
-  vedioId: 1,
-  vedioURL: video
-});
-// const addNewVedios = ref();
+// const addNewVedios = ref({
+//   vedioId: 1,
+//   vedioURL: video
+// });
+const addNewVedios = ref();
 const isExpanded = ref(false);
 const mode = ref(false)
 
@@ -421,11 +412,7 @@ const addNewAudio = () => {
   //   loadingDialogVisible.value = false;
   // }, 2000);
 }
-// import { pptQueryService, pptInsertService } from '@/api/courseware';
-// onMounted(async () => {
-//   let result = await pptQueryService();
-//   vedios.value = result.data;
-// })
+// import { pptInsertService } from '@/api/courseware';
 </script>
 
 <style scoped>
@@ -889,5 +876,20 @@ input[type="range"] {
   40% {
     transform: scale(1.0);
   }
+}
+
+.empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyimage {
+  width: 350px;
+  height: 350px;
+  background: url('../assets/pictures/empty.png') no-repeat center / contain;
+  border-radius: 10px;
 }
 </style>
