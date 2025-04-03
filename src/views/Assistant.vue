@@ -222,8 +222,8 @@
     </div>
     <el-divider direction="vertical" style="height: auto;" />
     <div class="col2">
+      <h3>生成的音频</h3>
       <div v-if="addNewAudios">
-        <h3>生成的音频</h3>
         <div class="audio-item">
           <div class="audio-top">
             <el-image :src="addNewAudios.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;"
@@ -283,65 +283,8 @@
           </div>
         </div>
       </div>
-      <h3>最新活动</h3>
-      <div v-if="audios" v-for="audio in audios" :key="audio.audioId" class="audio-item">
-        <div class="audio-top">
-          <el-image :src="audio.voiceImage" style="width: 60px; height: 60px; border-radius: 15px;" fit="cover" />
-          <div class="audio-content">
-            <div class="audio-info">
-              <div class="audio-text">{{ audio.audioText }}</div>
-              <div class="audio-name">
-                <el-icon size="20">
-                  <User />
-                </el-icon>
-                {{ audio.voiceName }}
-              </div>
-            </div>
-            <div class="audio-actions">
-              <div class="audio-actions-row">
-                <div class="dontagree" @click="showDontAgreeDialog = true"></div>
-                <el-dialog v-model="showDontAgreeDialog" width="30%" align-center :show-close="false">
-                  <div style="font-size: large;color: black;font-weight: 600;margin-bottom: 20px;">
-                    音频质量反馈</div>
-                  <div class="dialog">
-                    反馈类型
-                    <MySelect :options="reportOptions" :input-width="'432px'" :color="colorSelect"
-                      @update:value="handleReportValue" style="margin-bottom: 10px;" />
-                  </div>
-                  <template #footer>
-                    <span class="dialog-footer">
-                      <el-button color="black" plain @click="showDontAgreeDialog = false;">
-                        取消
-                      </el-button>
-                      <el-button color="black" @click="showDontAgreeDialog = false;">
-                        确认
-                      </el-button>
-                    </span>
-                  </template>
-                </el-dialog>
-                <div class="share" @click="open(audio.audioId)"></div>
-                <div class="download" @click="downloadAudio(audio.audioURL)"></div>
-              </div>
-              <div class="audio-actions-single">
-                <audio :src="audio.audioURL" :ref="el => setAudioRef(el, audio.audioId)"
-                  @timeupdate="e => updateHighlight(e, audio.audioId)" @ended="handleAudioEnd(audio.audioId)" />
-                <div v-if="!audio.isPlaying" class="close" @click="togglePlay(audio.audioId);">
-                </div>
-                <div v-else class="on" @click="togglePlay(audio.audioId);">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="divide"></div>
-        <div class="text-container">
-          <span v-for="(sentence, sIndex) in audio.sentences" :key="sIndex"
-            :class="{ 'highlight': audio.currentIndex === sIndex }" @click="seekTo(audio.audioId, sIndex)">
-            {{ sentence.text }}&nbsp;
-          </span>
-        </div>
-      </div>
-      <div v-else><el-empty description="暂无数据" />
+      <div v-else class="empty">
+        <div class="emptyimage"></div>
       </div>
     </div>
   </div>
@@ -372,60 +315,7 @@ const setAudioRef = (el, audioId) => {
     audioRefs.value.set(audioId, el);
   }
 };
-const handleAudioEnd = (audioId) => {
-  const targetAudio = audios.value.find(a => a.audioId === audioId);
-  if (targetAudio) {
-    targetAudio.isPlaying = false;
-  }
-};
-// 播放控制
-const togglePlay = (audioId) => {
-  const targetAudio = audios.value.find(a => a.audioId === audioId);
-  const audioElement = audioRefs.value.get(audioId);
 
-  audios.value.forEach(audio => {
-    if (audio.audioId !== audioId && audio.isPlaying) {
-      const otherElement = audioRefs.value.get(audio.audioId);
-      otherElement?.pause();
-      audio.isPlaying = false;
-    }
-  });
-
-  if (audioElement.paused) {
-    audioElement.play();
-    targetAudio.isPlaying = true;
-  } else {
-    audioElement.pause();
-    targetAudio.isPlaying = false;
-  }
-}
-
-// 更新时间高亮
-const updateHighlight = (event, audioId) => {
-  const currentTime = event.target.currentTime;
-  const targetAudio = audios.value.find(a => a.audioId === audioId);
-  const currentIndex = targetAudio.sentences.findIndex(s =>
-    currentTime >= s.start && currentTime <= s.end
-  );
-
-  if (currentIndex !== -1) {
-    targetAudio.currentIndex = currentIndex;
-  }
-};
-
-// 点击文本跳转
-const seekTo = (audioId, sentenceIndex) => {
-  const targetAudio = audios.value.find(a => a.audioId === audioId);
-  const audioElement = audioRefs.value.get(audioId);
-
-  if (!audioElement || sentenceIndex >= targetAudio.sentences.length) return;
-
-  audioElement.currentTime = targetAudio.sentences[sentenceIndex].start + 0.01;
-  if (!targetAudio.isPlaying) {
-    audioElement.play();
-    targetAudio.isPlaying = true;
-  }
-};
 const audioRef = ref(null);
 // 播放/暂停控制
 const togglePlay2 = () => {
@@ -453,7 +343,8 @@ const updateHighlight2 = () => {
   if (index !== -1 && index !== addNewAudios.value.currentIndex.value) {
     addNewAudios.value.currentIndex = index;
   }
-}; const handleAudioEnd2 = () => {
+};
+const handleAudioEnd2 = () => {
   addNewAudios.value.isPlaying = false;
 };
 
@@ -561,47 +452,103 @@ const visiblePopover = ref(false);
 //     voiceShareCount: 11,
 // });
 const voice = ref();
-import audioUrl from '@/assets/sound.m4a';
-const audios = ref([{
-  audioId: 1,
-  voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-  voiceName: '55',
-  audioText: '1232ssssssssss',
-  audioURL: audioUrl,
-  isPlaying: false,
-  currentIndex: -1,
-  sentences: [
-    { text: 'Hello1', start: 0.0, end: 1.2 },
-    { text: 'world!1', start: 1.2, end: 2.5 },
-    { text: 'This is a demo1', start: 2.5, end: 4.0 }
-  ]
-},
-{
-  audioId: 2,
-  voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-  voiceName: '55',
-  audioText: '1232ssssssssss',
-  audioURL: audioUrl,
-  isPlaying: false,
-  currentIndex: -1,
-  sentences: [
-    { text: 'Hello2', start: 0.0, end: 1.2 },
-    { text: 'world!2', start: 1.2, end: 2.5 },
-    { text: 'This is a demo2', start: 2.5, end: 4.0 }
-  ]
-}]);
+import assUrl from '@/assets/assistant/ass.mp3';
 const addNewAudios = ref({
   audioId: 1,
   voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
   voiceName: '66',
   audioText: '11111111111111111',
-  audioURL: audioUrl,
+  audioURL: assUrl,
   isPlaying: false,
   currentIndex: -1,
   sentences: [
-    { text: 'Hello', start: 0.0, end: 1.2 },
-    { text: 'world!', start: 1.2, end: 2.5 },
-    { text: 'This is a demo', start: 2.5, end: 4.0 }
+    { text: '《背 影》朱自清\n ', start: 0.0, end: 0.3 },
+    { text: '导入新课', start: 0.3, end: 0.4 },
+    { text: '生活中时时有感动，处处有感动。', start: 0.4, end: 0.8 },
+    { text: '它有时是一种声音，有时是一种色彩，有时是一种状态，有时是一种场景。', start: 0.8, end: 1.6},
+    { text: '如果你有一颗善感的心，同学的批评可以给你感动，妈妈的唠叨可以给你感动，甚至于爸爸的背影也可以给你持久的感动。', start: 1.6, end: 2.6 },
+    { text: '今天我们来一起学习朱自清的《背影》，看他是怎样被父亲的背影感动的。', start: 2.6, end: 3.2 },
+    { text: '作者简介', start: 3.2, end: 3.4 },
+    { text: '朱自清(1898—1948) ，字佩弦，号秋实，江苏扬州人。', start: 3.4, end: 4.1 },
+    { text: '1923年发表长诗《毁灭》，影响很大。', start: 4.1, end: 4.5 },
+    { text: '1928年出版第一本散文集《背影》，成了著名的散文作家。', start: 4.5, end: 5.1 },
+    { text: '主要作品有《踪迹》，散文集《背影》、《欧游杂记》、《你我》、《伦敦杂记》，文艺论著《诗言志辨》、《记雅俗共赏》等。', start: 5.1, end: 2.5 },
+    { text: '我们熟知的作品有《匆匆》、《春》、《荷塘月色》、《桨声灯影里的秦淮河》等。', start: 0, end:0  },
+    { text: '写作背景', start: 1.2, end: 2.5 },
+    { text: '《背影》写于1925年10月，作者在清华大学任教。', start: 1.2, end:  0},
+    { text: '1917年冬，作者祖母去世，父亲朱鸿钧原任徐州烟酒公卖局局长，被解职。', start: 1.2, end: 2.5 },
+    { text: '文中“祸不单行”正是指这两件事。', start: 1.2, end: 2.5 },
+    { text: '作者当时在北大哲学系读书，得知祖母去世，从北京赶到徐州与父亲一道回扬州奔丧。', start: 1.2, end: 2.5 },
+    { text: '丧事完毕，父亲到南京找工作，作者回北京念书，父子在浦口车站惜别。', start: 1.2, end: 2.5 },
+    { text: '字词积累', start: 1.2, end: 2.5 },
+    { text: ' 迂 褂 搀 交卸', start: 1.2, end: 2.5 },
+    { text: '狼藉 簌簌 赋闲', start: 1.2, end: 2.5 },
+    { text: '游逛  踌躇  蹒跚', start: 1.2, end: 2.5 },
+    { text: '颓唐  琐屑  晶莹', start: 1.2, end: 2.5 },
+    { text: '触目伤怀', start: 1.2, end: 2.5 },
+    { text: '整体感知', start: 1.2, end: 2.5 },
+    { text: '1.本文写的主要事件是什么？', start: 1.2, end: 2.5 },
+    { text: '父子车站送别。', start: 1.2, end: 2.5 },
+    { text: '2.表达了什么中心？', start: 1.2, end: 2.5 },
+    { text: '父疼子，子爱父，——父子情深。', start: 1.2, end: 2.5 },
+    { text: '3.全文共写到父亲的哪几次背影？', start: 1.2, end: 2.5 },
+    { text: '四写背影。', start: 1.2, end: 2.5 },
+    { text: '“背影”在文章中出现了四次，每次的情况有所不同，而思想感情却是一脉相承的。', start: 1.2, end: 2.5 },
+    { text: '分别为：①怀念父亲，难忘背影。第一次是开篇点题“背影”，有一种浓厚的感情气氛笼罩全文。', start: 1.2, end: 2.5 },
+    { text: '②望父买橘，刻画背影。第二次是在车站送别的场面中，父亲胖胖的身躯，步履艰难，蹒跚地走过铁道为儿子买橘子，使儿子感动得热泪盈眶。', start: 1.2, end: 2.5 },
+    { text: '③父子分手，惜别背影。第三次是父亲和儿子告别后，儿子眼望着父亲的“背影”在人群中消逝，离情别绪，又催人泪下。', start: 1.2, end: 2.5 },
+    { text: '④别后思念，再现背影。', start: 1.2, end: 2.5 },
+    { text: '第四次是在文章的结尾，儿子读着父亲的来信，在泪光中再次浮现了父亲的“背影”，思念之情不能自已，与文章开头呼应。', start: 1.2, end: 2.5 },
+    { text: '4.在送行过程中，父亲为儿子做了哪些事？', start: 1.2, end: 2.5 },
+    { text: '亲自送行，照看行李，讲定价钱，送子上车，拣定座位，叮嘱儿子，嘱咐茶房，为子买橘。', start: 1.2, end: 2.5 },
+    { text: '问题探究', start: 1.2, end: 2.5 },
+    { text: '1.(朗读第6段）体会父亲对儿子的爱。', start: 1.2, end: 2.5 },
+    { text: '①父亲的穿戴：黑、深青——穿着朴素，心情沉重。', start: 1.2, end: 2.5 },
+    { text: '（黑色给人压抑沉重的感觉，这是一个沉重的背影！）', start: 1.2, end: 2.5 },
+    { text: '②走路的姿势：蹒跚——年纪较大，腿脚不便。 ', start: 1.2, end: 2.5 },
+    { text: '（这是一个蹒跚的背影！）', start: 1.2, end: 2.5 },
+    { text: '③爬月台动作：探、攀、缩、倾——行动不便，步履艰难。', start: 1.2, end: 2.5 },
+    { text: '（动作描写，“探”，体胖动作不灵便，下铁道小心翼翼；“攀”，既写出月台的高度，又可以想象父亲爬月台的吃力；“缩”，两脚无处可蹬，把怎样爬写得更细致；“倾”，爬上月台虽然十分艰难，但又十分努力的样子。这是一个艰难的背影！） ', start: 1.2, end: 2.5 },
+    { text: '④作用：突出父亲行动的艰难，表现父亲的爱子之情。', start: 1.2, end: 2.5 },
+    { text: '2.父亲对儿子的关怀，除了为儿子做了这么多繁琐细小的事以外，还以什么方式表达了这种关爱？', start: 1.2, end: 2.5 },
+    { text: '父亲的语言。 ', start: 1.2, end: 2.5 },
+    { text: '①不要紧，他们去不好！', start: 1.2, end: 2.5 },
+    { text: '②我买几个橘子去。你就在此地，不要走动。', start: 1.2, end: 2.5 },
+    { text: '③我走了，到那边来信！', start: 1.2, end: 2.5 },
+    { text: '④进去吧，里边没人。', start: 1.2, end: 2.5 },
+    { text: '体现：怜惜体贴，依依不舍。', start: 1.2, end: 2.5 },
+    { text: '3.文中几次写到“我”流泪？分别应做何理解？', start: 1.2, end: 2.5 },
+    { text: '文中四次写到“我”流泪。', start: 1.2, end: 2.5 },
+    { text: '①第一次流泪，是悲哀；因为作者怀着沉重的心情，从北京赶到徐州跟父亲一起奔丧，见到那“满院狼藉的东西”，触目伤怀，才不禁潸然泪下。', start: 1.2, end: 2.5 },
+    { text: '②第二次流泪，因为感动；父亲的形象最为感人的地方，表现在他老态蹒跚地为“我”来回买橘子，那真挚而灼热的感情达到了最高点。人非木石，作者怎能不为之流泪？', start: 1.2, end: 2.5 },
+    { text: '③第三次流泪，是惆怅之泪；这样一位至情至善、爱子如命的父亲，当他的背影消失在来来往往的人群中的时候，作者感到特别的怜惜、怅惘、依恋，当然潸然泪下了。', start: 1.2, end: 2.5 },
+    { text: '④第四次流泪，是伤心之泪；以在晶莹的泪光中再现的父亲的“背影”结篇，与文章开头回环呼应，进一步突出父亲的“背影”给“我”留下的深刻印象，表达了作者对年迈的父亲无限思念的感情，写得凄切动人。', start: 1.2, end: 2.5 },
+    { text: '4.文中的儿子理解了父亲的关爱了吗？你能从文中找出依据吗？', start: 1.2, end: 2.5 },
+    { text: '儿子的几次流泪和两次自责说明他对父爱的理解和感激。', start: 1.2, end: 2.5 },
+    { text: '父疼子，子爱父——父子情深就是这篇文章所表现的中心。', start: 1.2, end: 2.5 },
+    { text: '品味语言', start: 1.2, end: 2.5 },
+    { text: '父亲朴实而简洁的语言包含着怎样的深情？', start: 1.2, end: 2.5 },
+    { text: '（1）“事已如此，不必难过，好在天无绝人之路！”', start: 1.2, end: 2.5 },
+    { text: '父亲甘愿承受家庭重负，只愿儿子能轻松愉快地生活。', start: 1.2, end: 2.5 },
+    { text: '（2）“不要紧，他们去不好！”', start: 1.2, end: 2.5 },
+    { text: '父亲不放心，怕别人照顾不周到，即使劳碌费神，也毫不在意。', start: 1.2, end: 2.5 },
+    { text: '这表明父亲对儿子无微不至的关心。', start: 1.2, end: 2.5 },
+    { text: '（3）“我买几个橘子去，你就在此地，不要走动。”', start: 1.2, end: 2.5 },
+    { text: '对儿子的关怀体贴十分周到。', start: 1.2, end: 2.5 },
+    { text: '（4）“我走了，到那边来信！”', start: 1.2, end: 2.5 },
+    { text: '惦记儿子旅途是否平安，反映了父亲对儿子深切的惦念和细心的关照。', start: 1.2, end: 2.5 },
+    { text: '（5）“进去吧，里边没人。”', start: 1.2, end: 2.5 },
+    { text: '怕儿子离开作座位丢失行李，反映了父亲对儿子细心的关照。', start: 1.2, end: 2.5 },
+    { text: '文章主旨', start: 1.2, end: 2.5 },
+    { text: '本文追述了作者八年前和父亲在浦口车站分别时的情景，刻画了一个感人至深的慈父形象，表达出真挚深沉的父子之情，也抒发了作者对父亲深切的思念之情。', start: 1.2, end: 2.5 },
+    { text: '课堂小结', start: 1.2, end: 2.5 },
+    { text: '同学们，至爱亲情是我们拥有的无比宝贵的财富。一桌准备好的饭菜，一件放在床头的衣服，一个鼓励的微笑，一句体贴的话语，都凝聚着亲人对我们的期望和关怀。', start: 1.2, end: 2.5 },
+    { text: '正像父亲的背影一样，永远感动着我们；让我们对他们说一声：我爱你们，我理解了你们。', start: 1.2, end: 2.5 },
+    { text: '课后作业', start: 1.2, end: 2.5 },
+    { text: '1.完成课后习题。', start: 1.2, end: 2.5 },
+    { text: '2.我们在爱的呵护下一天天长大，学习了这一课，你感悟到了什么？', start: 1.2, end: 2.5 },
+    { text: '你一定有许多想对父亲说的话，请以“爸爸，我想对您说”为开头，写一个片段，展示给大家。', start: 1.2, end: 2.5 },
+    { text: '3.预习第14课', start: 1.2, end: 2.5 },
   ]
 });
 const reportOptions = ref([
@@ -681,15 +628,8 @@ const addNewAudio = () => {
   //   loadingDialogVisible.value = false;
   // }, 2000);
 }
-// import { audioQueryService, audioInsertService } from '@/api/assistant';
-// onMounted(async () => {
-//   let result = await audioQueryService();
-//   audios.value = result.data.map(audio => ({
-//     ...audio,
-//     isPlaying: false,
-//     currentIndex: -1
-//   }));
-// })
+// import { audioInsertService } from '@/api/assistant';
+
 </script>
 
 <style scoped>
@@ -1242,5 +1182,20 @@ input[type="range"] {
   height: 1px;
   width: 100%;
   background-color: #e4e4e7;
+}
+
+.empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyimage {
+  width: 350px;
+  height: 350px;
+  background: url('../assets/pictures/empty.png') no-repeat center / contain;
+  border-radius: 10px;
 }
 </style>
