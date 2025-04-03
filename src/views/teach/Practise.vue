@@ -239,10 +239,12 @@ const data = ref([
     {
         audioURL: tallUrlW,
         practiseWord: 'tall',
+        score:80
     },
     {
         audioURL: petUrl,
         practiseWord: 'pet',
+        score:75
     },
 ])
 

@@ -6,6 +6,7 @@
             <audio ref="audioRef" :src="dataItem.audioURL" preload="auto"></audio>
             <div>{{ dataItem.practiseWord }}</div>
         </div>
+        <div class="myfont">{{ dataItem.score }}</div>
     </div>
     <div ref="waveformRef"></div>
     <div class="content">
@@ -18,6 +19,16 @@
             <div class="recordgray"></div>
             <div style="color: #b5b5b5;">点击并开始录音</div>
         </div>
+        <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在创建视频" align-center>
+        <div style="margin: 20px;">
+          <div class="loading-dots">
+            <span class="dot dot1"></span>
+            <span class="dot dot2"></span>
+            <span class="dot dot3"></span>
+          </div>
+          <div style="display: flex;justify-content: center;margin: 10px;">正在分析音频</div>
+        </div>
+      </el-dialog>
     </div>
 </template>
 
@@ -100,11 +111,15 @@ const startRecording = async () => {
     await record.value.startRecording();
     isRecording.value = true
 }
-
+const loadingDialogVisible = ref(false);
 // 停止录音
 const stopRecording = () => {
     record.value.stopRecording();
     isRecording.value = false;
+    loadingDialogVisible.value = true;
+    setTimeout(() => {
+        
+    },2000)
 }
 </script>
 
@@ -113,6 +128,16 @@ const stopRecording = () => {
     display: flex;
     justify-content: center;
     margin: 40px;
+}
+/* @font-face {
+  font-family: "阿里妈妈灵动体 VF Thin";
+  src: url("//at.alicdn.com/wf/webfont/Rqwg39VPkGQ2/eK34JIdDijyq.woff2") format("woff2"),
+  url("//at.alicdn.com/wf/webfont/Rqwg39VPkGQ2/igkaaxnPNKPM.woff") format("woff");
+  font-display: swap;
+} */
+.myfont{
+    font-family: "阿里妈妈灵动体 VF Thin", sans-serif;
+    font-family: "阿里妈妈灵动体 VF Thin" !important;
 }
 
 .content {
