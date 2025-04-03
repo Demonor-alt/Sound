@@ -141,8 +141,8 @@ import trueUrl from '@/assets/teach/audio/true.mp3';
 import falseUrl from '@/assets/teach/audio/false.mp3';
 const trueAudio = new Audio(trueUrl);
 const falseAudio = new Audio(falseUrl);
-// const componentList = [MyListen, MyCompare, MySpeak]
- const componentList = [MySpeak]
+const componentList = [MyListen, MyCompare, MySpeak]
+//  const componentList = [MySpeak]
 const isButtonDisabled = ref(true);
 const isAnswerCorrect = ref(null); //正确为1，错误为0
 const currentIndex = ref(0);
@@ -164,78 +164,78 @@ const errorOptions = reactive([
 const checkedCorrectOptions = ref([]);
 const checkedErroeOptions = ref([]);
 const data = ref([
-    // {
-    //     audioURL: tallUrlW,
-    //     options: ['tall', 'tell'],
-    //     answer: 'tall'
-    // },
-    // {
-    //     audioURL: petUrl,
-    //     options: ['pet', 'pot'],
-    //     answer: 'pet'
-    // },
-    // {
-    //     audioURL: tellUrl,
-    //     options: ['tall', 'tell'],
-    //     answer: 'tell'
-    // },
-    // {
-    //     audioURL: potUrlW,
-    //     options: ['pet', 'pot'],
-    //     answer: 'pot'
-    // },
-    // {
-    //     options: [
-    //         {
-    //             practiseWord: 'tall',
-    //             audioURL: tallUrl,
-    //         },
-    //         {
-    //             practiseWord: 'tall',
-    //             audioURL: tallUrlW,
-    //         },
-    //     ],
-    //     answer: true,
-    // },
-    // {
-    //     options: [
-    //         {
-    //             practiseWord: 'pet',
-    //             audioURL: petUrlW,
-    //         },
-    //         {
-    //             practiseWord: 'pot',
-    //             audioURL: potUrl,
-    //         },
-    //     ],
-    //     answer: false,
-    // },
-    // {
-    //     options: [
-    //         {
-    //             practiseWord: 'tell',
-    //             audioURL: tellUrlW,
-    //         },
-    //         {
-    //             practiseWord: 'tall',
-    //             audioURL: tallUrl,
-    //         },
-    //     ],
-    //     answer: false,
-    // },
-    // {
-    //     options: [
-    //         {
-    //             practiseWord: 'pot',
-    //             audioURL: potUrlW,
-    //         },
-    //         {
-    //             practiseWord: 'pot',
-    //             audioURL: potUrl,
-    //         },
-    //     ],
-    //     answer: true,
-    // },
+    {
+        audioURL: tallUrlW,
+        options: ['tall', 'tell'],
+        answer: 'tall'
+    },
+    {
+        audioURL: petUrl,
+        options: ['pet', 'pot'],
+        answer: 'pet'
+    },
+    {
+        audioURL: tellUrl,
+        options: ['tall', 'tell'],
+        answer: 'tell'
+    },
+    {
+        audioURL: potUrlW,
+        options: ['pet', 'pot'],
+        answer: 'pot'
+    },
+    {
+        options: [
+            {
+                practiseWord: 'tall',
+                audioURL: tallUrl,
+            },
+            {
+                practiseWord: 'tall',
+                audioURL: tallUrlW,
+            },
+        ],
+        answer: true,
+    },
+    {
+        options: [
+            {
+                practiseWord: 'pet',
+                audioURL: petUrlW,
+            },
+            {
+                practiseWord: 'pot',
+                audioURL: potUrl,
+            },
+        ],
+        answer: false,
+    },
+    {
+        options: [
+            {
+                practiseWord: 'tell',
+                audioURL: tellUrlW,
+            },
+            {
+                practiseWord: 'tall',
+                audioURL: tallUrl,
+            },
+        ],
+        answer: false,
+    },
+    {
+        options: [
+            {
+                practiseWord: 'pot',
+                audioURL: potUrlW,
+            },
+            {
+                practiseWord: 'pot',
+                audioURL: potUrl,
+            },
+        ],
+        answer: true,
+    },
     {
         audioURL: tallUrlW,
         practiseWord: 'tall',

@@ -55,6 +55,7 @@ onMounted(() => {
 });
 watch(() => props.dataItem, async () => {
     if (audioRef.value) {
+        isScore.value = false;
         audioRef.value.src = props.dataItem.audioURL;
         try {
             await audioRef.value.load();
@@ -120,6 +121,7 @@ const stopRecording = () => {
     setTimeout(() => {
         loadingDialogVisible.value = false;
         isScore.value = true;
+        emits('option-selected', true);
     },2000)
 }
 </script>
