@@ -222,8 +222,8 @@
     </div>
     <el-divider direction="vertical" style="height: auto;" />
     <div class="col2">
+      <h3>生成的视频</h3>
       <div v-if="addNewVedios">
-        <h3>生成的视频</h3>
         <div class="audio-item">
           <video :src="addNewVedios.vedioURL" controls width="100%" height="250"
             style=" border-radius: 10px;  border: 1px solid #ddd;"></video>

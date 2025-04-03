@@ -3,7 +3,7 @@
     <div class="col1">
       <h1>视频变声</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" action="/api/common/ppt" name="file" :on-success="uploadSuccess" :on-remove="handleRemove"
+        <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess" :on-remove="handleRemove"
           :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择视频</el-button>
@@ -219,22 +219,18 @@
     </div>
     <el-divider direction="vertical" style="height: auto;" />
     <div class="col2">
-      <h3 v-if="uploadPPTUrl">原来的视频</h3>
-      <video v-if="uploadPPTUrl" :src="uploadPPTUrl" controls width="100%" height="250"
+      <h3 v-if="uploadVedioUrl">原来的视频</h3>
+      <video v-if="uploadVedioUrl" :src="uploadVedioUrl" controls width="100%" height="250"
       style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
-      <div v-if="addNewVedios &&uploadPPTUrl">
-        <h3>生成的视频</h3>
+      <h3>生成的视频</h3>
+      <div v-if="addNewVedios && uploadVedioUrl">
         <div class="audio-item">
           <video :src="addNewVedios.vedioURL" controls width="100%" height="250"
             style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
         </div>
       </div>
-      <h3>最新活动</h3>
-      <div v-if="vedios" v-for="vedio in vedios" :key="vedio.vedioId" class="audio-item">
-        <video :src="vedio.vedioURL" controls width="100%" height="250"
-          style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
-      </div>
-      <div v-else><el-empty description="暂无数据" />
+      <div v-else class="empty">
+        <div class="emptyimage"></div>
       </div>
     </div>
   </div>
@@ -252,12 +248,15 @@ const router = useRouter();
 const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
-const uploadPPTUrl = ref();
+const uploadVedioUrl = ref();
+import rawAudio from '@/assets/voice/raw.mp4';
+import vcAudio from '@/assets/voice/vc.mp4';
 const uploadSuccess = (result, file) => {
-  uploadPPTUrl.value = result.data.uploadPPTUrl;
+  // uploadVedioUrl.value = result.data.uploadVedioUrl;
+  uploadVedioUrl.value = rawAudio;
 };
 const handleRemove = () => {
-  uploadPPTUrl.value = undefined;
+  uploadVedioUrl.value = undefined;
 }
 const upload = ref();
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
@@ -345,8 +344,6 @@ import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 
 const voice = ref();
-const vedios = ref();
-// const vedios = ref();
 import video from '@/assets/video.mp4'
 const addNewVedios = ref();
 // const addNewVedios = ref();
@@ -398,22 +395,26 @@ const addNewAudio = () => {
   loadingDialogVisible.value = true;
   const addData = {
     voiceId: voice.value.voiceId,
-    uploadVedioUrl: uploadPPTUrl.value,
+    uploadVedioUrl: uploadVedioUrl.value,
     vedioMode: mode.value,
     vedioSpeed: speedPercentage.value,
     vedioVolume: volumePercentage.value,
   }
+   setTimeout(async () => {
+     addNewVedios.value = {
+       vedioId: 1,
+       vedioURL:vcAudio
+    }
+    loadingDialogVisible.value = false;
+  }, 2000);
   // setTimeout(async () => {
   //   let result = await voiceInsertService(addData);
   //   addNewVedios.value = result.data;
   //   loadingDialogVisible.value = false;
   // }, 2000);
 }
-// import { voiceQueryService, voiceInsertService } from '@/api/voice';
-// onMounted(async () => {
-//   let result = await voiceQueryService();
-//   vedios.value = result.data;
-// })
+// import { voiceInsertService } from '@/api/voice';
+
 </script>
 
 <style scoped>
@@ -874,5 +875,19 @@ input[type="range"] {
   40% {
     transform: scale(1.0);
   }
+}
+.empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyimage {
+  width: 350px;
+  height: 350px;
+  background: url('../assets/pictures/empty.png') no-repeat center / contain;
+  border-radius: 10px;
 }
 </style>
