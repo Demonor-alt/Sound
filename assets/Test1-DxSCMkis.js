@@ -1,1 +1,0 @@
-import{_ as t,C as o,f as e,K as n,o as a}from"./index-Du5B95VK.js";const r={};function c(f,s){return a(),o(n,null,[s[0]||(s[0]=e("div",{class:"myfont"},"85",-1)),s[1]||(s[1]=e("div",{class:"font"},"85",-1))],64)}const l=t(r,[["render",c],["__scopeId","data-v-cbb91286"]]);export{l as default};
