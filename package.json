@@ -10,16 +10,23 @@
   },
   "dependencies": {
     "axios": "^1.7.9",
+    "crunker": "^2.4.0",
     "element-plus": "^2.9.3",
     "pinia": "^3.0.1",
     "pinia-persistedstate-plugin": "^0.1.0",
+    "three": "^0.169.0",
+    "three-orbitcontrols": "^2.110.3",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "wavesurfer.js": "^7.9.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.21",
+    "marked": "^14.1.2",
+    "postcss": "^8.4.47",
     "sass": "^1.85.0",
+    "tailwindcss": "^3.4.12",
     "vite": "^6.0.11",
     "vite-plugin-vue-devtools": "^7.7.0"
   }
