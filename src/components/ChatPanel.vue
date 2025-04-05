@@ -107,7 +107,7 @@ DemoControl.initSendLoading((shown) => {
   SendLoadingIconShown.value = shown
 })
 
-const DemoNumber = ref(0)
+const DemoNumber = ref(1)
 DemoControl.initNumber((number) => {
   DemoNumber.value = number
 })
@@ -139,8 +139,6 @@ DemoControl.changeAnimation((animation) => {
                       <BlankBoard v-if="DemoNumber === 0" />
                       <DemoBoard1 v-else-if="DemoNumber === 1" />
                       <DemoBoard2 v-else-if="DemoNumber === 2" />
-                      <DemoBoard3 v-else-if="DemoNumber === 3" />
-                      <RealBorad v-else-if="DemoNumber === 99" :content="RealContent" />
                     </CWhiteBoard>
 
                   </div>

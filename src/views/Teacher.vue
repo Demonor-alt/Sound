@@ -20,7 +20,7 @@ const ModelPresetsSelect = ref('灰色长裙.glb')
 </script>
 
 <template>
-  <div id="root">
+  <div class="body">
     <div class="h-full">
       <div class="h-full">
         <div class="w-full h-full relative">
@@ -34,3 +34,8 @@ const ModelPresetsSelect = ref('灰色长裙.glb')
     </div>
   </div>
 </template>
+<style scoped>
+.body{
+  height: 90vh;
+}
+</style>

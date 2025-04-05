@@ -79,7 +79,7 @@ const DemoControl = {
             // await asleep(2000)
             await initNumber(2)
             changeAnimationFunction("伸手")
-            DemoControl.playMusic("/intro/answer2.mp3")
+            DemoControl.playMusic("/Sound/intro/answer2.mp3")
             window.fileMorphs.packageAnimation.talk(SpeechToAEIOU(demo2Text))
             await asleep(50000)
             sendloadingFunction(false)

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { onMounted, toRef, watch, ref } from "vue";
-import EasyMorph from "../../utils/EasyMorph";
+import EasyMorph from "@/utils/EasyMorph";
 
 const emits = defineEmits([
     "listModelanimations",
@@ -34,7 +34,7 @@ const props = defineProps({
 })
 
 // const model_path = "https://cdn.eurekac.cn/s.glb"
-const model_path = ref("/" + props.ModelPresetsSelect)
+const model_path = ref("/Sound/" + props.ModelPresetsSelect)
 watch(toRef(props, "ModelPresetsSelect"), async (newVal) => {
     model_path.value = "/" + newVal
     document.getElementById("container").innerHTML = ""

@@ -16,6 +16,9 @@
     "pinia-persistedstate-plugin": "^0.1.0",
     "three": "^0.169.0",
     "three-orbitcontrols": "^2.110.3",
+    "buffer": "^6.0.3",
+    "@callmebill/lxgw-wenkai-web": "latest",
+    "@douyinfe/semi-ui": "^2.66.1",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "wavesurfer.js": "^7.9.4"
