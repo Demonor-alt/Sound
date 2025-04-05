@@ -36,6 +36,7 @@ const ModelPresetsSelect = ref('灰色长裙.glb')
 </template>
 <style scoped>
 .body{
-  height: 90vh;
+  height: 92vh;
+  margin: -19.5px -20.3px -20px -20.3px;
 }
 </style>

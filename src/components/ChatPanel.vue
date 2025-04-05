@@ -107,7 +107,7 @@ DemoControl.initSendLoading((shown) => {
   SendLoadingIconShown.value = shown
 })
 
-const DemoNumber = ref(1)
+const DemoNumber = ref(0)
 DemoControl.initNumber((number) => {
   DemoNumber.value = number
 })
