@@ -121,9 +121,9 @@ const { token } = useTokenStore();
 }
 
 .logo {
-  width: 150px;
-  height: 60px;
-  background: url('../assets/logo.svg') no-repeat center / contain;
+  width: 100px;
+  height: 100px;
+  background: url('../assets/logo.png') no-repeat center / contain;
 }
 
 .menu {
