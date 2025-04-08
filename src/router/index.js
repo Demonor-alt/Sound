@@ -89,6 +89,14 @@ const routes = [
                 path: '/test2',
                 component: () => import("@/views/Test2.vue"),
             },
+            {
+                path: '/test3',
+                component: () => import("@/views/Test3.vue"),
+            },
+            {
+                path: '/test4',
+                component: () => import("@/views/Test4.vue"),
+            },
         ]
 
     },
