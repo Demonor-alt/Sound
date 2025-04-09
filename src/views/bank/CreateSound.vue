@@ -63,11 +63,11 @@
                         <el-tab-pane label="上传音频" name="second">
                             <div class="audio-upload">
                                 <el-upload class="upload-component" accept="audio/*" :before-upload="handleFileUpload"
-                                    :show-file-list="false" :file-list="files" :on-remove="handleRemove" :limit="0">
+                                    :show-file-list="false" :on-remove="handleRemove" :limit="1">
                                     <template #default>
                                         <div class="upload-button">
                                             <div class="insert"></div>
-                                            <h5>添加或删除您的音频文件</h5>
+                                            <h5>添加您的音频文件</h5>
                                         </div>
                                     </template>
                                 </el-upload>
@@ -89,7 +89,7 @@
                             </div>
                         </el-tab-pane>
                         <div class="audio-upload">
-                            <el-row v-for="(file, index) in files" :key="index" class="files">
+                            <el-row v-if="file !== undefined" :key="index" class="files">
                                 <el-col :span="2" class="logo"></el-col>
                                 <el-col :span="13" class="file">
                                     {{ file.name }}
@@ -97,9 +97,9 @@
                                 </el-col>
                                 <el-col :span="4">{{ file.duration }}</el-col>
                                 <el-col :span="4" class="btns">
-                                    <div v-if="!file.isPlaying" class="close" @click="togglePlay(index)"></div>
-                                    <div v-else class="on" @click="togglePlay(index)"></div>
-                                    <el-icon @click="deleteFile(index)" class="delete-btn" size="25">
+                                    <div v-if="!file.isPlaying" class="close" @click="togglePlay()"></div>
+                                    <div v-else class="on" @click="togglePlay()"></div>
+                                    <el-icon @click="handleRemove()" class="delete-btn" size="25">
                                         <Close />
                                     </el-icon>
                                 </el-col>
@@ -211,7 +211,6 @@ const type = ref('textarea');
 const grayColor = ref('#fafafa');
 const placeholderDescription = ref('填写音频描述');
 const rows = ref("3");
-import audioUrl from '@/assets/sound.m4a';
 const samples = ref([{
     sampleId: '',
     sampleTitle: '',
@@ -253,7 +252,7 @@ function handleMessageName2(index, newMessage) {
 function handleMessageTextArea(index, newMessage) {
     samples.value[index].sampleText = newMessage;
 }
-const files = ref([]);
+const file = ref();
 const recording = ref(false);
 const mediaRecorder = ref(null);
 const audioChunks = ref([]);
@@ -293,15 +292,15 @@ function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
 }
 const createRecording = async (blob) => {
     end.value = new Date();
-    const newRecording = {
-        name: `record-${files.value.length + 1}.mp3`,
+    file.value = {
+        name: `record.mp3`,
         url: URL.createObjectURL(blob),
         blob: blob,
         duration: `${calculateTimeDifferenceInSeconds(start.value, end.value)}s`,
         size: formatFileSize(blob.size),
-        file: new File([blob], `record-${files.value.length + 1}.mp3`, { type: 'audio/mp3' })
+        file: new File([blob], `record.mp3`, { type: 'audio/mp3' })
     };
-    files.value.unshift(newRecording);
+    console.log(file.value);
 };
 const stopRecording = () => {
     if (mediaRecorder.value) {
@@ -320,86 +319,62 @@ const formatDuration = (seconds) => {
     return `${Math.floor(seconds)}s`;
 };
 //上传音频
-const handleFileUpload = async (file) => {
-    const audioUrl = URL.createObjectURL(file);
-    const audio = new Audio(URL.createObjectURL(file));
+const handleFileUpload = async (newFile) => {
+    const audioUrl = URL.createObjectURL(newFile);
+    const audio = new Audio(URL.createObjectURL(newFile));
     await new Promise((resolve) => {
         audio.addEventListener('loadedmetadata', () => {
             const duration = audio.duration;
             const formattedDuration = formatDuration(duration);
-            const fileInfo = {
-                name: file.name,
-                size: formatFileSize(file.size),
+            file.value = {
+                name: newFile.name,
+                size: formatFileSize(newFile.size),
                 duration: formattedDuration,
                 isPlaying: false,
                 url: audioUrl,
-                file: file, // 保存文件对象
+                file: newFile, // 保存文件对象
                 actualDuration: duration // 新增：将实际音频时长（秒）添加到文件信息中
             };
-            files.value.push(fileInfo);
             resolve();
         });
     });
-    return false;
+    console.log(file.value);
 };
 // 播放音频
-const audioInstances = reactive({});
-const togglePlay = (index) => {
-    const file = files.value[index]
-    // 如果已有实例则复用
-    if (!audioInstances[index]) {
-        audioInstances[index] = new Audio(file.url)
-    }
-    const audio = audioInstances[index]
-    if (file.isPlaying) {
-        audio.pause()
+const audioInstances = reactive();
+const togglePlay = () => {
+    audioInstances = new Audio(file.value.url)
+    if (file.value.isPlaying) {
+        audioInstances.pause()
     } else {
-        // 暂停所有正在播放的音频
-        Object.entries(audioInstances).forEach(([key, instance]) => {
-            if (key != index && !instance.paused) {
-                instance.pause()
-                files.value[key].isPlaying = false
-            }
-        })
-        audio.play()
+        audioInstances.play()
     }
-    // 更新播放状态
-    file.isPlaying = !file.isPlaying
+    file.value.isPlaying = !file.value.isPlaying
     // 添加播放结束监听
     audio.addEventListener('ended', () => {
-        file.isPlaying = false
+        file.value.isPlaying = false
     })
 }
 
 // 修改删除文件方法
-const deleteFile = (index) => {
-    // 停止播放并释放资源
-    if (audioInstances[index]) {
-        audioInstances[index].pause()
-        audioInstances[index].src = ''
-        delete audioInstances[index]
+const handleRemove = () => {
+    if (audioInstances) {
+        audioInstances.pause()
+        audioInstances.src = ''
     }
-    files.value.splice(index, 1)
+    file.value=undefined
 }
-
-const handleRemove = (file, files) => {
-    const index = files.value.findIndex((f) => f.name === file.name);
-    if (index !== -1) {
-        deleteFile(index);
-    }
-};
 const activeName = ref('second');
 const toStep2 = () => {
     stepStore.incrementStep();
 }
 //声音长度总和
 const selectedTime = computed(() => {
-    let totalSeconds = 0;
-    for (const file of files.value) {
-        const seconds = parseInt(file.duration.slice(0, -1), 10); // 移除末尾的's'并转换为整数
-        totalSeconds += seconds;
+    if (file.value === undefined) {
+        return 0;
     }
-    return totalSeconds;
+    const seconds = parseInt(file.value.duration.slice(0, -1), 10); // 移除末尾的's'并转换为整数
+    return seconds;
 });
 //声音节点
 const marks = computed(() => ({
@@ -455,34 +430,13 @@ const uploadSuccess = (result) => {
     insertData.value.voiceImage = result.data.voiceImage;
 }
 import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService,bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
-import axios from 'axios';
 
 const sendAudiosToBackend = async () => {
-    // const formData = new FormData();
-    // files.value.forEach((file) => {
-    //     formData.append('files', file.file);
-    // });
-    // const testData = {
-    //     text: "1111",
-    //     text_lang: 'zh',
-    //     ref_audio_path: 'C:\\Users\\IAA\\Desktop\\11.wav',
-    //     prompt_lang: 'zh',
-    //     prompt_text: '沙漠中的仙人掌通过其特殊的结构和储水能力适应了极端干燥的环境，是适应性和生存能力的一个生动例子。'
-    // }
-    const formData2 = new FormData();
-    files.value.forEach((file) => {
-        console.log(file);
-        formData2.append('audio_file', file);
-    });
-    // let loadResult = await uploadService(formData2);
-    console.log(formData2);
     const formData = new FormData();
     formData.append('text', "1111");
     formData.append('text_lang', 'zh');
     formData.append('prompt_lang', 'zh');
-    files.value.forEach((file) => {
-        formData.append('ref_audio', loadResult);
-    });
+    formData.append('ref_audio', file.value);
     try {
         let result = await bankInsertMySampleService(formData);
         console.log(result);
@@ -497,12 +451,6 @@ const sendAudiosToBackend = async () => {
 const createAction = async () => {
     // 发送音频数据到后端
     await sendAudiosToBackend();
-    // 清除所有音频实例
-    Object.keys(audioInstances).forEach(key => {
-        audioInstances[key].pause();
-        audioInstances[key].src = '';
-        delete audioInstances[key];
-    });
     // 跳转逻辑
     stepStore.incrementStep();
 };
