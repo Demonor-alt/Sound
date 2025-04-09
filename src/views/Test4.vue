@@ -2,10 +2,10 @@
     <div class="audio_right">
         <div class="gap">
             <img v-if="isPlaying === false" @click="startPlayback" class="audio_icon"
-                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../assets/icons/close2.svg"
+                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../../assets/icons/close2.svg"
                 alt="播放" />
             <img v-else @click="startPlayback" class="audio_icon"
-                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../assets/icons/on.svg"
+                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../../assets/icons/on.svg"
                 alt="暂停" />
 
             <!-- 时间显示 -->
@@ -24,9 +24,9 @@
                         v-model="volume" step="0.01" @change="setVolume" />
                 </div>
                 <img class="volume_icon" v-if="volume <= 0" @click.stop="audioHuds = !audioHuds"
-                    src="../assets/icons/mute.svg" alt="" />
+                    src="../../assets/icons/mute.svg" alt="" />
                 <img class="volume_icon" v-if="volume > 0" @click.stop="audioHuds = !audioHuds"
-                    src="../assets/icons/speaker.svg" alt="" />
+                    src="../../assets/icons/speaker.svg" alt="" />
             </div>
         </div>
     </div>
@@ -42,7 +42,11 @@ const props = defineProps({
     },
     sliderLength: {
         type: String,
-        default: '420'
+        default: '520'
+    },
+    text: {
+        type: String,
+        default: '盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。'
     }
 });
 const isPlaying = ref(false);
@@ -52,7 +56,6 @@ const volume = ref(0.9);
 const currentTime = ref(0);
 const duration = ref('--');
 const audioHuds = ref(false);
-const sliderLength = ref(300); // 进度条长度，可以根据需要调整
 
 function formatTime(seconds) {
     if (seconds === '--') return '--';
@@ -84,55 +87,102 @@ async function startPlayback() {
     } else {
         isPlaying.value = true;
     }
+
+    // 如果已存在音频并且是通过 Blob URL 加载的，直接播放或暂停
+    if (sound.value && sound.value._src && sound.value._src.startsWith('blob:')) {
+        console.log(isPlaying.value);
+        if (isPlaying.value) {
+            // 如果正在播放，则暂停
+            sound.value.pause();
+            isPlaying.value = false;
+        } else {
+            // 如果没有播放，则开始播放
+            sound.value.play();
+            isPlaying.value = true;
+        }
+        return;
+    }
+
+    // 设置为流式播放模式
     const formData = new FormData();
-    formData.append('text', "在信息爆炸的时代，我们每天被海量的数据包围，而阅读，这一古老的行为...");
+    formData.append('text', props.text);
     formData.append('text_lang', 'zh');
     formData.append('prompt_lang', 'zh');
     formData.append('streaming_mode', 'true');
     formData.append('ref_audio_path', "D://雷军.mp3");
 
-    console.log('最终 FormData 内容:', Array.from(formData.entries()));
     const queryParams = new URLSearchParams();
     for (const [key, value] of formData.entries()) {
         queryParams.append(key, value);
     }
     const apiUrl = `/api2/tts?${queryParams.toString()}`;
 
+    // 创建流式音频
     sound.value = new Howl({
         src: [apiUrl],
         xhr: {
             method: 'GET',
         },
-        html5: true,
+        html5: true,  // 使用 HTML5 Audio 来处理较大的文件
         volume: volume.value,
         format: ['wav'],
         onplay: () => {
-            updateProgressInterval();
+            updateProgressInterval(); // 开始更新进度条
         },
         onload: () => {
-            if (sound.value.duration() && sound.value.duration() !== Infinity) {
+            // 动态获取音频时长
+            if (sound.value.duration() !== Infinity) {
                 duration.value = sound.value.duration(); // 获取音频总时长
+                console.log('音频总时长:', duration.value);
             }
         },
         onend: () => {
             isPlaying.value = false;
+            duration.value = currentTime.value;
             currentTime.value = 0;
             progress.value = 0;
+            // 播放完成后自动停止并清理
+            sound.value.stop();
+            console.log('1111',isPlaying.value);
         },
         onloaderror: (id, error) => {
             console.error('音频加载失败', error);
-            error.value = "音频加载失败";
             isPlaying.value = false;
         }
     });
+
+    // 通过流式播放开始音频
     sound.value.play();
+
+    // 等待音频加载完成后创建 Blob
+    sound.value.on('load', async () => {
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('音频加载失败');
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob); // 创建 Blob URL
+
+            // 在加载完成后切换到 Blob URL（可以用来缓存音频以便后续播放）
+            sound.value._src = audioUrl; // 更新音频源为 Blob URL
+        } catch (error) {
+            console.error('音频加载失败', error);
+        }
+    });
 }
 
 // 更新进度条
 function updateProgressInterval() {
     const interval = setInterval(() => {
         if (sound.value && isPlaying.value) {
+            // 获取当前时间
             currentTime.value = sound.value.seek();
+            // 如果没有得到 duration，可以通过当前时间来动态估算进度
+            if (duration.value === '--') {
+                // 如果 duration 还没有被设置，可以根据当前时间来动态计算
+                if (sound.value.duration() !== Infinity) {
+                    duration.value = sound.value.duration(); // 获取音频总时长
+                }
+            }
             if (duration.value !== '--') {
                 progress.value = (currentTime.value / duration.value) * 100;
             }
@@ -141,6 +191,7 @@ function updateProgressInterval() {
         }
     }, 500);
 }
+
 </script>
 <style lang="scss" scoped>
 .audio_right {
@@ -169,7 +220,6 @@ function updateProgressInterval() {
     }
 
     .audio_icon {
-        /* 移除固定的 width 和 height */
         margin-bottom: 4px;
         cursor: pointer;
     }
