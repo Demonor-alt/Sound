@@ -173,7 +173,7 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <AudioPlayer :audioUrl="sample.sampleUrl"></AudioPlayer>
+                            <StreamAudioPlayer />
                         </div>
                     </div>
                     <!-- 添加按钮 -->
@@ -203,7 +203,7 @@
 <script setup>
 import Recent from "@/components/bank/Recent.vue";
 import MyInput from "@/components/newComponent/Input.vue";
-import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
+import StreamAudioPlayer from "@/components/newComponent/StreamAudioPlayer.vue";
 import MySelect from '@/components/newComponent/Select.vue'
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
@@ -290,16 +290,14 @@ function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
     const differenceInSeconds = Math.floor(differenceInMillis / 1000);
     return differenceInSeconds;
 }
-import { voiceUploadService } from '@/api/explanation';
-const voiceUrl = ref();
 const createRecording = async (blob) => {
     end.value = new Date();
     const formData = new FormData();
     const audioFile = new File([blob], "record.mp3", { type: "audio/mp3" });
     formData.append("files", audioFile);
     try {
-        let result = await voiceUploadService(formData);
-        voiceUrl.value = result.data.voiceUrl;
+        // let result = await voiceUploadService(formData);
+        // voiceUrl.value = result.data.voiceUrl;
         file.value = {
             name: `record.mp3`,
             url: URL.createObjectURL(blob),
@@ -311,7 +309,6 @@ const createRecording = async (blob) => {
     } catch (error) {
         console.error("上传失败:", error);
     }
-    console.log(voiceUrl.value);
 };
 const stopRecording = () => {
     if (mediaRecorder.value) {
@@ -349,15 +346,14 @@ const handleFileUpload = async (newFile) => {
             resolve();
         });
     });
-    const formData = new FormData();
-    formData.append("files", newFile);
-    try {
-        let result = await voiceUploadService(formData);
-        voiceUrl.value = result.data.voiceUrl;
-    } catch (error) {
-        console.error("上传失败:", error);
-    }
-    console.log(voiceUrl.value);
+    // const formData = new FormData();
+    // formData.append("files", newFile);
+    // try {
+    //     let result = await voiceUploadService(formData);
+    //     voiceUrl.value = result.data.voiceUrl;
+    // } catch (error) {
+    //     console.error("上传失败:", error);
+    // }
 };
 // 播放音频
 const audioInstance = ref(null); 

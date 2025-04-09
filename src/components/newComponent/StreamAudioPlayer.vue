@@ -2,10 +2,10 @@
     <div class="audio_right">
         <div class="gap">
             <img v-if="isPlaying === false" @click="startPlayback" class="audio_icon"
-                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../assets/icons/close2.svg"
+                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../../assets/icons/close2.svg"
                 alt="播放" />
             <img v-else @click="startPlayback" class="audio_icon"
-                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../assets/icons/on.svg"
+                :style="{ width: buttonSize + 'px', height: buttonSize + 'px' }" src="../../assets/icons/on.svg"
                 alt="暂停" />
 
             <!-- 时间显示 -->
@@ -24,9 +24,9 @@
                         v-model="volume" step="0.01" @change="setVolume" />
                 </div>
                 <img class="volume_icon" v-if="volume <= 0" @click.stop="audioHuds = !audioHuds"
-                    src="../assets/icons/mute.svg" alt="" />
+                    src="../../assets/icons/mute.svg" alt="" />
                 <img class="volume_icon" v-if="volume > 0" @click.stop="audioHuds = !audioHuds"
-                    src="../assets/icons/speaker.svg" alt="" />
+                    src="../../assets/icons/speaker.svg" alt="" />
             </div>
         </div>
     </div>
@@ -110,8 +110,9 @@ async function startPlayback() {
             updateProgressInterval();
         },
         onload: () => {
-            if (sound.value.duration() && sound.value.duration() !== Infinity) {
+            if (sound.value.duration() !== Infinity) {
                 duration.value = sound.value.duration(); // 获取音频总时长
+                console.log('音频总时长:', duration.value);
             }
         },
         onend: () => {

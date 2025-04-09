@@ -16,7 +16,9 @@
             </div>
             <div class="voice-selection">
                 <div class="text">语音声音</div>
-                <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn" @click="createNewSound">一分钟创建</div></div>
+                <div style="display: flex;flex-direction: row;gap: 10px;">没有模型? <div class="voice-selection-btn"
+                        @click="createNewSound">一分钟创建</div>
+                </div>
             </div>
             <div class="output-section" @click="visible = true" v-if="!voice">
                 <div class="add"></div>
@@ -40,7 +42,7 @@
                             <div class="mydot"></div>
                             <div class="tag1"> {{ voice.voiceLanguage }}</div>
                             <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
-                                }}
+                            }}
                             </div>
                         </div>
                         <div class="select-btns">
@@ -100,16 +102,16 @@
                     <el-tab-pane label="探索" name="first">
                         <div class="action-sum">
                             <div style="width: 155px;">
-                                <MyInput :message="nameValue" :placeholder="placeholder" :size="'medium'" :background="'#FFF'"
-                                    @update:message="handleMessage" />
+                                <MyInput :message="nameValue" :placeholder="placeholder" :size="'medium'"
+                                    :background="'#FFF'" @update:message="handleMessage" />
                             </div>
                             <div class="action-bar">
                                 <span class="header-tip">排序</span>
-                                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
-                                    @update:value="handleSortValue" />
+                                <MySelect :options="sortOptions" :input-width="'155px'" :color="color" :size="'medium'"
+                                    :background="'#FFF'" @update:value="handleSortValue" />
                                 <span class="header-tip">语言</span>
-                                <MySelect :options="languageOptions" :input-width="'155px'" :color="color" :size="'medium'" :background="'#FFF'"
-                                    @update:value="handlelanguageValue" />
+                                <MySelect :options="languageOptions" :input-width="'155px'" :color="color"
+                                    :size="'medium'" :background="'#FFF'" @update:value="handlelanguageValue" />
                                 <el-popover placement="bottom" :width="250" :visible="visiblePopover">
                                     <template #reference>
                                         <el-button size="large" class="btn" @click="visiblePopover = !visiblePopover">
@@ -144,7 +146,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="我的语音" name="third">
                         <MyInput :message="nameValue" :placeholder="placeholder" class="action-bar"
-                            @update:message="handleMessage" style="width: 20%;" :background="'#FFF'" :size="'medium'"/>
+                            @update:message="handleMessage" style="width: 20%;" :background="'#FFF'" :size="'medium'" />
                         <div style="max-height: 53vh;overflow-y: auto;">
                             <MySoundItem :nameValue="nameValue"></MySoundItem>
                         </div>
@@ -353,17 +355,17 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
     queryById(currentId.value);
 });
 import { bankQueryDetailService } from '@/api/bank/mybank'
-import { voiceQueryToAudioService } from '@/api/explanation'
+// import { voiceQueryToAudioService } from '@/api/explanation'
 const queryById = async (id) => {
     let result = await bankQueryDetailService(id);
     voice.value = result.data[0];
-    response.value = await voiceQueryToAudioService(id);
-     // 构造 Blob
-     const byteCharacters = atob(data);
+    // response.value = await voiceQueryToAudioService(id);
+    // 构造 Blob
+    const byteCharacters = atob(data);
     const byteArrays = new Uint8Array(byteCharacters.length);
-    
+
     for (let i = 0; i < byteCharacters.length; i++) {
-      byteArrays[i] = byteCharacters.charCodeAt(i);
+        byteArrays[i] = byteCharacters.charCodeAt(i);
     }
     const blob = new Blob([byteArrays], { type: fileType });
 }
@@ -540,7 +542,7 @@ const addNewAudio = () => {
     //     loadingDialogVisible.value = false;
     // }, 2000);
 }
-import { open,downloadAudio } from '@/hooks/actions';
+import { open, downloadAudio } from '@/hooks/actions';
 // import { audioQueryService, audioInsertService } from '@/api/explanation'
 // onMounted(async () => {
 //     let result = await audioQueryService();
@@ -619,11 +621,13 @@ import { open,downloadAudio } from '@/hooks/actions';
     justify-content: space-between;
     align-items: center;
 }
-.voice-selection-btn{
+
+.voice-selection-btn {
     cursor: pointer;
 }
-.voice-selection-btn:hover{
-    color:#71717a;
+
+.voice-selection-btn:hover {
+    color: #71717a;
 }
 
 .output-section {
@@ -645,10 +649,12 @@ import { open,downloadAudio } from '@/hooks/actions';
         background: url('../assets/icons/add.svg') no-repeat center / contain;
     }
 }
+
 .output-section:hover {
     border-color: #ccc;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
+
 .select-output-section {
     min-height: 50px;
     border: 1px solid #ddd;
@@ -803,10 +809,11 @@ input[type="range"] {
     }
 }
 
-.btn{
+.btn {
     height: 32px;
     width: 40px;
 }
+
 .btn:hover {
     background-color: #f4f4f5 !important;
     border: #606266 1px solid !important;
@@ -877,11 +884,16 @@ input[type="range"] {
     padding: 2px 10px;
     border-radius: 20px;
     font-size: small;
-    display: inline-block;      /* 确保宽度生效 */
-    max-width: 50px;           /* 根据需求调整最大宽度 */
-    white-space: nowrap;        /* 禁止文本换行 */
-    overflow: hidden;           /* 隐藏溢出内容 */
-    text-overflow: ellipsis;    /* 显示省略号 */
+    display: inline-block;
+    /* 确保宽度生效 */
+    max-width: 50px;
+    /* 根据需求调整最大宽度 */
+    white-space: nowrap;
+    /* 禁止文本换行 */
+    overflow: hidden;
+    /* 隐藏溢出内容 */
+    text-overflow: ellipsis;
+    /* 显示省略号 */
 }
 
 .advanced-settings {

@@ -19,7 +19,7 @@
                     @input="handleProgressChange" :style="{ width: sliderLength + 'px' }" />
                 <div class="volume">
                     <div class="volume_progress" v-show="audioHuds">
-                        <el-slider show-tooltip="false" vertical height="100px" class="volume_bar" v-model="audioVolume"
+                        <el-slider :show-tooltip="false" vertical height="100px" class="volume_bar" v-model="audioVolume"
                              @change="handleAudioVolume" />
                     </div>
                     <img class="volume_icon" v-if="audioVolume <= 0" @click.stop="audioHuds = !audioHuds"
