@@ -25,7 +25,7 @@
                         <div class="avatar">
                             <div class="upload-box">
                                 <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
-                                    action="/api/common/upload" name="file" :on-success="uploadSuccess">
+                                    action="/api1/common/upload" name="file" :on-success="uploadSuccess">
                                     <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
@@ -290,17 +290,28 @@ function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
     const differenceInSeconds = Math.floor(differenceInMillis / 1000);
     return differenceInSeconds;
 }
+import { voiceUploadService } from '@/api/explanation';
+const voiceUrl = ref();
 const createRecording = async (blob) => {
     end.value = new Date();
-    file.value = {
-        name: `record.mp3`,
-        url: URL.createObjectURL(blob),
-        blob: blob,
-        duration: `${calculateTimeDifferenceInSeconds(start.value, end.value)}s`,
-        size: formatFileSize(blob.size),
-        file: new File([blob], `record.mp3`, { type: 'audio/mp3' })
-    };
-    console.log(file.value);
+    const formData = new FormData();
+    const audioFile = new File([blob], "record.mp3", { type: "audio/mp3" });
+    formData.append("files", audioFile);
+    try {
+        let result = await voiceUploadService(formData);
+        voiceUrl.value = result.data.voiceUrl;
+        file.value = {
+            name: `record.mp3`,
+            url: URL.createObjectURL(blob),
+            blob: blob,
+            duration: `${calculateTimeDifferenceInSeconds(start.value, end.value)}s`,
+            size: formatFileSize(blob.size),
+            file: audioFile
+        };
+    } catch (error) {
+        console.error("上传失败:", error);
+    }
+    console.log(voiceUrl.value);
 };
 const stopRecording = () => {
     if (mediaRecorder.value) {
@@ -321,7 +332,7 @@ const formatDuration = (seconds) => {
 //上传音频
 const handleFileUpload = async (newFile) => {
     const audioUrl = URL.createObjectURL(newFile);
-    const audio = new Audio(URL.createObjectURL(newFile));
+    const audio = new Audio(audioUrl);
     await new Promise((resolve) => {
         audio.addEventListener('loadedmetadata', () => {
             const duration = audio.duration;
@@ -332,35 +343,47 @@ const handleFileUpload = async (newFile) => {
                 duration: formattedDuration,
                 isPlaying: false,
                 url: audioUrl,
-                file: newFile, // 保存文件对象
-                actualDuration: duration // 新增：将实际音频时长（秒）添加到文件信息中
+                file: newFile,
+                actualDuration: duration
             };
             resolve();
         });
     });
-    console.log(file.value);
+    const formData = new FormData();
+    formData.append("files", newFile);
+    try {
+        let result = await voiceUploadService(formData);
+        voiceUrl.value = result.data.voiceUrl;
+    } catch (error) {
+        console.error("上传失败:", error);
+    }
+    console.log(voiceUrl.value);
 };
 // 播放音频
-const audioInstances = reactive();
+const audioInstance = ref(null); 
 const togglePlay = () => {
-    audioInstances = new Audio(file.value.url)
-    if (file.value.isPlaying) {
-        audioInstances.pause()
-    } else {
-        audioInstances.play()
+    if (audioInstance.value) {
+        audioInstance.value.pause();
+        audioInstance.value.removeEventListener('ended', handleEnded);
     }
-    file.value.isPlaying = !file.value.isPlaying
-    // 添加播放结束监听
-    audio.addEventListener('ended', () => {
-        file.value.isPlaying = false
-    })
-}
+    audioInstance.value = new Audio(file.value.url);
+    const handleEnded = () => {
+        file.value.isPlaying = false;
+    };
+    audioInstance.value.addEventListener('ended', handleEnded);
+    if (file.value.isPlaying) {
+        audioInstance.value.pause();
+    } else {
+        audioInstance.value.play();
+    }
+    file.value.isPlaying = !file.value.isPlaying;
+};
 
 // 修改删除文件方法
 const handleRemove = () => {
-    if (audioInstances) {
-        audioInstances.pause()
-        audioInstances.src = ''
+    if (audioInstance.value) {
+        audioInstance.value.pause()
+        audioInstance.value.src = ''
     }
     file.value=undefined
 }
@@ -756,12 +779,14 @@ const toStep2AndUpdate = async () => {
     width: 25px;
     height: 25px;
     background: url('../../assets/icons/close.svg') no-repeat center / contain;
+    cursor: pointer;
 }
 
 .on {
     width: 30px;
     height: 30px;
     background: url('../../assets/icons/on.svg') no-repeat center / contain;
+    cursor: pointer;
 }
 
 .logo {
