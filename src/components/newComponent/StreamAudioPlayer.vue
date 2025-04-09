@@ -42,7 +42,11 @@ const props = defineProps({
     },
     sliderLength: {
         type: String,
-        default: '420'
+        default: '520'
+    },
+    text: {
+        type: String,
+        default:'盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境为耐盐植物和卤虫等生物提供了生存家园，说明自然的干湿变化能创造特殊生态。'
     }
 });
 const isPlaying = ref(false);
@@ -52,7 +56,6 @@ const volume = ref(0.9);
 const currentTime = ref(0);
 const duration = ref('--');
 const audioHuds = ref(false);
-const sliderLength = ref(300); // 进度条长度，可以根据需要调整
 
 function formatTime(seconds) {
     if (seconds === '--') return '--';
@@ -84,30 +87,35 @@ async function startPlayback() {
     } else {
         isPlaying.value = true;
     }
+    // 如果已存在音频并且是通过 Blob URL 加载的，直接播放
+    if (sound.value && sound.value._src && sound.value._src.startsWith('blob:')) {
+        sound.value.play();
+        return;
+    }
+    // 设置为流式播放模式
     const formData = new FormData();
-    formData.append('text', "在信息爆炸的时代，我们每天被海量的数据包围，而阅读，这一古老的行为...");
+    formData.append('text', props.text);
     formData.append('text_lang', 'zh');
     formData.append('prompt_lang', 'zh');
     formData.append('streaming_mode', 'true');
     formData.append('ref_audio_path', "D://雷军.mp3");
 
-    console.log('最终 FormData 内容:', Array.from(formData.entries()));
     const queryParams = new URLSearchParams();
     for (const [key, value] of formData.entries()) {
         queryParams.append(key, value);
     }
     const apiUrl = `/api2/tts?${queryParams.toString()}`;
-
+    // 创建流式音频
     sound.value = new Howl({
         src: [apiUrl],
         xhr: {
             method: 'GET',
         },
-        html5: true,
+        html5: true,  // 使用 HTML5 Audio 来处理较大的文件
         volume: volume.value,
         format: ['wav'],
         onplay: () => {
-            updateProgressInterval();
+            updateProgressInterval(); // 开始更新进度条
         },
         onload: () => {
             if (sound.value.duration() !== Infinity) {
@@ -122,11 +130,23 @@ async function startPlayback() {
         },
         onloaderror: (id, error) => {
             console.error('音频加载失败', error);
-            error.value = "音频加载失败";
             isPlaying.value = false;
         }
     });
+    // 通过流式播放开始音频
     sound.value.play();
+    // 等待音频加载完成后创建 Blob
+    sound.value.on('load', async () => {
+        try {
+            const response = await fetch(apiUrl);
+            if (!response.ok) throw new Error('音频加载失败');
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            sound.value._src = audioUrl;
+        } catch (error) {
+            console.error('音频加载失败', error);
+        }
+    });
 }
 
 // 更新进度条
@@ -170,7 +190,6 @@ function updateProgressInterval() {
     }
 
     .audio_icon {
-        /* 移除固定的 width 和 height */
         margin-bottom: 4px;
         cursor: pointer;
     }
