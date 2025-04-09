@@ -22,18 +22,15 @@ export default defineConfig({
   server: {
     proxy: {
       '/api1': {
-        target:'http://127.0.0.1:4523/m1/5812788-5497864-default',//后台服务所在的源
-        // target: 'https://frp-bar.com:44463',//后台服务所在的源
-        // target: 'https://60.215.128.117:28128',//后台服务所在的源
+        target:'http://127.0.0.1:4523/m1/5812788-5497864-default',//本地mock
+        // target: 'https://frp-bar.com:44463',//后端
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api1/, '')//api1替换为''
       },
       '/api2': {
-        //target:'http://127.0.0.1:4523/m1/5812788-5497864-default',//后台服务所在的源
-        // target: 'https://frp-bar.com:44463',//后台服务所在的源
-        //target: 'https://www.u1605327.nyat.app:22465',//后台服务所在的源
-        target: 'http://127.0.0.1:9880',//后台服务所在的源
+        //target: 'https://www.u1605327.nyat.app:22465',//AI
+        target: 'http://127.0.0.1:9880',//本地
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api2/, '')//api2替换为''

@@ -1,3 +1,4 @@
+<!-- 循环播放，音频长度是根据播放位置获得 -->
 <template>
     <div class="audio_right">
         <div class="gap">
@@ -46,7 +47,7 @@ const props = defineProps({
     },
     text: {
         type: String,
-        default:'盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境为耐盐植物和卤虫等生物提供了生存家园，说明自然的干湿变化能创造特殊生态。'
+        default:'盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。'
     }
 });
 const isPlaying = ref(false);
@@ -125,6 +126,7 @@ async function startPlayback() {
         },
         onend: () => {
             isPlaying.value = false;
+            duration.value = currentTime.value;
             currentTime.value = 0;
             progress.value = 0;
         },

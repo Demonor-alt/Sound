@@ -155,7 +155,7 @@
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
                                     sample.sampleTitle
-                                    }}</span>
+                                }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
                                     <Close />
@@ -356,7 +356,7 @@ const handleFileUpload = async (newFile) => {
     // }
 };
 // 播放音频
-const audioInstance = ref(null); 
+const audioInstance = ref(null);
 const togglePlay = () => {
     if (audioInstance.value) {
         audioInstance.value.pause();
@@ -381,7 +381,7 @@ const handleRemove = () => {
         audioInstance.value.pause()
         audioInstance.value.src = ''
     }
-    file.value=undefined
+    file.value = undefined
 }
 const activeName = ref('second');
 const toStep2 = () => {
@@ -448,21 +448,18 @@ const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data.voiceImage;
 }
-import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService,bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
+import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService, bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
 
 const sendAudiosToBackend = async () => {
-    const formData = new FormData();
-    formData.append('text', "1111");
-    formData.append('text_lang', 'zh');
-    formData.append('prompt_lang', 'zh');
-    formData.append('ref_audio', file.value);
     try {
-        let result = await bankInsertMySampleService(formData);
-        console.log(result);
         let result2 = await bankInsertService(insertData.value);
         currentVoiceId.value = result2.data.voiceId;
-        samples.value = result.data.sample;
-        console.log('音频上传成功:', samples.value, currentVoiceId.value);
+        samples.value = [{
+            sampleId: '001',
+            sampleTitle: '默认文本',
+            sampleText: '盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。',
+        }]
+
     } catch (error) {
         console.error('音频上传失败:', error);
     }
