@@ -35,7 +35,7 @@
 
 <script setup>
 import { Howl } from 'howler';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 const props = defineProps({
     buttonSize: {
         type: String,
@@ -164,6 +164,9 @@ function updateProgressInterval() {
         }
     }, 500);
 }
+onMounted(() => {
+    startPlayback();
+})
 </script>
 <style lang="scss" scoped>
 .audio_right {
