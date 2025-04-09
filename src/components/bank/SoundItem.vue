@@ -156,41 +156,41 @@ const props = defineProps({
 });
 import audioUrl from '@/assets/sound.m4a';
 const voices = ref([
-    {
-        voiceId: 1,
-        userName: 'fc',
-        voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        voiceName: '55',
-        voiceDescription: '1212',
-        voiceCreationTime: new Date(2025, 1, 9, 19, 11),
-        voiceUseCount: 110000,
-        voiceShareCount: 11,
-        voiceLikeCount: 20,
-        voiceCollectCount: 10,
-        voiceLanguage: 'ch',
-        voiceTag: 'aaaaaaaaa',
-        voiceIsUsed: false,
-        voiceIsShared: false,
-        voiceIsLiked: false,
-        voiceIsUnliked: false,
-        voiceIsCollected: false,
-        voiceSamples: [
-            {
-                sampleId: 1,
-                sampleIsPlaying: false,
-                sampleTitle: 'Default Sample',
-                sampleText: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-                sampleUrl: audioUrl
-            },
-            {
-                sampleId: 2,
-                sampleIsPlaying: false,
-                sampleTitle: '可以让父母',
-                sampleText: '对侧人防热非人发热功耗一节课iklo',
-                sampleUrl: audioUrl
-            }
-        ],
-    },
+    // {
+    //     voiceId: 1,
+    //     userName: 'fc',
+    //     voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
+    //     voiceName: '55',
+    //     voiceDescription: '1212',
+    //     voiceCreationTime: new Date(2025, 1, 9, 19, 11),
+    //     voiceUseCount: 110000,
+    //     voiceShareCount: 11,
+    //     voiceLikeCount: 20,
+    //     voiceCollectCount: 10,
+    //     voiceLanguage: 'ch',
+    //     voiceTag: 'aaaaaaaaa',
+    //     voiceIsUsed: false,
+    //     voiceIsShared: false,
+    //     voiceIsLiked: false,
+    //     voiceIsUnliked: false,
+    //     voiceIsCollected: false,
+    //     voiceSamples: [
+    //         {
+    //             sampleId: 1,
+    //             sampleIsPlaying: false,
+    //             sampleTitle: 'Default Sample',
+    //             sampleText: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
+    //             sampleUrl: audioUrl
+    //         },
+    //         {
+    //             sampleId: 2,
+    //             sampleIsPlaying: false,
+    //             sampleTitle: '可以让父母',
+    //             sampleText: '对侧人防热非人发热功耗一节课iklo',
+    //             sampleUrl: audioUrl
+    //         }
+    //     ],
+    // },
 ]);
 const filteredVoices = computed(() => {
     let result = voices.value.filter(voice =>
@@ -249,6 +249,7 @@ import { discoverQueryService } from '@/api/bank/discover'
 onMounted(async () => {
     let result = await discoverQueryService();
     voices.value = result.data;
+    console.log(voices.value);
     voices.value.forEach(item => { item.voiceIsShared = false; });
 })
 import { ElNotification } from 'element-plus'
