@@ -173,7 +173,7 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <StreamAudioPlayer />
+                            <StreamAudioPlayer :text="sample.sampleText" />
                         </div>
                     </div>
                     <!-- 添加按钮 -->
