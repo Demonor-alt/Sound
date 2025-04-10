@@ -91,7 +91,7 @@
                                         <div class="noRecord"></div>
                                         停止录制
                                     </div>
-                                    <div ref="waveformRef" ></div>
+                                    <div ref="waveformRef"></div>
                                 </div>
                                 <div style="font-size: small;color: #6b7280;margin-left: 20px;">
                                     *您可以使用自己的文本或下面的建议文本录制您的声音。</div>
@@ -164,7 +164,7 @@
                         <div>
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
-                                    sample.sampleTitle
+            sample.sampleTitle
                                     }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
@@ -280,29 +280,12 @@ const createWaveSurferInstance = () => {
         waveColor: '#000000',
         progressColor: '#000000',
         height: 80,
-        width:210,
+        width: 210,
         barWidth: 10,
         barRadius: 2,
         cursorWidth: 0,
     });
 };
-
-onMounted(() => {
-    createWaveSurferInstance();  // 组件挂载时创建 WaveSurfer 实例
-    record.value = wavesurfer.value.registerPlugin(
-        RecordPlugin.create({
-            scrollingWaveform: false,
-        })
-    )
-
-    // 录音结束事件
-    record.value.on('record-end', (blob) => {
-        recordedUrl.value = URL.createObjectURL(blob)
-        recordedBlobType.value = blob.type.split(';')[0].split('/')[1] || 'webm'
-
-        createRecording(blob)
-    })
-});
 
 // 录制音频
 const startRecording = async () => {
@@ -484,8 +467,10 @@ import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, ba
 
 const sendAudiosToBackend = async () => {
     try {
-        let result2 = await bankInsertService(insertData.value);
-        currentVoiceId.value = result2.data.voiceId;
+        // console.log(insertData.value);
+        // let result2 = await bankInsertService(insertData.value);
+        // console.log(result2.data);
+        // currentVoiceId.value = result2.data.voiceId;
         samples.value = [{
             sampleId: '001',
             sampleTitle: '默认文本',
@@ -535,6 +520,23 @@ onMounted(async () => {
         let result = await bankQueryDetailService(queryVoiceId);
         insertData.value = result.data;
         samples.value = result.data.voiceSamples;
+        console.log(insertData.value);
+    }
+    else {
+        createWaveSurferInstance();  // 组件挂载时创建 WaveSurfer 实例
+        record.value = wavesurfer.value.registerPlugin(
+            RecordPlugin.create({
+                scrollingWaveform: false,
+            })
+        )
+
+        // 录音结束事件
+        record.value.on('record-end', (blob) => {
+            recordedUrl.value = URL.createObjectURL(blob)
+            recordedBlobType.value = blob.type.split(';')[0].split('/')[1] || 'webm'
+
+            createRecording(blob)
+        })
     }
 })
 const toStep2AndUpdate = async () => {
@@ -696,12 +698,14 @@ const toStep2AndUpdate = async () => {
         border: #dcdfe6 1px solid;
         border-radius: 6px;
     }
-    .wave-record{
+
+    .wave-record {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         padding-right: 5%;
     }
+
     .record {
         display: flex;
         flex-direction: row;
