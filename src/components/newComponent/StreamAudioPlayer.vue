@@ -48,6 +48,10 @@ const props = defineProps({
     text: {
         type: String,
         default:'盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。'
+    },
+    path: {
+        type: String,
+        default:"D://雷军.mp3"
     }
 });
 const isPlaying = ref(false);
