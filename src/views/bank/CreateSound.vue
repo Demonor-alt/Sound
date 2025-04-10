@@ -567,7 +567,7 @@ const toStep2AndUpdate = async () => {
 }
 
 :deep(.el-radio-button .el-radio-button__inner) {
-    min-width: 43vh;
+    min-width: 42.6vh;
 }
 
 .radio {
@@ -766,8 +766,8 @@ const toStep2AndUpdate = async () => {
     align-items: center;
 
     .insert {
-        width: 20px;
-        height: 20px;
+        width: 30px;
+        height: 30px;
         background: url('../../assets/icons/insert.svg') no-repeat center / contain;
         padding: 10px;
         background-color: #e5e8eb;
