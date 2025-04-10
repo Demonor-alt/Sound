@@ -90,18 +90,17 @@
                                 <Edit />
                             </el-icon>
                         </el-button>
-                        <el-button size="large" class="btn" circle @click="dialogVisible = true">
+                        <el-button size="large" class="btn" circle @click="voice.dialogVisible = true">
                             <el-icon size="20" color="black">
                                 <Delete />
                             </el-icon>
                         </el-button>
-                        <el-dialog v-model="dialogVisible" align-center :show-close="false" style="width: 500px;">
+                        <el-dialog v-model="voice.dialogVisible" align-center :show-close="false" style="width: 500px;">
                             <div style="font-size: large;font-weight: 600;">您确定要删除语音吗</div>
                             <template #footer>
                                 <span class="dialog-footer">
-                                    <el-button color="black" plain @click="dialogVisible = false">取消</el-button>
-                                    <el-button color="black"
-                                        @click="dialogVisible = false; deleteService(voice.voiceId)">
+                                    <el-button color="black" plain @click="voice.dialogVisible = false">取消</el-button>
+                                    <el-button color="black" @click="voice.dialogVisible = false; deleteService(voice.voiceId)">
                                         确认
                                     </el-button>
                                 </span>
@@ -233,6 +232,7 @@ const bankList = async () => {
     try {
         const result = await bankQueryService();
         voiceList.value = result.data;
+        console.log(voiceList.value);
     } catch (error) {
         console.error('Failed to ', error);
         voiceList.value = [];
@@ -242,9 +242,14 @@ const bankList = async () => {
 onMounted(() => {
     bankList();
 });
-const deleteService = async(id) => {
-    let result = await bankDeleteService(id);
-    bankList();
+const deleteService = async (id) => {
+    try {
+        const result = await bankDeleteService(id);
+        console.log('Delete result:', result);
+        bankList();
+    } catch (error) {
+        console.error('Failed to delete voice:', error);
+    }
 };
 </script>
 
