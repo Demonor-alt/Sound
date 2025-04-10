@@ -22,8 +22,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api1': {
-        // target:'http://127.0.0.1:4523/m1/5812788-5497864-default',//本地mock
-        target: 'https://frp-bar.com:44463',//后端
+        target:'http://127.0.0.1:4523/m1/5812788-5497864-default',//本地mock
+        // target: 'https://frp-bar.com:44463',//后端
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/api1/, '')//api1替换为''

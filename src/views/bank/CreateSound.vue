@@ -109,31 +109,31 @@
                     <div class="time-picker">
                         <div class="loadHeader">
                             已上传：{{ selectedTime }}s
-                            <div v-if="selectedTime <= 90 && selectedTime >= 10" class="icon">
+                            <div v-if="selectedTime <= 50 && selectedTime >=5" class="icon">
                                 <el-icon size="20" color="#16a149">
                                     <CircleCheck />
                                 </el-icon>
                                 不错
                             </div>
-                            <div v-if="selectedTime > 90" class="icon">
+                            <div v-if="selectedTime > 30" class="icon">
                                 <el-icon size="20" color="#ef4343">
                                     <CircleClose />
                                 </el-icon>
                                 过长
                             </div>
-                            <div v-if="selectedTime < 10 && selectedTime > 0" class="icon">
+                            <div v-if="selectedTime < 5 && selectedTime > 0" class="icon">
                                 <el-icon size="20" color="#ef4343">
                                     <CircleClose />
                                 </el-icon>
                                 过短
                             </div>
                             <div v-if="selectedTime === 0" class="icon">
-                                推荐 30 秒左右
+                                推荐 20 秒左右
                             </div>
                         </div>
-                        <el-slider v-model="selectedTime" min="0" max="100" :step="1" show-stops :marks="marks"
+                        <el-slider v-model="selectedTime" min="0" max="30" :step="1" show-stops :marks="marks"
                             :show-tooltip="false" :show-button="false" />
-                        <div class="tip">*提示：最短10秒，最长90秒，推荐30秒</div>
+                        <div class="tip">*提示：最短5秒，最长30秒，推荐20秒</div>
                     </div>
                 </div>
                 <button v-if="queryVoiceId === undefined" class="next-btn" @click="createAction">创建</button>
@@ -358,14 +358,14 @@ const handleFileUpload = async (newFile) => {
 // 播放音频
 const audioInstance = ref(null);
 const togglePlay = () => {
+    const handleEnded = () => {
+        file.value.isPlaying = false;
+    };
     if (audioInstance.value) {
         audioInstance.value.pause();
         audioInstance.value.removeEventListener('ended', handleEnded);
     }
     audioInstance.value = new Audio(file.value.url);
-    const handleEnded = () => {
-        file.value.isPlaying = false;
-    };
     audioInstance.value.addEventListener('ended', handleEnded);
     if (file.value.isPlaying) {
         audioInstance.value.pause();
@@ -397,15 +397,15 @@ const selectedTime = computed(() => {
 });
 //声音节点
 const marks = computed(() => ({
-    10: {
+    5: {
         style: { color: '#9ca3b3', fontSize: '17px' },
         label: '最小'
     },
-    30: {
+    20: {
         style: { color: '#9ca3b3', fontSize: '17px' },
         label: '推荐'
     },
-    90: {
+    30: {
         style: { color: '#9ca3b3', fontSize: '17px' },
         label: '最大'
     },
