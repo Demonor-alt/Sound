@@ -43,7 +43,7 @@ const props = defineProps({
     },
     sliderLength: {
         type: String,
-        default: '520'
+        default: '470'
     },
     text: {
         type: String,
