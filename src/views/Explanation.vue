@@ -477,7 +477,7 @@ const toExplanation = () => {
 }
 const loadingDialogVisible = ref(false);
 const addNewAudio = () => {
-    loadingDialogVisible.value = true;
+    // loadingDialogVisible.value = true;
     const addData = {
         voiceId: voice.value.voiceId,
         audioText: inputText.value,
@@ -491,9 +491,9 @@ const addNewAudio = () => {
         voiceName: voice.value.voiceName,
         audioId:'1',
     }
-    setTimeout(async () => {
-        loadingDialogVisible.value = false;
-    }, 500);
+    // setTimeout(async () => {
+    //     loadingDialogVisible.value = false;
+    // }, 500);
     // setTimeout(async () => {
     //     let result = await audioInsertService(addData);
     //     addNewAudios.value = result.data;
@@ -1021,7 +1021,7 @@ input[type="range"] {
 
 .empty {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   display: flex;
   align-items: center;
   justify-content: center;
