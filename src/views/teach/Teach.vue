@@ -161,7 +161,7 @@ header {
     padding: 10px;
     border: 2px solid #e5e5e5;
     border-radius: 15px;
-    width: 150px;
+    width: 170px;
     display: flex;
     flex-direction: column;
     gap: 5px;
