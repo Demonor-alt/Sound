@@ -24,8 +24,15 @@
                         封面图 (可选)
                         <div class="avatar">
                             <div class="upload-box">
-                                <el-upload class="avatar-uploader" :auto-upload="true" :show-file-list="false"
+                                <!-- <el-upload class="avatar-uploader" :show-file-list="false"
                                     action="/api1/common/upload" name="file" :on-success="uploadSuccess">
+                                    <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" :auto-upload="false"/>
+                                    <el-icon v-else class="avatar-uploader-icon">
+                                        <Plus />
+                                    </el-icon>
+                                </el-upload> -->
+                                <el-upload class="avatar-uploader" :show-file-list="false" :auto-upload="false"
+                                    :on-change="handleChange">
                                     <img v-if="insertData.voiceImage" :src="insertData.voiceImage" class="avatar" />
                                     <el-icon v-else class="avatar-uploader-icon">
                                         <Plus />
@@ -109,7 +116,7 @@
                     <div class="time-picker">
                         <div class="loadHeader">
                             已上传：{{ selectedTime }}s
-                            <div v-if="selectedTime <= 50 && selectedTime >=5" class="icon">
+                            <div v-if="selectedTime <= 50 && selectedTime >= 5" class="icon">
                                 <el-icon size="20" color="#16a149">
                                     <CircleCheck />
                                 </el-icon>
@@ -447,6 +454,9 @@ const insertData = ref({
 const uploadSuccess = (result) => {
     // console.log(result);
     insertData.value.voiceImage = result.data.voiceImage;
+}
+const handleChange = () => {
+    insertData.value.voiceImage = 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/cb1abdbd-987c-41f9-b374-ff85e46b92e7.png'
 }
 import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService, bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
 
