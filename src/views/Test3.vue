@@ -2,7 +2,7 @@
     <el-row>
         <el-col :span="12">
             <div>
-                <div >
+                <div>
                     <el-tabs v-model="activeName" class="demo-tabs">
                         <el-tab-pane label="录制音频" name="first">
                             <div class="audio-player">
@@ -22,6 +22,23 @@
                                 <Store />
                             </div>
                         </el-tab-pane>
+                        <div class="audio-upload">
+                            <el-row v-if="file !== undefined" :key="index" class="files">
+                                <el-col :span="2" class="logo"></el-col>
+                                <el-col :span="13" class="file">
+                                    {{ file.name }}
+                                    <div class="size">{{ file.size }}</div>
+                                </el-col>
+                                <el-col :span="4">{{ file.duration }}</el-col>
+                                <el-col :span="4" class="btns">
+                                    <div v-if="!file.isPlaying" class="close" @click="togglePlay()"></div>
+                                    <div v-else class="on" @click="togglePlay()"></div>
+                                    <el-icon @click="handleRemove()" class="delete-btn" size="25">
+                                        <Close />
+                                    </el-icon>
+                                </el-col>
+                            </el-row>
+                        </div>
                     </el-tabs>
                 </div>
             </div>
@@ -71,6 +88,8 @@ onMounted(() => {
     record.value.on('record-end', (blob) => {
         recordedUrl.value = URL.createObjectURL(blob)
         recordedBlobType.value = blob.type.split(';')[0].split('/')[1] || 'webm'
+
+        createRecording(blob)
     })
 });
 
