@@ -51,7 +51,7 @@ const props = defineProps({
     },
     path: {
         type: String,
-        default:"D://雷军.mp3"
+        default:"D://audio.mp3"
     }
 });
 const isPlaying = ref(false);
