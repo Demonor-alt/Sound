@@ -82,13 +82,16 @@
                         </el-tab-pane>
                         <el-tab-pane label="录制音频" name="first">
                             <div class="audio-player">
-                                <div v-if="!recording" @click="startRecording" class="record">
-                                    <div class="inRecord"></div>
-                                    点击开始录制
-                                </div>
-                                <div v-else @click="stopRecording" class="record">
-                                    <div class="noRecord"></div>
-                                    停止录制
+                                <div class="wave-record">
+                                    <div v-if="!recording" @click="startRecording" class="record">
+                                        <div class="inRecord"></div>
+                                        点击开始录制
+                                    </div>
+                                    <div v-else @click="stopRecording" class="record">
+                                        <div class="noRecord"></div>
+                                        停止录制
+                                    </div>
+                                    <div ref="waveformRef" ></div>
                                 </div>
                                 <div style="font-size: small;color: #6b7280;margin-left: 20px;">
                                     *您可以使用自己的文本或下面的建议文本录制您的声音。</div>
@@ -162,7 +165,7 @@
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
                                     sample.sampleTitle
-                                }}</span>
+                                    }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
                                     <Close />
@@ -261,35 +264,60 @@ function handleMessageTextArea(index, newMessage) {
 }
 const file = ref();
 const recording = ref(false);
-const mediaRecorder = ref(null);
-const audioChunks = ref([]);
+const record = ref(null);
+const recordedUrl = ref();
+const recordedBlobType = ref();
+const wavesurfer = ref(null);  // 保存 wavesurfer 实例
+const waveformRef = ref(null);  // 保存 div 的引用
 const start = ref();
 const end = ref();
-//录制音频
+import WaveSurfer from 'wavesurfer.js';
+import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm'
+// 创建 WaveSurfer 实例
+const createWaveSurferInstance = () => {
+    wavesurfer.value = WaveSurfer.create({
+        container: waveformRef.value,
+        waveColor: '#000000',
+        progressColor: '#000000',
+        height: 80,
+        width:210,
+        barWidth: 10,
+        barRadius: 2,
+        cursorWidth: 0,
+    });
+};
+
+onMounted(() => {
+    createWaveSurferInstance();  // 组件挂载时创建 WaveSurfer 实例
+    record.value = wavesurfer.value.registerPlugin(
+        RecordPlugin.create({
+            scrollingWaveform: false,
+        })
+    )
+
+    // 录音结束事件
+    record.value.on('record-end', (blob) => {
+        recordedUrl.value = URL.createObjectURL(blob)
+        recordedBlobType.value = blob.type.split(';')[0].split('/')[1] || 'webm'
+
+        createRecording(blob)
+    })
+});
+
+// 录制音频
 const startRecording = async () => {
-    start.value = new Date();
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder.value = new MediaRecorder(stream);
-        audioChunks.value = [];
-        mediaRecorder.value.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                audioChunks.value.push(event.data);
-            }
-        };
-        mediaRecorder.value.start();
-        recording.value = true;
-        mediaRecorder.value.onstop = () => {
-            const audioBlob = new Blob(audioChunks.value, { type: "audio/mp3" });
-            audioBlob.value = audioBlob;
-            recording.value = false;
-            stream.getTracks().forEach(track => track.stop());
-            createRecording(audioBlob);
-        };
-    } catch (error) {
-        console.error("获取音频流失败：", error);
+    await record.value.startRecording();
+    recording.value = true;
+    start.value = new Date();  // 记录录音开始时间
+};
+const stopRecording = () => {
+    if (record.value) {
+        record.value.stopRecording();  // 使用 RecordPlugin 停止录音
+        recording.value = false;
+        end.value = new Date();  // 记录录音结束时间
     }
 };
+// 计算音频的时长
 function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
     const date1 = new Date(dateStr1);
     const date2 = new Date(dateStr2);
@@ -297,14 +325,12 @@ function calculateTimeDifferenceInSeconds(dateStr1, dateStr2) {
     const differenceInSeconds = Math.floor(differenceInMillis / 1000);
     return differenceInSeconds;
 }
+// 创建录音文件
 const createRecording = async (blob) => {
-    end.value = new Date();
     const formData = new FormData();
     const audioFile = new File([blob], "record.mp3", { type: "audio/mp3" });
     formData.append("files", audioFile);
     try {
-        // let result = await voiceUploadService(formData);
-        // voiceUrl.value = result.data.voiceUrl;
         file.value = {
             name: `record.mp3`,
             url: URL.createObjectURL(blob),
@@ -313,16 +339,12 @@ const createRecording = async (blob) => {
             size: formatFileSize(blob.size),
             file: audioFile
         };
+        wavesurfer.value.load(file.value.url);
     } catch (error) {
         console.error("上传失败:", error);
     }
 };
-const stopRecording = () => {
-    if (mediaRecorder.value) {
-        mediaRecorder.value.stop();
-        recording.value = false;
-    }
-};
+
 const formatFileSize = (bytes) => {
     const kb = bytes / 1024;
     return `${kb.toFixed(2)} KB`;
@@ -674,7 +696,12 @@ const toStep2AndUpdate = async () => {
         border: #dcdfe6 1px solid;
         border-radius: 6px;
     }
-
+    .wave-record{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-right: 5%;
+    }
     .record {
         display: flex;
         flex-direction: row;

@@ -19,7 +19,6 @@
                                 </div>
                                 <div style="font-size: small;color: #6b7280;margin-left: 20px;">
                                     *您可以使用自己的文本或下面的建议文本录制您的声音。</div>
-                                <Store />
                             </div>
                         </el-tab-pane>
                         <div class="audio-upload">
@@ -46,10 +45,9 @@
     </el-row>
 </template>
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue';
+import { ref, onMounted } from 'vue';
 import WaveSurfer from 'wavesurfer.js';
 import { Close } from '@element-plus/icons-vue';
-import Store from '@/components/bank/Store.vue';
 import RecordPlugin from 'wavesurfer.js/dist/plugins/record.esm'
 
 // 初始化变量
@@ -175,3 +173,18 @@ const handleRemove = () => {
 
 const activeName = ref('second');
 </script>
+<style scoped>
+.close {
+    width: 25px;
+    height: 25px;
+    background: url('../assets/icons/close.svg') no-repeat center / contain;
+    cursor: pointer;
+}
+
+.on {
+    width: 30px;
+    height: 30px;
+    background: url('../assets/icons/on.svg') no-repeat center / contain;
+    cursor: pointer;
+}
+</style>
