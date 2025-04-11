@@ -237,7 +237,7 @@ const samples = ref([{
 const addSample = () => {
     samples.value.push({
         sampleTitle: '',
-        sampleText: '',
+        sampleContent: '',
         sampleUrl: '',
         sampleIsPlaying: false,
     });
@@ -266,7 +266,7 @@ function handleMessageName2(index, newMessage) {
     samples.value[index].sampleTitle = newMessage;
 }
 function handleMessageTextArea(index, newMessage) {
-    samples.value[index].sampleText = newMessage;
+    samples.value[index].sampleContent = newMessage;
 }
 const handleAudioUrlValue = (index, newMessage) => {
     samples.value[index].sampleUrl = newMessage;
@@ -457,7 +457,7 @@ const stepStore = useStepStore()
 const { step } = storeToRefs(stepStore);
 const currentVoiceId = ref('');
 const insertData = ref({
-    voiceType: '1',
+    voiceType: 1,
     voiceImage: '',
     voiceName: '',
     voiceDescription: '',
@@ -481,7 +481,7 @@ const sendAudiosToBackend = async () => {
         samples.value = [{
             sampleId: '001',
             sampleTitle: '默认文本',
-            sampleText: '盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。',
+            sampleContent: '盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。',
         }]
 
     } catch (error) {
@@ -511,12 +511,17 @@ const toMyBankAndInsert = async () => {
 const toMyBankAndUpdate = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
-    let result = await bankUpdateSamplesService(samples.value);
+    const updateData = {
+        samples:samples.value,
+        voiceId: currentVoiceId.value,
+    }
+    let result = await bankUpdateSamplesService(updateData);
+    console.log(result);
 }
 const generateSample = async (index) => {
     const createAudioData = {
         voiceId: currentVoiceId.value,
-        sampleText: samples.value[index].sampleText,
+        sampleContent: samples.value[index].sampleContent,
     }
     // let result = await createAudioloadService(createAudioData);
     // samples.value[index].sampleUrl = result.data.sampleUrl;
@@ -526,7 +531,6 @@ onMounted(async () => {
         let result = await bankQueryDetailService(queryVoiceId);
         insertData.value = result.data[0];
         samples.value = result.data[0].voiceSamples;
-        console.log(insertData.value.voiceType.toString() === '1');
     }
     else {
         createWaveSurferInstance();  // 组件挂载时创建 WaveSurfer 实例
@@ -545,16 +549,13 @@ onMounted(async () => {
         })
     }
 })
-watch(() => insertData.value, (newValue) => {
-    console.log('Data updated:', newValue);
-}, { deep: true });
 const toStep2AndUpdate = async () => {
     stepStore.incrementStep();
     const updateData = {
         ...insertData,
         voiceId: currentVoiceId.value,
     }
-    let result = await bankUpdateService(insertData.value);
+    let result = await bankUpdateService(updateData);
 }
 </script>
 
