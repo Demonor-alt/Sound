@@ -53,3 +53,7 @@ export const uploadService = (data) => {
 export const bankInsertSamplesService = (data) => {
     return request.post('/api1/mybank/mysample',data);
 }
+//上传音频，返回url
+export const uploadSampleService = (data) => {
+    return request.post('/explanation/upload', data);
+}

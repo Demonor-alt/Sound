@@ -35,7 +35,7 @@
 
 <script setup>
 import { Howl } from 'howler';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, defineEmits } from 'vue';
 const props = defineProps({
     buttonSize: {
         type: String,
@@ -47,11 +47,15 @@ const props = defineProps({
     },
     text: {
         type: String,
-        default:'盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。'
+        default: '盐湖在干旱季节水分蒸发，盐分结晶析出，形成独特的盐滩景观，盐滩周边的特殊环境，为耐盐植物和卤虫等生物，提供了生存家园，说明自然的干湿变化，能创造特殊生态。'
     },
     path: {
         type: String,
-        default:"D://audio.mp3"
+        default: "D://audio.mp3"
+    },
+    isNeedToBank: {
+        type: Boolean,
+        default: false
     }
 });
 const isPlaying = ref(false);
@@ -62,26 +66,26 @@ const currentTime = ref(0);
 const duration = ref('--');
 const audioHuds = ref(false);
 
-function formatTime(seconds) {
+const formatTime = (seconds) => {
     if (seconds === '--') return '--';
     const minutes = Math.floor(seconds / 60);
     const secondsRemaining = Math.floor(seconds % 60);
     return `${minutes}:${secondsRemaining < 10 ? '0' : ''}${secondsRemaining}`;
 }
 
-function updateProgress() {
+const updateProgress = () => {
     if (sound.value) {
         sound.value.seek((progress.value / 100) * duration.value);
     }
 }
 
-function setVolume() {
+const setVolume = () => {
     if (sound.value) {
         sound.value.volume(volume.value);  // 直接设置音量
     }
 }
 
-async function startPlayback() {
+const startPlayback = async () => {
     // 如果音频正在播放且被点击暂停按钮
     if (isPlaying.value) {
         sound.value.pause();
@@ -103,7 +107,7 @@ async function startPlayback() {
     formData.append('text_lang', 'zh');
     formData.append('prompt_lang', 'zh');
     formData.append('streaming_mode', 'true');
-    formData.append('ref_audio_path', "D://雷军.mp3");
+    formData.append('ref_audio_path', props.path);
 
     const queryParams = new URLSearchParams();
     for (const [key, value] of formData.entries()) {
@@ -149,6 +153,11 @@ async function startPlayback() {
             const audioBlob = await response.blob();
             const audioUrl = URL.createObjectURL(audioBlob);
             sound.value._src = audioUrl;
+            if (props.isNeedToBank) {
+                const formData = new FormData();
+                formData.append('file', audioBlob, 'audio.wav');
+                sendToBank(formData);
+            }
         } catch (error) {
             console.error('音频加载失败', error);
         }
@@ -156,7 +165,7 @@ async function startPlayback() {
 }
 
 // 更新进度条
-function updateProgressInterval() {
+const updateProgressInterval = () => {
     const interval = setInterval(() => {
         if (sound.value && isPlaying.value) {
             currentTime.value = sound.value.seek();
@@ -171,6 +180,14 @@ function updateProgressInterval() {
 onMounted(() => {
     startPlayback();
 })
+
+const emit = defineEmits(['update:audioUrl']) 
+import { uploadSampleService } from '@/api/bank/mybank'
+//将音频传给后端，生成url
+const sendToBank = async (formData) => {
+    let result = await uploadSampleService(formData);
+    emit('update:audioUrl', result.data.voiceUrl);
+}
 </script>
 <style lang="scss" scoped>
 .audio_right {

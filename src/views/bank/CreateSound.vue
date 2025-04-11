@@ -15,7 +15,7 @@
                                 <el-radio-button label="私有" value="0" />
                             </el-radio-group>
                         </div>
-                        <div v-if="insertData.voiceType === '1'" style="font-size: small; color: #6b748b;">
+                        <div v-if="insertData.voiceType.toString() === '1'" style="font-size: small; color: #6b748b;">
                             此语音模型将在发现页面中可见，每个人都可以看到。
                         </div>
                         <div v-else style="font-size: small; color: #6b748b;">此语音模型仅对创建者可见，不能共享且不会出现在发现页面。</div>
@@ -164,7 +164,7 @@
                         <div>
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
-            sample.sampleTitle
+                                    sample.sampleTitle
                                     }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
@@ -183,7 +183,7 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <StreamAudioPlayer :text="sample.sampleText" />
+                            <StreamAudioPlayer @update:audioUrl="handleAudioUrlValue(index, newMessage)"  :text="sample.sampleText" :isNeedToBank="true" />
                         </div>
                     </div>
                     <!-- 添加按钮 -->
@@ -198,7 +198,8 @@
                         <button class="next-btn" v-if="queryVoiceId === undefined"
                             @click="toMyBankAndInsert">保存</button>
                         <button class="next-btn" v-else @click="toMyBankAndUpdate">保存</button>
-                        <button class="skip" @click="toMyBank">跳过</button>
+                        <button class="skip" v-if="queryVoiceId === undefined" @click="toMyBankAndInsert">跳过</button>
+                        <button class="skip"v-else @click="toMyBank">跳过</button>
                     </div>
                 </div>
             </div>
@@ -261,6 +262,9 @@ function handleMessageName2(index, newMessage) {
 }
 function handleMessageTextArea(index, newMessage) {
     samples.value[index].sampleText = newMessage;
+}
+const handleAudioUrlValue = (index, newMessage) => {
+    samples.value[index].sampleUrl = newMessage;
 }
 const file = ref();
 const recording = ref(false);
@@ -422,7 +426,7 @@ const marks = computed(() => ({
         label: '最大'
     },
 }));
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 const placeholderName = ref('填写声音名称');
 const placeholderTag = ref('输入标签');
 function handleMessageName(newMessage) {
@@ -464,13 +468,11 @@ const handleChange = () => {
     insertData.value.voiceImage = 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/cb1abdbd-987c-41f9-b374-ff85e46b92e7.png'
 }
 import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService, bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
-
+const tempCurrentVoiceId = ref();//直接改变currentVoiceId会报错
 const sendAudiosToBackend = async () => {
     try {
-        // console.log(insertData.value);
-        // let result2 = await bankInsertService(insertData.value);
-        // console.log(result2.data);
-        // currentVoiceId.value = result2.data.voiceId;
+        let result2 = await bankInsertService(insertData.value);
+        tempCurrentVoiceId.value = result2.data.voiceId;
         samples.value = [{
             sampleId: '001',
             sampleTitle: '默认文本',
@@ -496,7 +498,7 @@ const toMyBankAndInsert = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
     const addData = {
-        voiceId: currentVoiceId.value,
+        voiceId: tempCurrentVoiceId.value,
         samples: samples.value
     }
     let result = await bankInsertSamplesService(addData);
@@ -504,8 +506,7 @@ const toMyBankAndInsert = async () => {
 const toMyBankAndUpdate = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
-    const newSamples = samples.value.slice(1);
-    let result = await bankUpdateSamplesService(newSamples);
+    let result = await bankUpdateSamplesService(samples.value);
 }
 const generateSample = async (index) => {
     const createAudioData = {
@@ -539,13 +540,16 @@ onMounted(async () => {
         })
     }
 })
+watch(() => insertData.value, (newValue) => {
+    console.log('Data updated:', newValue);
+}, { deep: true });
 const toStep2AndUpdate = async () => {
+    stepStore.incrementStep();
     const updateData = {
         ...insertData,
         voiceId: currentVoiceId.value,
     }
     let result = await bankUpdateService(insertData.value);
-    stepStore.incrementStep();
 }
 </script>
 
