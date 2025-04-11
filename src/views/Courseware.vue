@@ -3,7 +3,13 @@
     <div class="col1">
       <h1>课件转视频</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess"
+        <!-- <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess"
+          :limit="1">
+          <template #trigger>
+            <el-button color="black" size="large" type="primary">选择课件</el-button>
+          </template>
+</el-upload> -->
+        <el-upload ref="upload" :auto-upload="false" :show-file-list="true" :on-change="handleChange"
           :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择课件</el-button>
@@ -252,16 +258,19 @@ const uploadPPTUrl = ref();
 const uploadSuccess = (result, file) => {
   uploadPPTUrl.value = result.data.uploadPPTUrl;
 };
+const handleChange = (file, fileList) => {
+    console.log(file, fileList);
+};
 const upload = ref();
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
-    const idMatch = newPath.match(/\?id=(\w+)/);
-    if (idMatch) {
-        currentId.value = idMatch[1];
-    } else {
-        currentId.value = '';
-    }
-    visible.value = false;
-    queryById(currentId.value);
+  const idMatch = newPath.match(/\?id=(\w+)/);
+  if (idMatch) {
+    currentId.value = idMatch[1];
+  } else {
+    currentId.value = '';
+  }
+  visible.value = false;
+  queryById(currentId.value);
 });
 import { bankQueryDetailService } from '@/api/bank/mybank'
 const queryById = async (id) => {

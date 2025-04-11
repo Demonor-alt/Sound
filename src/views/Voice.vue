@@ -3,7 +3,13 @@
     <div class="col1">
       <h1>视频变声</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess" :on-remove="handleRemove"
+        <!-- <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess" :on-remove="handleRemove"
+          :limit="1">
+          <template #trigger>
+            <el-button color="black" size="large" type="primary">选择视频</el-button>
+          </template>
+        </el-upload> -->
+        <el-upload ref="upload" :auto-upload="false" :show-file-list="true" :on-change="handleChange"
           :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择视频</el-button>
@@ -248,12 +254,16 @@ const router = useRouter();
 const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
-const uploadVedioUrl = ref(rawAudio);
+const uploadVedioUrl = ref();
 import rawAudio from '@/assets/voice/raw.mp4';
 import vcAudio from '@/assets/voice/vc.mp4';
 const uploadSuccess = (result, file) => {
   // uploadVedioUrl.value = result.data.uploadVedioUrl;
   uploadVedioUrl.value = rawAudio;
+};
+const handleChange = () => {
+  uploadVedioUrl.value = rawAudio;
+
 };
 const handleRemove = () => {
   uploadVedioUrl.value = undefined;

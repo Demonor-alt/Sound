@@ -3,7 +3,13 @@
     <div class="col1">
       <h1>辅助阅读</h1>
       <div class="upload-section">
-        <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess"
+        <!-- <el-upload ref="upload" :auto-upload="true" action="/api1/common/ppt" name="file" :on-success="uploadSuccess"
+          :limit="1">
+          <template #trigger>
+            <el-button color="black" size="large" type="primary">选择课件</el-button>
+          </template>
+        </el-upload> -->
+        <el-upload ref="upload" :auto-upload="false" :show-file-list="true" :on-change="handleChange"
           :limit="1">
           <template #trigger>
             <el-button color="black" size="large" type="primary">选择课件</el-button>
@@ -305,6 +311,9 @@ const currentVoiceId = route.query ? route.query.id : undefined;
 const uploadPPTUrl = ref();
 const uploadSuccess = (result, file) => {
   uploadPPTUrl.value = result.data.uploadPPTUrl;
+};
+const handleChange = (file, fileList) => {
+    console.log(file, fileList);
 };
 const upload = ref();
 // 音频元素引用
