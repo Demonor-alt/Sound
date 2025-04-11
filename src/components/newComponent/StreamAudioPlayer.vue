@@ -51,7 +51,7 @@ const props = defineProps({
     },
     path: {
         type: String,
-        default: "D://audio.mp3"
+        default: "D://雷军.mp3"
     },
     isNeedToBank: {
         type: Boolean,
@@ -155,7 +155,7 @@ const startPlayback = async () => {
             sound.value._src = audioUrl;
             if (props.isNeedToBank) {
                 const formData = new FormData();
-                formData.append('file', audioBlob, 'audio.wav');
+                formData.append('files', audioBlob, 'audio.wav');
                 sendToBank(formData);
             }
         } catch (error) {
