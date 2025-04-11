@@ -409,16 +409,7 @@ function handleMessage(newMessage) {
 import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 const showDontAgreeDialog = ref(false);
-const voice = ref({
-    voiceId: 1,
-    userName: 'fc',
-    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-    voiceName: '55',
-    voiceDescription: '1212',
-    voiceCreationTime: new Date(2025, 1, 9, 19, 11),
-    voiceUseCount: 110000,
-    voiceShareCount: 11,
-});
+const voice = ref();
 // const voice = ref();
 // const addNewAudios = ref({
 //     audioId: 1,
