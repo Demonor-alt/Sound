@@ -63,8 +63,9 @@
           </el-icon>视频变声
         </div>
       </div>
-      <el-avatar v-if="token.userImage !== ''" :src="token.userImage"  style="margin-right: 20px;"/>
-      <el-avatar v-else :icon="UserFilled" />
+      <el-avatar src="http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg" :icon="UserFilled" />
+      <!-- <el-avatar v-if="token.userImage !== ''" :src="token.userImage"  style="margin-right: 20px;"/>
+      <el-avatar v-else :icon="UserFilled" /> -->
     </el-header>
     <div style="background-color: #e4e4e7;height: 1px;width: 100%;"></div>
     <el-main>
@@ -121,9 +122,11 @@ const { token } = useTokenStore();
 }
 
 .logo {
-  width: 100px;
-  height: 100px;
-  background: url('../assets/logo.png') no-repeat center / contain;
+  width: 130px;
+  height: 45px;
+  background: url('../assets/logo3.png') no-repeat center / contain;
+  border: #e0e5eb 1px solid;
+  border-radius: 10px;
 }
 
 .menu {
