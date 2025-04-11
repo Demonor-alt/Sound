@@ -621,7 +621,7 @@ const addNewAudio = () => {
       ]
     };
     loadingDialogVisible.value = false;
-  }, 2000);
+  }, 10000);
   // setTimeout(async () => {
   //   let result = await audioInsertService(addData);
   //   addNewAudios.value = {

@@ -406,7 +406,7 @@ const addNewAudio = () => {
        vedioURL:vcAudio
     }
     loadingDialogVisible.value = false;
-  }, 2000);
+  }, 10000);
   // setTimeout(async () => {
   //   let result = await voiceInsertService(addData);
   //   addNewVedios.value = result.data;

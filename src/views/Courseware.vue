@@ -412,7 +412,7 @@ const addNewAudio = () => {
       vedioURL: video
     }
     loadingDialogVisible.value = false;
-  }, 2000);
+  }, 10000);
   // setTimeout(async () => {
   //   let result = await pptInsertService(addData);
   //   addNewVedios.value = result.data;
