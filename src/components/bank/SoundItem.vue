@@ -67,7 +67,7 @@
                     </div>
                     <div
                         style="width: 50%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; font-size: small;">
-                        {{ sample.sampleText }}
+                        {{ sample.sampleContent }}
                     </div>
                 </div>
             </div>

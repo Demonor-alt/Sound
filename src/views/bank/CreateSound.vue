@@ -165,7 +165,7 @@
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
                                     sample.sampleTitle
-                                    }}</span>
+                                }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
                                     <Close />
@@ -183,7 +183,11 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <StreamAudioPlayer :isNeedToBank="true" @update:audioUrl="(newMessage) => handleAudioUrlValue(index, newMessage)"  :text="sample.sampleText" />
+                            <StreamAudioPlayer v-if="queryVoiceId === undefined" :isNeedToBank="true"
+                                @update:audioUrl="(newMessage) => handleAudioUrlValue(index, newMessage)"
+                                :text="sample.sampleText" />
+                            <AudioPlayer v-else :audioUrl="sample.sampleUrl" />
+
                         </div>
                     </div>
                     <!-- 添加按钮 -->
@@ -199,7 +203,7 @@
                             @click="toMyBankAndInsert">保存</button>
                         <button class="next-btn" v-else @click="toMyBankAndUpdate">保存</button>
                         <button class="skip" v-if="queryVoiceId === undefined" @click="toMyBankAndInsert">跳过</button>
-                        <button class="skip"v-else @click="toMyBank">跳过</button>
+                        <button class="skip" v-else @click="toMyBank">跳过</button>
                     </div>
                 </div>
             </div>
@@ -215,6 +219,7 @@
 import Recent from "@/components/bank/Recent.vue";
 import MyInput from "@/components/newComponent/Input.vue";
 import StreamAudioPlayer from "@/components/newComponent/StreamAudioPlayer.vue";
+import AudioPlayer from "@/components/newComponent/AudioPlayer.vue";
 import MySelect from '@/components/newComponent/Select.vue'
 const placeholderName2 = ref("输入音频样本标题");
 const placeholderTextArea = ref("输入音频样本文本")
@@ -264,7 +269,6 @@ function handleMessageTextArea(index, newMessage) {
     samples.value[index].sampleText = newMessage;
 }
 const handleAudioUrlValue = (index, newMessage) => {
-    console.log(newMessage);
     samples.value[index].sampleUrl = newMessage;
 }
 const file = ref();
@@ -500,7 +504,7 @@ const toMyBankAndInsert = async () => {
     stepStore.reduceStep();
     const addData = {
         voiceId: tempCurrentVoiceId.value,
-        samples: samples.value
+        sample: samples.value
     }
     let result = await bankInsertSamplesService(addData);
 }
@@ -520,9 +524,9 @@ const generateSample = async (index) => {
 onMounted(async () => {
     if (queryVoiceId !== undefined) {
         let result = await bankQueryDetailService(queryVoiceId);
-        insertData.value = result.data;
-        samples.value = result.data.voiceSamples;
-        console.log(insertData.value);
+        insertData.value = result.data[0];
+        samples.value = result.data[0].voiceSamples;
+        console.log(insertData.value.voiceType.toString() === '1');
     }
     else {
         createWaveSurferInstance();  // 组件挂载时创建 WaveSurfer 实例

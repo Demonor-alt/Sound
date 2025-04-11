@@ -13,7 +13,7 @@
                     <span class="display-detail">{{ timeDistance(voice.voiceCreationTime) }}</span>
                     <div class="dot"></div>
                     <div class="tag1"> {{ voice.voiceLanguage }}</div>
-                    <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;">
+                    <div class="tag2" v-if="voice.voiceTag !== '' && voice.voiceTag !==null" style="margin-left: 5px;">
                         {{ voice.voiceTag }}
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                                     </div>
                                 </div>
                                 <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                    {{ sample.sampleText }}
+                                    {{ sample.sampleContent }}
                                 </div>
                             </el-card>
                         </div>
@@ -221,14 +221,14 @@ const voice = ref({
             sampleId: 1,
             sampleIsPlaying: false,
             sampleTitle: 'Default Sample',
-            sampleText: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
+            sampleContent: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
             sampleUrl: audioUrl
         },
         {
             sampleId: 2,
             sampleIsPlaying: false,
             sampleTitle: '可以让父母',
-            sampleText: '对侧人防热非人发热功耗一节课iklo',
+            sampleContent: '对侧人防热非人发热功耗一节课iklo',
             sampleUrl: audioUrl
         }
     ]
