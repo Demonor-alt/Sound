@@ -75,7 +75,7 @@
                                         </div>
                                     </div>
                                     <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                        {{ sample.sampleText }}
+                                        {{ sample.sampleContent }}
                                     </div>
                                 </el-card>
                             </div>
@@ -155,7 +155,7 @@ const voiceList = ref([
                 "sampleId": 83,
                 "sampleIsPlaying": false,
                 "sampleTitle": "拨伟大快但是脊梁",
-                "sampleText": "consectetur",
+                "sampleContent": "consectetur",
                 "sampleUrl": audioUrl
             }
         ]

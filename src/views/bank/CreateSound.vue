@@ -11,8 +11,8 @@
                         <div class="radio">
                             <el-radio-group v-model="insertData.voiceType" size="large" text-color="black"
                                 fill="#fafafa">
-                                <el-radio-button label="公开" value="1" />
-                                <el-radio-button label="私有" value="0" />
+                                <el-radio-button label="公开" :value="1" />
+                                <el-radio-button label="私有" :value="0" />
                             </el-radio-group>
                         </div>
                         <div v-if="insertData.voiceType.toString() === '1'" style="font-size: small; color: #6b748b;">
@@ -175,7 +175,7 @@
                         <div class="myinput">
                             <MyInput :message="sample.sampleTitle" :placeholder="placeholderName2"
                                 @update:message="(newMessage) => handleMessageName2(index, newMessage)" />
-                            <MyInput :message="sample.sampleText" :placeholder="placeholderTextArea" :type="type"
+                            <MyInput :message="sample.sampleContent" :placeholder="placeholderTextArea" :type="type"
                                 :rows="rows"
                                 @update:message="(newMessage) => handleMessageTextArea(index, newMessage)" />
                             <el-button color="#e7e7e8" @click="generateSample(index)"
@@ -185,7 +185,7 @@
                             </el-button>
                             <StreamAudioPlayer v-if="queryVoiceId === undefined" :isNeedToBank="true"
                                 @update:audioUrl="(newMessage) => handleAudioUrlValue(index, newMessage)"
-                                :text="sample.sampleText" />
+                                :text="sample.sampleContent" />
                             <AudioPlayer v-else :audioUrl="sample.sampleUrl" />
 
                         </div>
@@ -230,7 +230,7 @@ const rows = ref("3");
 const samples = ref([{
     sampleId: '',
     sampleTitle: '',
-    sampleText: '',
+    sampleContent: '',
     sampleUrl: '',
     sampleIsPlaying: false,
 }]);
