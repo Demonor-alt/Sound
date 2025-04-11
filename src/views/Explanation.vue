@@ -302,7 +302,7 @@ const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
 import audioUrl from '@/assets/sound.m4a';
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
-    const idMatch = newPath.match(/\?id=(\d+)/);
+    const idMatch = newPath.match(/\?id=(\w+)/);
     if (idMatch) {
         currentId.value = idMatch[1];
     } else {
@@ -314,17 +314,19 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
 import { bankQueryDetailService } from '@/api/bank/mybank'
 // import { voiceQueryToAudioService } from '@/api/explanation'
 const queryById = async (id) => {
+    console.log(id)
     let result = await bankQueryDetailService(id);
+    console.log(result);
     voice.value = result.data[0];
     // response.value = await voiceQueryToAudioService(id);
     // 构造 Blob
-    const byteCharacters = atob(data);
-    const byteArrays = new Uint8Array(byteCharacters.length);
+    // const byteCharacters = atob(data);
+    // const byteArrays = new Uint8Array(byteCharacters.length);
 
-    for (let i = 0; i < byteCharacters.length; i++) {
-        byteArrays[i] = byteCharacters.charCodeAt(i);
-    }
-    const blob = new Blob([byteArrays], { type: fileType });
+    // for (let i = 0; i < byteCharacters.length; i++) {
+    //     byteArrays[i] = byteCharacters.charCodeAt(i);
+    // }
+    // const blob = new Blob([byteArrays], { type: fileType });
 }
 onMounted(async () => {
     if (currentVoiceId) {

@@ -254,14 +254,14 @@ const uploadSuccess = (result, file) => {
 };
 const upload = ref();
 watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
-  const idMatch = newPath.match(/\?id=(\d+)/);
-  if (idMatch) {
-    currentId.value = idMatch[1];
-  } else {
-    currentId.value = '';
-  }
-  visible.value = false;
-  queryById(currentId);
+    const idMatch = newPath.match(/\?id=(\w+)/);
+    if (idMatch) {
+        currentId.value = idMatch[1];
+    } else {
+        currentId.value = '';
+    }
+    visible.value = false;
+    queryById(currentId.value);
 });
 import { bankQueryDetailService } from '@/api/bank/mybank'
 const queryById = async (id) => {
