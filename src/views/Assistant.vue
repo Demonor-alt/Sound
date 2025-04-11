@@ -368,7 +368,7 @@ watch(() => router.currentRoute.value.fullPath, (newPath, oldPath) => {
 import { bankQueryDetailService } from '@/api/bank/mybank'
 const queryById = async (id) => {
   let result = await bankQueryDetailService(id);
-  voice.value = result.data;
+  voice.value = result.data[0];
 }
 onMounted(async () => {
   if (currentVoiceId) {
