@@ -8,7 +8,7 @@
             </div>
         </el-header>
         <el-main>
-            <div v-if="voices.length === 0">
+            <div v-if="!voices">
                 <el-empty description="暂无数据" />
             </div>
             <el-row v-for="voice in filteredVoices" :key="voice.voiceId" class="voice-item">
@@ -117,32 +117,16 @@ function handleMessage(newMessage) {
 }
 import audioUrl from '@/assets/sound.m4a';
 
-const voices = ref([
-    {
-        voiceId: 1,
-        voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-        voiceName: "曲志明",
-        voiceDescription: "例面求上。果圆相称斗织是。开电年。同利算术极七等被来。问广十世。",
-        voiceCreationTime: new Date(2025, 1, 9, 19, 11),
-        voiceIsCollected: true,
-        voiceSamples: [
-            {
-                sampleId: 83,
-                sampleIsPlaying: false,
-                sampleTitle: "拨伟大快但是脊梁",
-                sampleContent: "consectetur",
-                sampleUrl: audioUrl
-            }
-        ]
-    }
-]);
+const voices = ref();
 
 const searchText = ref('');
 const placeholder = ref('搜索声音...');
 const filteredVoices = computed(() => {
-    return voices.value.filter(voice =>
-        voice.voiceName.includes(searchText.value)
-    )
+    if (voices.value) {
+        return voices.value.filter(voice =>
+            voice.voiceName.includes(searchText.value)
+        )
+    }
 })
 
 const formatDate = (date) => {
@@ -261,7 +245,7 @@ onBeforeUnmount(async () => {
     display: flex;
     padding: 20px;
     margin-bottom: 20px;
-    transition: all 0.3s ease; 
+    transition: all 0.3s ease;
 
     .el-col {
         display: flex;
@@ -287,9 +271,10 @@ onBeforeUnmount(async () => {
         }
     }
 }
+
 .voice-item:hover {
-    border-color: #ccc; 
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); 
+    border-color: #ccc;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .logo {

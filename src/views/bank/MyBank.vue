@@ -13,7 +13,7 @@
             </div>
         </el-header>
         <el-main>
-            <div v-if="voiceList.length === 0">
+            <div v-if="!voiceList">
                 <el-empty description="暂无数据" />
             </div>
             <el-row v-for="voice in filteredVoices" :key="voice.voiceId" class="voice-item">
@@ -142,31 +142,15 @@ function handleMessage(newMessage) {
 }
 import audioUrl from '@/assets/sound.m4a';
 // 模拟数据
-const voiceList = ref([
-    {
-        "voiceId": 70,
-        "voiceImage": "https://loremflickr.com/400/400?lock=567532027855895",
-        "voiceName": "曲志明",
-        "voiceDescription": "例面求上。果圆相称斗织是。开电年。同利算术极七等被来。问广十世。",
-        "voiceCreationTime": "2024-04-22 00:28:31",
-        "voiceIsCollected": true,
-        "voiceSamples": [
-            {
-                "sampleId": 83,
-                "sampleIsPlaying": false,
-                "sampleTitle": "拨伟大快但是脊梁",
-                "sampleContent": "consectetur",
-                "sampleUrl": audioUrl
-            }
-        ]
-    }
-]);
+const voiceList = ref();
 const searchText = ref('');
 const placeholder = ref('搜索声音...');
 const filteredVoices = computed(() => {
-    return voiceList.value.filter(voice =>
+    if (voiceList.value) {
+        return voiceList.value.filter(voice =>
         voice.voiceName.includes(searchText.value)
     )
+    }
 })
 
 // 日期格式化
