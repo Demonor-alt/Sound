@@ -183,7 +183,7 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <StreamAudioPlayer @update:audioUrl="handleAudioUrlValue(index, newMessage)"  :text="sample.sampleText" :isNeedToBank="true" />
+                            <StreamAudioPlayer :isNeedToBank="true" @update:audioUrl="(newMessage) => handleAudioUrlValue(index, newMessage)"  :text="sample.sampleText" />
                         </div>
                     </div>
                     <!-- 添加按钮 -->
@@ -264,6 +264,7 @@ function handleMessageTextArea(index, newMessage) {
     samples.value[index].sampleText = newMessage;
 }
 const handleAudioUrlValue = (index, newMessage) => {
+    console.log(newMessage);
     samples.value[index].sampleUrl = newMessage;
 }
 const file = ref();
