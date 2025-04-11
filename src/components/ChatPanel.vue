@@ -180,7 +180,7 @@ DemoControl.changeAnimation((animation) => {
                               <textarea :disabled="!AIInputEnabled" ref="ChatInputRef" v-model="AIInput"
                                 placeholder="发送消息、或点击左侧按钮语音输入"
                                 class="rc-textarea textarea--mqeErm1c3cJyzW0dncHo textarea--mqeErm1c3cJyzW0dncHo coz-fg-primary coz-bg-max disabled:coz-bg-max placeholder:coz-fg-dim"
-                                style="overflow-y: hidden; resize: none; height: 28px; min-height: 24px; max-height: 104px;font-size: 20px;">
+                                style="overflow-y: hidden; resize: none; height: 28px; min-height: 24px; max-height: 104px;font-size: 15px;">
                               </textarea>
                               <!-- 加载图标 -->
                               <div class="pt-[3px] absolute" v-if="LoadingIconShown"
