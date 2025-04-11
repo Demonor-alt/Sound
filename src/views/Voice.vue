@@ -40,7 +40,7 @@
               <span class="display-detail">{{ timeDistance(voice.voiceCreationTime) }}</span>
               <div class="mydot"></div>
               <div class="tag1"> {{ voice.voiceLanguage }}</div>
-              <div class="tag2" v-if="voice.voiceTag !== ''" style="margin-left: 5px;"> {{ voice.voiceTag
+              <div class="tag2" v-if="voice.voiceTag !== '' && voice.voiceTag!==null" style="margin-left: 5px;"> {{ voice.voiceTag
               }}
               </div>
             </div>
@@ -248,7 +248,7 @@ const router = useRouter();
 const currentId = ref('');
 const route = useRoute();
 const currentVoiceId = route.query ? route.query.id : undefined;
-const uploadVedioUrl = ref();
+const uploadVedioUrl = ref(rawAudio);
 import rawAudio from '@/assets/voice/raw.mp4';
 import vcAudio from '@/assets/voice/vc.mp4';
 const uploadSuccess = (result, file) => {
@@ -406,7 +406,7 @@ const addNewAudio = () => {
        vedioURL:vcAudio
     }
     loadingDialogVisible.value = false;
-  }, 10000);
+  }, 1000);
   // setTimeout(async () => {
   //   let result = await voiceInsertService(addData);
   //   addNewVedios.value = result.data;

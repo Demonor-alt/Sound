@@ -6,7 +6,7 @@
                 <div class="text">您的文本</div>
                 <MyInput :message="inputText" :placeholder="placeholderTextArea" :type="type" :maxlength="maxlength"
                     :rows="rows" :color="color1" @update:message="handleMessageTextArea" />
-                <div class="counter">{{ inputText.length }}/500</div>
+                <div class="counter">{{ inputText.length }}/2000</div>
             </div>
             <div class="warning">
                 <el-icon size="12">
@@ -289,7 +289,7 @@ import MyInput from "@/components/newComponent/Input.vue";
 const placeholderTextArea = ref("输入您想生成的语音文本")
 const type = ref('textarea');
 const rows = ref("5");
-const maxlength = ref("500");
+const maxlength = ref("2000");
 const color1 = ref("#fafafa");
 const inputText = ref('');
 function handleMessageTextArea(newValue) {

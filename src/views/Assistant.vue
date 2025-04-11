@@ -524,9 +524,9 @@ const addNewAudio = () => {
   setTimeout(() => {
     addNewAudios.value = {
       audioId: 1,
-      voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-      voiceName: '66',
-      audioText: '11111111111111111',
+      voiceImage: 'https://frp-bar.com:44463/pics/3fff5297-7e5f-4a15-be6f-48dbc818dfa9.png',
+      voiceName: '糖',
+      audioText: '通用女声',
       audioURL: assUrl,
       isPlaying: false,
       currentIndex: -1,
