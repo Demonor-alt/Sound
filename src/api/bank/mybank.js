@@ -55,5 +55,5 @@ export const bankInsertSamplesService = (data) => {
 }
 //上传音频，返回url
 export const uploadSampleService = (data) => {
-    return request.post('/explanation/upload', data);
+    return request.post('/api1/explanation/upload', data);
 }
