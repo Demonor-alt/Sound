@@ -98,12 +98,12 @@ h1 {
     padding: 5px 20px;
     border-radius: 6px;
     border: #e4e4e7 1px solid;
-    background-color: white;
+    background-color: #f5f5f5;
     cursor: pointer;
 }
 
 .diff:hover {
-    background-color: #f5f5f5;
+    background-color: white;
 }
 
 .diff.is_active {
