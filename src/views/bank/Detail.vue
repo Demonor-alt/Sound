@@ -201,36 +201,30 @@ function handleMessageTextArea(newValue) {
 import audioUrl from '@/assets/sound.m4a';
 const voice = ref({
     voiceId: 1,
-    userName: 'fc',
-    voiceImage: 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/975adcd7-15bf-44d4-a440-be2fbc972af1.jpg',
-    voiceName: '55',
-    voiceDescription: '1212',
-    voiceCreationTime: new Date(2025, 1, 9, 19, 11),
-    voiceUseCount: 110000,
-    voiceShareCount: 11,
-    voiceLikeCount: 20,
-    voiceCollectCount: 10,
-    voiceLanguage: 'ch',
-    voiceTag: 'aaaaaaaaa',
+    userName: '',
+    voiceImage: '',
+    voiceName: '',
+    voiceDescription: '',
+    voiceCreationTime: '',
+    voiceUseCount: 0,
+    voiceShareCount: 0,
+    voiceLikeCount: 0,
+    voiceCollectCount: 0,
+    voiceLanguage: '',
+    voiceTag: '',
     voiceIsUsed: false,
     voiceIsShared: false,
-    voiceIsLiked: '1',
+    voiceIsLiked: '',
     voiceIsCollected: false,
     voiceSamples: [
         {
             sampleId: 1,
             sampleIsPlaying: false,
-            sampleTitle: 'Default Sample',
-            sampleContent: '哈哈哈笑死我了，这也太搞笑了吧！我靠我靠，这是什么神仙操作啊，太离谱了哩咯。笑得我肚子疼，这也太逗了吧，绝了绝了！',
-            sampleUrl: audioUrl
-        },
-        {
-            sampleId: 2,
-            sampleIsPlaying: false,
-            sampleTitle: '可以让父母',
-            sampleContent: '对侧人防热非人发热功耗一节课iklo',
+            sampleTitle: '',
+            sampleContent: '',
             sampleUrl: audioUrl
         }
+       
     ]
 })
 import { ref, reactive, onMounted } from 'vue'

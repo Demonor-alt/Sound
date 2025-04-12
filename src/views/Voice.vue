@@ -225,10 +225,10 @@
     </div>
     <el-divider direction="vertical" style="height: auto;" />
     <div class="col2">
-      <h3 v-if="uploadVedioUrl">原来的视频</h3>
+      <h3 v-if="uploadVedioUrl">原视频</h3>
       <video v-if="uploadVedioUrl" :src="uploadVedioUrl" controls width="100%" height="250"
       style=" border-radius: 10px;  border: 1px solid #ddd;"></video>
-      <h3>生成的视频</h3>
+      <h3>生成视频</h3>
       <div v-if="addNewVedios && uploadVedioUrl">
         <div class="audio-item">
           <video :src="addNewVedios.vedioURL" controls width="100%" height="250"
@@ -416,7 +416,7 @@ const addNewAudio = () => {
        vedioURL:vcAudio
     }
     loadingDialogVisible.value = false;
-  }, 1000);
+  }, 10000);
   // setTimeout(async () => {
   //   let result = await voiceInsertService(addData);
   //   addNewVedios.value = result.data;

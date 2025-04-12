@@ -151,6 +151,16 @@
                     <button class="next-btn" @click="toStep2AndUpdate">保存</button>
                     <button class="skip" @click="toStep2">跳过</button>
                 </div>
+                <el-dialog v-model="loadingDialogVisible" :show-close="false" width="25%" title="正在生成样本" align-center>
+                    <div style="margin: 20px;">
+                        <div class="loading-dots">
+                            <span class="dot dot1"></span>
+                            <span class="dot dot2"></span>
+                            <span class="dot dot3"></span>
+                        </div>
+                        <div style="display: flex;justify-content: center;margin: 10px;">正在分析音频</div>
+                    </div>
+                </el-dialog>
             </div>
         </el-col>
         <el-col :span="12" v-else>
@@ -165,7 +175,7 @@
                             <div class="card-header">
                                 <span style="font-weight: 600;">{{ sample.sampleTitle === '' ? "样本" + index :
                                     sample.sampleTitle
-                                }}</span>
+                                    }}</span>
                                 <el-icon size="20" color="#606672" style="cursor: pointer;"
                                     @click="removeSample(index)">
                                     <Close />
@@ -183,9 +193,11 @@
                                 <div class="make"></div>
                                 生成样本
                             </el-button>
-                            <StreamAudioPlayer v-if="queryVoiceId === undefined" :isNeedToBank="true"
+                            <!-- <StreamAudioPlayer v-if="queryVoiceId === undefined" :isNeedToBank="true"
                                 @update:audioUrl="(newMessage) => handleAudioUrlValue(index, newMessage)"
-                                :text="sample.sampleContent" />
+                                :text="sample.sampleContent" /> -->
+                            <AudioPlayer v-if="queryVoiceId === undefined"
+                                audioUrl="https://frp-bar.com:44463/voice/fde96d22-d990-48d5-be34-58ad4277ef80.mp3" />
                             <AudioPlayer v-else :audioUrl="sample.sampleUrl" />
 
                         </div>
@@ -470,7 +482,7 @@ const uploadSuccess = (result) => {
     insertData.value.voiceImage = result.data.voiceImage;
 }
 const handleChange = () => {
-    insertData.value.voiceImage = 'http://yiyangqianxihsdkhejknfnbhuyjwes.online/cb1abdbd-987c-41f9-b374-ff85e46b92e7.png'
+    insertData.value.voiceImage = 'https://frp-bar.com:44463/pics/7417577f-a746-49c7-841a-3a2505c236e7.png'
 }
 import { bankInsertService, bankInsertSamplesService, bankQueryDetailService, bankUpdateService, bankUpdateSamplesService, bankInsertMySampleService, uploadService } from '@/api/bank/mybank'
 const tempCurrentVoiceId = ref();//直接改变currentVoiceId会报错
@@ -488,11 +500,16 @@ const sendAudiosToBackend = async () => {
         console.error('音频上传失败:', error);
     }
 };
+const loadingDialogVisible = ref();
 const createAction = async () => {
+    loadingDialogVisible.value = true;
     // 发送音频数据到后端
     await sendAudiosToBackend();
     // 跳转逻辑
-    stepStore.incrementStep();
+    setTimeout(() => {
+        loadingDialogVisible.value = true;
+        stepStore.incrementStep();
+    }, 4000)
 };
 
 const toMyBank = () => {
@@ -512,7 +529,7 @@ const toMyBankAndUpdate = async () => {
     router.push('/mybank');
     stepStore.reduceStep();
     const updateData = {
-        samples:samples.value,
+        samples: samples.value,
         voiceId: currentVoiceId.value,
     }
     let result = await bankUpdateSamplesService(updateData);
@@ -928,6 +945,48 @@ audio {
         border: #e4e4e7 1px solid;
         border-radius: 4px;
         cursor: pointer;
+    }
+}
+
+.loading-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    background-color: #000;
+    border-radius: 50%;
+    margin: 0 4px;
+    animation: bounce 1.4s infinite ease-in-out both;
+}
+
+/* 为每个点设置不同的动画延迟 */
+.dot1 {
+    animation-delay: -0.32s;
+}
+
+.dot2 {
+    animation-delay: -0.16s;
+}
+
+.dot3 {
+    animation-delay: 0s;
+}
+
+/* 定义跳动动画 */
+@keyframes bounce {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1.0);
     }
 }
 </style>
