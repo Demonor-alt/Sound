@@ -144,7 +144,9 @@ const startPlayback = async () => {
         }
     });
     // 通过流式播放开始音频
-    sound.value.play();
+    setTimeout(() => {
+        sound.value.play();
+   },200000)
     // 等待音频加载完成后创建 Blob
     sound.value.on('load', async () => {
         try {
