@@ -228,7 +228,7 @@
     </div>
     <el-divider direction="vertical" style="height: auto;" />
     <div class="col2">
-      <h3>生成的音频</h3>
+      <h3>生成音频</h3>
       <div v-if="addNewAudios">
         <div class="audio-item">
           <div class="audio-top">

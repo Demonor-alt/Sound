@@ -472,16 +472,16 @@ const loadingDialogVisible = ref(false);
 const addNewAudio = () => {
     // loadingDialogVisible.value = true;
     const addData = {
-        voiceId: voice.value.voiceId,
+        // voiceId: voice.value.voiceId,
         audioText: inputText.value,
         audioMode: mode.value,
         audioSpeed: speedPercentage.value,
         audioVolume: volumePercentage.value,
     }
     addNewAudios.value = {
-        voiceImage: voice.value.voiceImage,
+        // voiceImage: voice.value.voiceImage,
         audioText: inputText.value,
-        voiceName: voice.value.voiceName,
+        // voiceName: voice.value.voiceName,
         audioId:'1',
     }
     // setTimeout(async () => {
