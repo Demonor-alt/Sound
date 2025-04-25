@@ -1,12 +1,15 @@
-<template>
-    <el-upload :auto-upload="false" :show-file-list="true" :on-change="handleChange">
-        <el-button slot="trigger">选择文件</el-button>
-    </el-upload>
-</template>
+<script>
+const pro=new Promise((resolve,reject)=>{
+    console.log("1");
+    const duration=Math.floor(Math.random()*5000);
 
-<script setup>
-// 处理文件变更
-const handleChange = (file, fileList) => {
-    console.log(file, fileList);
-};
+    setTimeout(()=>{
+        if(Math.random()<0.5){
+            resolve(duration)
+        }else {
+            reject("2")
+        }
+    },duration);
+})
+pro.then((data)=>{},(reason)=>{})
 </script>

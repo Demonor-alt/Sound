@@ -143,7 +143,7 @@ async function startPlayback() {
             progress.value = 0;
             // 播放完成后自动停止并清理
             sound.value.stop();
-            console.log('1111',isPlaying.value);
+            console.log('1111', isPlaying.value);
         },
         onloaderror: (id, error) => {
             console.error('音频加载失败', error);
