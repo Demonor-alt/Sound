@@ -2,6 +2,10 @@
     <el-row style="height: 100vh;width: 100%;">
         <el-col :span="12" style="background-color: black;">
             <div class="logo"></div>
+            <div class="description">
+                <div style="font-size: 20px;">极速声形制做</div>
+                <div style="font-size: small;">The shape of sound © 2025</div>
+            </div>
         </el-col>
         <el-col :span="12">
             <div class="body">
@@ -41,7 +45,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter()
 import { useTokenStore } from '@/stores/token'
 const tokenStore = useTokenStore();
-import { loginService } from '@/api/login';
+// import { loginService } from '@/api/login';
 import { ElMessage } from 'element-plus';
 const handleLogin = async () => {
     isLoading.value = true;
@@ -65,18 +69,34 @@ const handleLogin = async () => {
     // }
 };
 </script>
-<style>
+<style scoped>
 .logo {
-    width: 150px;
-    height: 60px;
+    width: 130px;
+    height: 45px;
     padding-left: 10px;
-    background: url('../assets/logo2.svg') no-repeat center / contain;
+    background: #fff url('../assets/background.png') no-repeat center / contain;
+    border: #e0e5eb 1px solid;
+    border-radius: 10px;
+    margin-left: 20px;
+    margin-top: 7px;
+}
+
+.description {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-left: 20px;
+    padding-top: 10px;
+    position: absolute;
+    bottom: 25px;
+    left: 10px;
 }
 
 .body {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 70%;
     gap: 5px;
     padding-top: 25%;
     padding-left: 25%;
