@@ -124,7 +124,7 @@ const { token } = useTokenStore();
 .logo {
   width: 130px;
   height: 45px;
-  background: url('../assets/logo3.png') no-repeat center / contain;
+  background: url('../assets/background.png') no-repeat center / contain;
   border: #e0e5eb 1px solid;
   border-radius: 10px;
 }

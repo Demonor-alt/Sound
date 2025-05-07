@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div style="font-size: small;color: #71717a; padding-top: 10px;">
-                                {{ sample.sampleText }}
+                                {{ sample.sampleContent }}
                             </div>
                         </el-card>
                     </div>
