@@ -354,7 +354,6 @@ import MySelectChange from '@/components/newComponent/SelectChange.vue'
 const visiblePopover = ref(false);
 
 const voice = ref();
-import video from '@/assets/video.mp4'
 const addNewVedios = ref();
 // const addNewVedios = ref();
 const isExpanded = ref(false);
